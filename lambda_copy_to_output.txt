@@ -1,0 +1,69 @@
+import json
+import urllib.parse
+import boto3
+import datetime
+import glob, os
+
+print('Loading function')
+
+s3 = boto3.client('s3')
+
+
+def lambda_handler(event, context):
+    #print("Received event: " + json.dumps(event, indent=2))
+
+    # Get the object from the event and show its content type
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    try:
+        lambda_file_path = f"/tmp/{key}"
+        name=key.split('.')[0]
+        ct = datetime.datetime.now()
+        ts = ct.timestamp()
+        lambda_output_file_path = f"/tmp/{ts}.m3u8"
+        s3.download_file(bucket, key, lambda_file_path)
+        os.system(
+            f"/opt/ffmpeglib/ffmpeg -i {lambda_file_path} -profile:v baseline -level 3.0 -start_number 0 -hls_time 30 -hls_list_size 0 -f hls {lambda_output_file_path}"
+        )
+        os.chdir("/tmp")
+        print("...printing: ")
+        for file in glob.glob("*.ts"):
+            print(file,": ", end="")
+            get_size = os.path.getsize (file)
+            print(str(get_size))
+            dest_key = str(ts) + '/' + file
+            print(dest_key)
+            s3.upload_file(
+                Bucket="output-streamify",
+                Key=dest_key,
+                Filename=f"/tmp/{file}",
+            )
+            print(f"/tmp/{ts}/{file}")
+            # s3.copy_object(
+            #     Bucket="output-streamify",
+            #     Key=dest_key,
+            #     CopySource=f'{bucket}/{key}'
+            # )
+        # s3.upload_file(
+        #     Bucket="output-streamify",
+        #     Key=lambda_output_file_path.split("/")[-1],
+        #     Filename=lambda_output_file_path,
+        # )
+        dest_key = str(ts) + '/' + name + '.m3u8'
+        s3.copy_object(
+                Bucket="output-streamify",
+                Key=dest_key,
+                CopySource=f'{bucket}/{key}'
+            )
+        
+        return
+    except Exception as e:
+        print(e)
+        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+        raise e
+        
+            # s3.upload_file(
+            # Bucket="output-streamify",
+            # Key=file,
+            # Filename=f"/tmp/{ts}/{file}",)
+            # print(f"/tmp/{ts}/{file}")
