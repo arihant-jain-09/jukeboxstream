@@ -1,36 +1,36 @@
 @import './styles/variables';
 @import './styles/typography/typography';
 .app {
-  height: 100%;
+  min-height: 100vh;
   overflow: hidden;
   display: grid;
   grid-template-columns:
-    [full-start sidebar-start] minmax(6rem, 10rem)
+    [full-start sidebar-start] minmax(10rem, 30rem)
     [sidebar-end content-start] repeat(
       12,
       [col-start] minmax(min-content, 10rem) [col-end]
     )
-    [content-end] minmax(10rem, 1fr) [full-end];
+    minmax(10rem, 1fr) [full-end content-end];
   grid-auto-rows: min-content;
   position: relative;
   @media screen and (max-width: 1200px) {
     grid-template-columns:
-      [full-start sidebar-start] 8rem
+      [full-start sidebar-start] 25rem
       [sidebar-end content-start] repeat(
         12,
         [col-start] minmax(min-content, 10rem) [col-end]
       )
-      [content-end] minmax(10rem, 1fr) [full-end];
+      minmax(10rem, 1fr) [full-end content-end];
     grid-auto-rows: min-content;
   }
   @media screen and (max-width: 700px) {
     grid-template-columns:
-      [full-start sidebar-start] minmax(min-content, 10rem)
-      [ content-start] repeat(
+      [full-start sidebar-start] minmax(min-content, 20rem)
+      [sidebar-end content-start] repeat(
         12,
         [col-start] minmax(min-content, 10rem) [col-end]
       )
-      [content-end] minmax(6rem, 1fr) [sidebar-end full-end];
+      minmax(6rem, 1fr) [full-end content-end];
   }
 
   &__content {

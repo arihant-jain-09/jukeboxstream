@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
 *,
 *::before,
 *::after {
@@ -8,23 +10,20 @@
 
 body {
   margin: 0;
-  font-family: sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-family: 'Lato', sans-serif;
   height: 100%;
-  background-color: #252836;
+  margin: 0;
+  padding: 0;
 }
 
 html {
   font-size: 62.5%;
   height: 100%;
-  @media screen and (max-width: 900px) {
-    font-size: 56.25%;
+  @media screen and (min-width: 320px) {
+    font-size: calc(8px + 6 * ((100vw - 320px) / 680));
   }
-  @media screen and (max-width: 800px) {
-    font-size: 50%;
+  @media screen and (min-width: 1000px) {
+    font-size: 10px;
   }
-}
-
-div#root {
-  height: 100%;
 }

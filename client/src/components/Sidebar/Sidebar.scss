@@ -1,0 +1,44 @@
+@import '../../styles/variables';
+.sidebar {
+  grid-column: sidebar-start / sidebar-end;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: $background-color-light;
+  padding: 2rem 0 2rem 3rem;
+  &__logo {
+    margin-bottom: 4rem;
+    &-text {
+      font-size: $font-size-h2;
+      font-weight: 600;
+    }
+  }
+  &__content {
+    &-head {
+      margin-bottom: 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+    }
+    & > * {
+      margin-bottom: 2.5rem;
+    }
+  }
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  color: $text-navy;
+  cursor: pointer;
+  &__svg {
+    margin-right: 0.75rem;
+    svg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+}
