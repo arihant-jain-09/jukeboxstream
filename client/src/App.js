@@ -1,8 +1,8 @@
-import React from 'react';
-import Header from './components/Header/Header';
-import './App.scss';
-import { withAuthenticator } from '@aws-amplify/ui-react';
-import Sidebar from './components/Sidebar/Sidebar';
+import React from "react";
+import Header from "./components/Header/Header";
+import "./App.scss";
+import { withAuthenticator } from "@aws-amplify/ui-react";
+import Sidebar from "./components/Sidebar/Sidebar";
 
 const App = (props) => {
   return (

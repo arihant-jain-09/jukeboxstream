@@ -1,5 +1,6 @@
-import React from 'react';
-import './Header.scss';
+import React from "react";
+import Upload from "../S3/Upload.jsx";
+import "./Header.scss";
 const Header = (props) => {
   const { signOut, user } = props;
   return (
@@ -9,11 +10,12 @@ const Header = (props) => {
           <span>Home</span>
         </div>
         <div className="header-right">
-          <div className="header-right--image"></div>
+          <Upload />
+          {/* <div className="header-right--image"></div>
           <div className="header-right--info">
             <div className="header-right--info-name">Arihant Jain</div>
             <div className="header-right--info-type">Premium</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
