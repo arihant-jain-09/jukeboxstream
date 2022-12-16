@@ -1,28 +1,22 @@
 import React from "react";
-import s3Client from "aws-sdk/clients/s3";
+import { s3 } from "./index";
 import axios from "axios";
 
-const s3 = new s3Client({
-  accessKeyId: process.env.REACT_APP_ACCESS_KEY,
-  secretAccessKey: process.env.REACT_APP_SECRET_KEY,
-  region: process.env.REACT_APP_REGION,
-  signatureVersion: "v4",
-});
-
 const Test = () => {
-  const Key = "carol_of_bells.mp3";
-  const s3Params = {
-    Bucket: process.env.REACT_APP_BUCKET_NAME,
-    Key,
-    Expires: 60,
-    ContentType: "audio/mpeg",
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const file = formData.get("file");
+    const [name, ex] = file.name.split(".");
+    const Key = `${name}_${new Date().toISOString()}.${ex}`;
+    const s3Params = {
+      Bucket: process.env.REACT_APP_BUCKET_NAME,
+      Key,
+      Expires: 60,
+      ContentType: file.type,
+    };
     const uploadUrl = s3.getSignedUrl("putObject", s3Params);
+    console.log(uploadUrl);
     try {
       await axios.put(uploadUrl, file);
     } catch (error) {
