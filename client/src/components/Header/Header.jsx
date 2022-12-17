@@ -10,7 +10,7 @@ const Header = (props) => {
           <span>Home</span>
         </div>
         <div className="header-right">
-          <Upload />
+          {props.isAdmin && <Upload />}
           {/* <div className="header-right--image"></div>
           <div className="header-right--info">
             <div className="header-right--info-name">Arihant Jain</div>
