@@ -5,7 +5,7 @@ const ImageGrid = ({ items }) => {
     <div className="imageGrid">
       {items &&
         items.map((item) => (
-          <img className="imageGrid-item" src={item.imageUrl} alt="not found" />
+          <img className="imageGrid-item" src={item.cover} alt="not found" />
         ))}
     </div>
   );

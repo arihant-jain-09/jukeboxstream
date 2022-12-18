@@ -14,16 +14,17 @@ router.get("/streams/all", async (req, res) => {
   });
   const { Items: images } = await db.send(command);
   for (let image of images) {
-    const folderName = image.name.S.substr(0, image.name.S.lastIndexOf("."));
-    image.imageUrl = await getSignedUrl(
+    image.title = image.title.S;
+    const folderName = image.title.substr(0, image.title.lastIndexOf("."));
+    image.cover = await getSignedUrl(
       s3,
       new GetObjectCommand({
         Bucket: process.env.BUCKET_NAME,
-        Key: `${folderName}/${image.name.S}`,
+        Key: `${folderName}/${image.title}`,
       }),
       { expiresIn: 60 * 60 } // 1 hour
     );
-    console.log(`${folderName}/${image.name.S}`);
+    console.log(`${folderName}/${image.title}`);
   }
   res.send(images);
 });

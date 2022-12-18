@@ -12,34 +12,40 @@
       minmax(min-content, 10rem)
     )
     [search-end right-start]repeat(4, minmax(min-content, 10rem))
-    [right-end content-start]
-    minmax(10rem, 1fr) [full-end];
+    [content-end]
+    minmax(10rem, 1fr) [full-end right-end];
   align-items: center;
+  color: #717171;
   &-left {
     grid-column: search-start / search-end;
   }
   &-right {
     grid-column: right-start / right-end;
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    &--icons {
+      display: flex;
+      svg {
+        cursor: pointer;
+        width: 22.64px;
+        height: 24px;
+      }
+      & > *:not(:first-child) {
+        margin-left: 2.5rem;
+      }
+    }
     &--image {
+      cursor: pointer;
       width: 4rem;
       height: 4rem;
       border-radius: 1rem;
-      background-repeat: no-repeat;
-      background-image: url("../../assets/images/arihant_jain.jpg");
-      background-size: contain;
-      margin-right: 1rem;
-    }
-    &--info {
-      display: flex;
-      flex-direction: column;
-      letter-spacing: $letter-spacing;
-      &-name {
-        font-size: $font-size-h5;
-      }
-      &-type {
-        font-size: $font-size-h6;
-        color: $text-light;
+      margin-left: 2.5rem;
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
   }
