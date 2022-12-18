@@ -1,22 +1,26 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 .sidebar {
   grid-column: sidebar-start / sidebar-end;
-  grid-row: 1;
+  height: 100vh;
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
-  background-color: $background-color-light;
+  background-color: #ededed;
   padding: 2rem 0 2rem 3rem;
   &__logo {
     margin-bottom: 4rem;
     &-text {
+      color: $secondary-color;
       font-size: $font-size-h2;
       font-weight: 600;
     }
   }
   &__content {
     &-head {
+      color: #717171;
       margin-bottom: 1.5rem;
-      font-family: 'Montserrat', sans-serif;
+      font-family: "Montserrat", sans-serif;
       font-weight: 500;
     }
     & > * {

@@ -1,14 +1,14 @@
-import React from 'react';
-import './Sidebar.scss';
-import { ReactComponent as Home } from '../../assets/home.svg';
-import { ReactComponent as Trending } from '../../assets/trending.svg';
-import { ReactComponent as Library } from '../../assets/library.svg';
-import { ReactComponent as Liked } from '../../assets/love.svg';
-import { ReactComponent as Favourite } from '../../assets/favourite.svg';
-import { ReactComponent as Playlist } from '../../assets/playlist.svg';
-import { ReactComponent as Profile } from '../../assets/profile.svg';
-import { ReactComponent as Settings } from '../../assets/settings.svg';
-import { ReactComponent as Logout } from '../../assets/logout.svg';
+import React from "react";
+import "./Sidebar.scss";
+import { ReactComponent as Home } from "../../assets/home.svg";
+import { ReactComponent as Trending } from "../../assets/trending.svg";
+import { ReactComponent as Library } from "../../assets/library.svg";
+import { ReactComponent as Liked } from "../../assets/love.svg";
+import { ReactComponent as Favourite } from "../../assets/favourite.svg";
+import { ReactComponent as Playlist } from "../../assets/playlist.svg";
+import { ReactComponent as Profile } from "../../assets/profile.svg";
+import { ReactComponent as Settings } from "../../assets/settings.svg";
+import { ReactComponent as Logout } from "../../assets/logout.svg";
 
 const SidebarItem = ({ Svg, text }) => {
   return (

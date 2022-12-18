@@ -1,4 +1,5 @@
 import React from "react";
+import Search from "../Search/Search.jsx";
 import Upload from "../Upload/Upload.jsx";
 import "./Header.scss";
 const Header = (props) => {
@@ -7,7 +8,7 @@ const Header = (props) => {
     <>
       <div className="header">
         <div className="header-left">
-          <span>Home</span>
+          <Search />
         </div>
         <div className="header-right">
           {props.isAdmin && <Upload />}

@@ -1,0 +1,28 @@
+@import "../../styles/typography/typography";
+@import "../../styles/variables";
+.search {
+  border-radius: $border-radius;
+  font-size: $font-size-h4;
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
+  input {
+    background-color: transparent;
+    border-radius: $border-radius;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    outline: none;
+    border: none;
+  }
+  &__svg {
+    margin-right: 0.75rem;
+    color: #717171;
+    svg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+}

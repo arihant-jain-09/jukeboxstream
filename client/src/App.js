@@ -3,10 +3,10 @@ import "./App.scss";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import Layout from "./components/Layout/Layout";
 import axios from "axios";
-import isEmpty from "lodash";
+import ImageGrid from "./components/ImageGrid/ImageGrid";
 
 const App = (props) => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(null);
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/streams/all")
@@ -17,14 +17,12 @@ const App = (props) => {
     return () => {};
   }, []);
 
+  console.log(items);
+
   return (
     <>
       <Layout {...props}>
-        <div className="app__content">
-          <div className="app__content-item">
-            {!isEmpty(items) && items[0].name}
-          </div>
-        </div>
+        <ImageGrid items={items} />
       </Layout>
     </>
   );

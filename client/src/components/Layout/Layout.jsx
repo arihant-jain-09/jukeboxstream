@@ -6,9 +6,11 @@ import "./Layout.scss";
 const Layout = (props) => {
   return (
     <div className="layout">
-      <Header {...props} />
       <Sidebar signOut={props.signOut} />
-      <div className="layout__content">{props.children}</div>
+      <div className="layout__content">
+        <Header {...props} />
+        {props.children}
+      </div>
     </div>
   );
 };
