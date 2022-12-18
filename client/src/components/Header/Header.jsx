@@ -1,5 +1,5 @@
 import React from "react";
-import Upload from "../S3/Upload.jsx";
+import Upload from "../Upload/Upload.jsx";
 import "./Header.scss";
 const Header = (props) => {
   const { signOut, user } = props;

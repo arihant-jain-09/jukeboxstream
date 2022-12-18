@@ -1,6 +1,6 @@
 import React from "react";
-import { s3 } from "./index";
-import axios from "axios";
+import { s3 } from "../../services/s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 const Test = () => {
   const handleSubmit = async (e) => {
@@ -9,16 +9,18 @@ const Test = () => {
     const file = formData.get("file");
     const [name, ex] = file.name.split(".");
     const Key = `${name}_${new Date().toISOString()}.${ex}`;
+    console.log(file);
+
     const s3Params = {
       Bucket: process.env.REACT_APP_BUCKET_NAME,
-      Key,
-      Expires: 60,
+      Key: Key,
       ContentType: file.type,
+      Body: file,
     };
-    const uploadUrl = s3.getSignedUrl("putObject", s3Params);
-    console.log(uploadUrl);
+    const command = new PutObjectCommand(s3Params);
     try {
-      await axios.put(uploadUrl, file);
+      const data = await s3.send(command);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
