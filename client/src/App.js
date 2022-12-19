@@ -5,6 +5,7 @@ import Layout from "./components/Layout/Layout";
 import axios from "axios";
 import ImageGrid from "./components/ImageGrid/ImageGrid";
 import Carousel from "./components/Carousel/Carousel";
+import { userSideItems } from "./utils/userSidebarImports";
 
 const App = (props) => {
   const [items, setItems] = useState(null);
@@ -20,7 +21,7 @@ const App = (props) => {
 
   return (
     <>
-      <Layout {...props}>
+      <Layout {...props} sideItems={userSideItems}>
         <div className="layout__content-wrapper">
           <ImageGrid items={items} />
         </div>

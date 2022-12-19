@@ -1,19 +1,10 @@
 import React from "react";
 import "./Sidebar.scss";
-import { ReactComponent as Home } from "../../assets/home.svg";
-import { ReactComponent as Trending } from "../../assets/trending.svg";
-import { ReactComponent as Library } from "../../assets/library.svg";
-import { ReactComponent as Liked } from "../../assets/love.svg";
-import { ReactComponent as Favourite } from "../../assets/favourite.svg";
-import { ReactComponent as Playlist } from "../../assets/playlist.svg";
-import { ReactComponent as Profile } from "../../assets/profile.svg";
-import { ReactComponent as Settings } from "../../assets/settings.svg";
-import { ReactComponent as Logout } from "../../assets/logout.svg";
 
-const SidebarItem = ({ Svg, text }) => {
+const SidebarItem = ({ Svg, text, onClick }) => {
   return (
     <>
-      <div className="sidebarItem">
+      <div className="sidebarItem" onClick={onClick}>
         <div className="sidebarItem__svg">
           <Svg />
         </div>
@@ -22,6 +13,7 @@ const SidebarItem = ({ Svg, text }) => {
     </>
   );
 };
+
 const SidebarLogoutItem = ({ Svg, text, signOut }) => {
   return (
     <>
@@ -35,7 +27,8 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
   );
 };
 
-const Sidebar = ({ signOut }) => {
+const Sidebar = ({ signOut, sideItems }) => {
+  console.log(sideItems);
   return (
     <>
       <div className="sidebar">
@@ -44,24 +37,19 @@ const Sidebar = ({ signOut }) => {
           <div className="sidebar__logo-text">Streamify</div>
         </div>
         <div className="sidebar__content">
-          <div className="sidebar__content_item">
-            <div className="sidebar__content-head">MENU</div>
-            <SidebarItem Svg={Home} text="Home" />
-            <SidebarItem Svg={Trending} text="Trending" />
-            <SidebarItem Svg={Library} text="Your Library" />
-          </div>
-          <div className="sidebar__content_item">
-            <div className="sidebar__content-head">Your Collection</div>
-            <SidebarItem Svg={Liked} text="Liked Songs" />
-            <SidebarItem Svg={Favourite} text="Favourite Artists" />
-            <SidebarItem Svg={Playlist} text="Playlist" />
-          </div>
-          <div className="sidebar__content_item">
-            <div className="sidebar__content-head">General</div>
-            <SidebarItem Svg={Profile} text="Profile" />
-            <SidebarItem Svg={Settings} text="Favourite Artists" />
-            <SidebarLogoutItem Svg={Logout} text="Logout" signOut={signOut} />
-          </div>
+          {sideItems.map((item) => {
+            const [key] = Object.keys(item);
+            return (
+              <div className="sidebar__content_item">
+                <div className="sidebar__content-head">{key}</div>
+                {item[key].map((item) => {
+                  if (item.text === "Logout")
+                    return <SidebarLogoutItem {...item} signOut={signOut} />;
+                  else return <SidebarItem {...item} />;
+                })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

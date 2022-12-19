@@ -3,6 +3,7 @@ import Layout from "../../components/Layout/Layout";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import { withAuthenticator } from "@aws-amplify/ui-react";
+import { adminSideItems } from "../../utils/adminSidebarImports";
 import "./admin.scss";
 
 const Admin = (props) => {
@@ -24,7 +25,17 @@ const Admin = (props) => {
     return () => {};
   }, [checkUser]);
 
-  return <>{isAdmin && <Layout {...props} isAdmin={isAdmin}></Layout>}</>;
+  return (
+    <>
+      {isAdmin && (
+        <Layout
+          {...props}
+          isAdmin={isAdmin}
+          sideItems={adminSideItems}
+        ></Layout>
+      )}
+    </>
+  );
 };
 
 export default withAuthenticator(Admin);

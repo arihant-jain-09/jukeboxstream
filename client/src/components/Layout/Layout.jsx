@@ -6,7 +6,7 @@ import "./Layout.scss";
 const Layout = (props) => {
   return (
     <div className="layout">
-      <Sidebar signOut={props.signOut} />
+      <Sidebar {...props} />
       <div className="layout__content">
         <Header {...props} />
         {props.children}
