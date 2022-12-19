@@ -57,26 +57,24 @@ const data = [
     cover:
       "https://output-streamify.s3.ap-south-1.amazonaws.com/carol_of_bells_2022-12-18T18%3A22%3A32.289Z/carol_of_bells_2022-12-18T18%3A22%3A32.289Z.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3RCUUR22X5UYGFHR%2F20221218%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221218T182556Z&X-Amz-Expires=3600&X-Amz-Signature=92dc316a89786671511478601a1d1f22bfc354f8aa9fd695d5a5a3856ae75a2a&X-Amz-SignedHeaders=host&x-id=GetObject",
   },
-  {
-    title: "carol_of_bells_2022-12-18T18:22:32.289Z.jpg",
-    cover:
-      "https://output-streamify.s3.ap-south-1.amazonaws.com/carol_of_bells_2022-12-18T18%3A22%3A32.289Z/carol_of_bells_2022-12-18T18%3A22%3A32.289Z.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3RCUUR22X5UYGFHR%2F20221218%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221218T182556Z&X-Amz-Expires=3600&X-Amz-Signature=92dc316a89786671511478601a1d1f22bfc354f8aa9fd695d5a5a3856ae75a2a&X-Amz-SignedHeaders=host&x-id=GetObject",
-  },
-  {
-    title: "carol_of_bells_2022-12-18T18:22:32.289Z.jpg",
-    cover:
-      "https://output-streamify.s3.ap-south-1.amazonaws.com/carol_of_bells_2022-12-18T18%3A22%3A32.289Z/carol_of_bells_2022-12-18T18%3A22%3A32.289Z.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3RCUUR22X5UYGFHR%2F20221218%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221218T182556Z&X-Amz-Expires=3600&X-Amz-Signature=92dc316a89786671511478601a1d1f22bfc354f8aa9fd695d5a5a3856ae75a2a&X-Amz-SignedHeaders=host&x-id=GetObject",
-  },
-  {
-    title: "carol_of_bells_2022-12-18T18:22:32.289Z.jpg",
-    cover:
-      "https://output-streamify.s3.ap-south-1.amazonaws.com/carol_of_bells_2022-12-18T18%3A22%3A32.289Z/carol_of_bells_2022-12-18T18%3A22%3A32.289Z.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3RCUUR22X5UYGFHR%2F20221218%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221218T182556Z&X-Amz-Expires=3600&X-Amz-Signature=92dc316a89786671511478601a1d1f22bfc354f8aa9fd695d5a5a3856ae75a2a&X-Amz-SignedHeaders=host&x-id=GetObject",
-  },
 ];
 
+const insertDuplicates = ({ items }) => {
+  const newItems = [];
+  items.forEach((item) => {
+    for (let i = items.length - 1; i < 5; i++) newItems.push(item);
+  });
+  return newItems;
+};
+
 const Carousel = ({ items }) => {
-  console.log(items);
   const ref = useRef();
+  if (items.length === 0) return null;
+  else if (items.length < 5) {
+    items = insertDuplicates({ items });
+  }
+  console.log(items);
+
   return (
     <div className="carousel">
       <ResponsiveContainer
@@ -88,7 +86,7 @@ const Carousel = ({ items }) => {
           return (
             <StackedCarousel
               ref={carouselRef}
-              data={data}
+              data={items}
               carouselWidth={parentWidth}
               slideWidth={500}
               height={516}

@@ -1,6 +1,7 @@
 node_modules
 videos
 audio
+*.pem
 
 # Logs
 logs

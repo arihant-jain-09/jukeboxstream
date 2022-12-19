@@ -1,9 +1,8 @@
 import express from "express";
 import { db } from "../services/dynamoDB.js";
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3 } from "../services/s3.js";
+import { getSignedUrl as cloudfrontSignedUrl } from "@aws-sdk/cloudfront-signer";
+import * as fs from "fs";
 
 const router = express.Router();
 
@@ -16,14 +15,22 @@ router.get("/streams/all", async (req, res) => {
   for (let image of images) {
     image.title = image.title.S;
     const folderName = image.title.substr(0, image.title.lastIndexOf("."));
-    image.cover = await getSignedUrl(
-      s3,
-      new GetObjectCommand({
-        Bucket: process.env.BUCKET_NAME,
-        Key: `${folderName}/${image.title}`,
-      }),
-      { expiresIn: 60 * 60 } // 1 hour
+    const s3ObjectKey = `${folderName}/${image.title}`;
+    const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;
+    const privateKey = fs.readFileSync(
+      new URL("../private_key.pem", import.meta.url),
+      {
+        encoding: "utf8",
+      }
     );
+    const keyPairId = process.env.CLOUDFRONT_KEY_PAIR_ID;
+    const dateLessThan = new Date(new Date().getTime() + 60 * 60000);
+    image.cover = cloudfrontSignedUrl({
+      url,
+      keyPairId,
+      dateLessThan,
+      privateKey,
+    });
     console.log(`${folderName}/${image.title}`);
   }
   res.send(images);

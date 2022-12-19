@@ -21,8 +21,20 @@ const App = (props) => {
   return (
     <>
       <Layout {...props}>
-        <ImageGrid items={items} />
-        {items && <Carousel items={items} />}
+        <div className="layout__content-wrapper">
+          <ImageGrid items={items} />
+        </div>
+
+        {/* {items && (
+          <Carousel
+            items={items.map((item) => {
+              return {
+                title: item.title,
+                cover: item.cover,
+              };
+            })}
+          />
+        )} */}
       </Layout>
     </>
   );

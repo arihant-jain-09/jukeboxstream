@@ -1,8 +1,9 @@
 @import "../../styles/variables";
 .imageGrid {
+  grid-column: 1/-1;
   padding: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   &-item {
     max-width: 120px;
     max-height: 120px;

@@ -1,0 +1,9 @@
+@import "../../styles/variables";
+.slide {
+  background-color: #eeeeee;
+  border-radius: $border-radius;
+  img {
+    display: inline-block;
+    background-color: #c4c4c4;
+  }
+}
