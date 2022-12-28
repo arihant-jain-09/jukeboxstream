@@ -1,5 +1,23 @@
 import NextAuth from "next-auth/next";
-import CognitoProvider from "next-auth/providers/cognito";
+
+function CognitoProvider(options) {
+  return {
+    id: "cognito",
+    name: "Cognito",
+    type: "oauth",
+    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    idToken: true,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture,
+      };
+    },
+    options,
+  };
+}
 
 export default NextAuth({
   providers: [
@@ -9,4 +27,22 @@ export default NextAuth({
       issuer: process.env.COGNITO_DOAMIN,
     }),
   ],
+  callbacks: {
+    jwt({ token, account, profile }) {
+      if (account) {
+        console.log("Account exists");
+        // modify token
+        token.role = profile["cognito:groups"];
+      }
+      return token;
+    },
+
+    session({ session, token }) {
+      if (session.user) {
+        // modify session
+        session.user.roles = token.role;
+      }
+      return session;
+    },
+  },
 });
