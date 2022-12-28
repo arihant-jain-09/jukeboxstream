@@ -1,6 +1,7 @@
-import Layout from "../components/Layout/Layout";
+import Layout from "../../components/Layout/Layout";
 import { useSession } from "next-auth/react";
-import { adminSideItems } from "../utils/adminSidebarImports";
+import { adminSideItems } from "../../utils/adminSidebarImports";
+import Upload from "../../components/Upload/Upload";
 
 const Admin = (props) => {
   const { data: session, status } = useSession();
@@ -11,7 +12,9 @@ const Admin = (props) => {
   if (groups && groups.find((e) => e === "admin")) {
     return (
       <>
-        <Layout {...props} sideItems={adminSideItems}></Layout>
+        <Layout {...props} sideItems={adminSideItems} isAdmin="true">
+          <Upload />
+        </Layout>
       </>
     );
   } else {

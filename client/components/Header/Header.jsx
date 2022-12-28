@@ -20,7 +20,6 @@ const Header = (props) => {
           <div className={styles["header-right--image"]}>
             <img src="/arihant_jain.jpg" alt="user" />
           </div>
-          {props.isAdmin && <Upload />}
         </div>
       </div>
     </>

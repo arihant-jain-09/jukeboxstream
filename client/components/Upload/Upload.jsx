@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { s3 } from "../../utils/s3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import styles from "./upload.module.scss";
+import styles from "./Upload.module.scss";
 import UploadIcon from "../../assets/upload.svg";
 import CoverImageIcon from "../../assets/cover.svg";
 import Button from "../Button/button";
@@ -20,7 +20,7 @@ const CustomInput = ({ placeholder, value, onChange }) => {
   );
 };
 
-const DesktopUpload = () => {
+const Upload = () => {
   const [artistName, setArtistName] = useState("");
   const [titleName, setTitleName] = useState("");
   const [genreList, setGenreList] = useState([]);
@@ -99,4 +99,4 @@ const DesktopUpload = () => {
   );
 };
 
-export default DesktopUpload;
+export default Upload;

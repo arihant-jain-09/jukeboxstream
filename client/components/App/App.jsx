@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./App.module.scss";
-import Layout from "../Layout/Layout";
+import Layout, { LayoutContentWrapper } from "../Layout/Layout";
 import axios from "axios";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import Carousel from "../Carousel/Carousel";
 import { userSideItems } from "../../utils/userSidebarImports";
 import styles from "../Layout/Layout.module.scss";
+import Header from "../Header/Header";
 
 const App = (props) => {
   const [items, setItems] = useState(null);
@@ -22,9 +23,8 @@ const App = (props) => {
   return (
     <>
       <Layout {...props} sideItems={userSideItems}>
-        <div className={styles["layout__content-wrapper"]}>
-          <ImageGrid items={items} />
-        </div>
+        <Header />
+        <ImageGrid items={items} />
 
         {/* {items && (
           <Carousel
