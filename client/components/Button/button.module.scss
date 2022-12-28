@@ -1,0 +1,9 @@
+@import "../../styles/variables";
+.button {
+  cursor: pointer;
+  margin-top: 1rem;
+  outline: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: $border-radius;
+  border: none;
+}
