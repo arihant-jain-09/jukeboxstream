@@ -5,6 +5,7 @@ import styles from "./Upload.module.scss";
 import UploadIcon from "../../assets/upload.svg";
 import CoverImageIcon from "../../assets/cover.svg";
 import Button from "../Button/button";
+import axios from "axios";
 // import { genreArray } from "../../../utils/genreArray";
 
 const CustomInput = ({ placeholder, value, onChange }) => {
@@ -31,8 +32,20 @@ const Upload = () => {
     const mp3file = files[1];
     const [name, ex] = mp3file.name.split(".");
     const Key = `${name}_${new Date().toISOString()}.${ex}`;
-    // console.log(formData.getAll("file"));
-
+    const genre = genreList.split(",").map((x) => {
+      return { S: x.toString() };
+    });
+    try {
+      const { data } = await axios.put("/api/entry", {
+        id: { S: Date.now().toString() },
+        title: { S: titleName },
+        artist: { S: artistName },
+        genre: { L: genre },
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
     // const s3Params = {
     //   Bucket: process.env.BUCKET_NAME,
     //   Key: Key,
