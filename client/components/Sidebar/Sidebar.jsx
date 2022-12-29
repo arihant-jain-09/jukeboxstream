@@ -1,10 +1,28 @@
+import { useRouter } from "next/router";
 import React from "react";
 import styles from "./Sidebar.module.scss";
 
-const SidebarItem = ({ Svg, text, onClick }) => {
+import Home from "../../assets/home.svg";
+import Trending from "../../assets/trending.svg";
+import Library from "../../assets/library.svg";
+import Liked from "../../assets/love.svg";
+import Favourite from "../../assets/favourite.svg";
+import Playlist from "../../assets/playlist.svg";
+import Profile from "../../assets/profile.svg";
+import Settings from "../../assets/settings.svg";
+import Logout from "../../assets/logout.svg";
+import Upload from "../../assets/upload.svg";
+
+const SidebarItem = ({ Svg, text, onClick, selected }) => {
+  if (selected) console.log(text);
   return (
     <>
-      <div className={styles["sidebarItem"]} onClick={onClick}>
+      <div
+        className={`${selected && styles["sidebarItem--selected"]} ${
+          styles["sidebarItem"]
+        }`}
+        onClick={onClick}
+      >
         <div className={styles["sidebarItem__svg"]}>
           <Svg />
         </div>
@@ -27,8 +45,142 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
   );
 };
 
-const Sidebar = ({ signOut, sideItems }) => {
-  console.log(sideItems);
+const Sidebar = ({ signOut, isAdmin }) => {
+  const router = useRouter();
+  console.log(router.pathname);
+  let sideItems;
+
+  const userSideItems = [
+    {
+      MENU: [
+        {
+          Svg: Home,
+          text: "Home",
+          onClick: () => {
+            console.log("clicked Home");
+          },
+          selected: router.pathname === "/",
+        },
+        {
+          Svg: Trending,
+          text: "Trending",
+          selected: router.pathname === "/trending",
+        },
+        {
+          Svg: Library,
+          text: "Your Library",
+          selected: router.pathname === "/library",
+        },
+      ],
+    },
+    {
+      "Your Collection": [
+        {
+          Svg: Liked,
+          text: "Liked Songs",
+          selected: router.pathname === "/liked",
+        },
+        {
+          Svg: Favourite,
+          text: "Favourite Artists",
+          selected: router.pathname === "/favourite",
+        },
+        {
+          Svg: Playlist,
+          text: "Playlist",
+          selected: router.pathname === "/playlist",
+        },
+      ],
+    },
+    {
+      General: [
+        {
+          Svg: Profile,
+          text: "Profile",
+          selected: router.pathname === "/profile",
+        },
+        {
+          Svg: Settings,
+          text: "Settings",
+          selected: router.pathname === "/settings",
+        },
+        {
+          Svg: Logout,
+          text: "Logout",
+          selected: router.pathname === "/logout",
+        },
+      ],
+    },
+  ];
+
+  const adminSideItems = [
+    {
+      MENU: [
+        {
+          Svg: Home,
+          text: "Home",
+          onClick: () => {
+            router.push("/admin");
+          },
+          selected: router.pathname === "/admin",
+        },
+        {
+          Svg: Upload,
+          text: "Upload",
+          onClick: () => {
+            router.push("/admin/upload");
+          },
+          selected: router.pathname === "/admin/upload",
+        },
+        {
+          Svg: Library,
+          text: "Your Library",
+          selected: router.pathname === "/admin/library",
+        },
+      ],
+    },
+    {
+      "Your Collection": [
+        {
+          Svg: Liked,
+          text: "Liked Songs",
+          selected: router.pathname === "/liked",
+        },
+        {
+          Svg: Favourite,
+          text: "Favourite Artists",
+          selected: router.pathname === "/favourite",
+        },
+        {
+          Svg: Playlist,
+          text: "Playlist",
+          selected: router.pathname === "/playlist",
+        },
+      ],
+    },
+    {
+      General: [
+        {
+          Svg: Profile,
+          text: "Profile",
+          selected: router.pathname === "/profile",
+        },
+        {
+          Svg: Settings,
+          text: "Settings",
+          selected: router.pathname === "/settings",
+        },
+        {
+          Svg: Logout,
+          text: "Logout",
+          selected: router.pathname === "/logout",
+        },
+      ],
+    },
+  ];
+  if (isAdmin) sideItems = adminSideItems;
+  else sideItems = userSideItems;
+
   return (
     <>
       <div className={styles["sidebar"]}>

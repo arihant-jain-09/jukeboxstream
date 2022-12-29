@@ -1,10 +1,10 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import "./App.module.scss";
 import Layout, { LayoutContentWrapper } from "../Layout/Layout";
 import axios from "axios";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import Carousel from "../Carousel/Carousel";
-import { userSideItems } from "../../utils/userSidebarImports";
 import styles from "../Layout/Layout.module.scss";
 import Header from "../Header/Header";
 
@@ -22,7 +22,7 @@ const App = (props) => {
 
   return (
     <>
-      <Layout {...props} sideItems={userSideItems}>
+      <Layout {...props}>
         <Header />
         <ImageGrid items={items} />
 

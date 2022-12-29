@@ -37,6 +37,33 @@
   padding: 0.75rem 0;
   color: $text-navy;
   cursor: pointer;
+  &--selected {
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      background-color: #3dae6d;
+      width: 0.5rem;
+      height: 100%;
+      left: -3rem;
+      display: block;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      background: rgb(112, 210, 148);
+      background: linear-gradient(
+        90deg,
+        rgba(112, 210, 148, 1) 20%,
+        rgba(237, 237, 237, 1) 100%
+      );
+      width: 100%;
+      height: 100%;
+      left: -2.5rem;
+      display: block;
+      z-index: -1;
+    }
+  }
   &__svg {
     margin-right: 0.75rem;
     svg {
