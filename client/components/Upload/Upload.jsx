@@ -1,14 +1,19 @@
-import React, { useState } from "react";
-import { s3 } from "../../utils/s3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import React from "react";
 import styles from "./Upload.module.scss";
 import UploadIcon from "../../assets/upload.svg";
 import CoverImageIcon from "../../assets/cover.svg";
-import Button from "../Button/button";
-import axios from "axios";
+
 // import { genreArray } from "../../../utils/genreArray";
 
-const CustomInput = ({ placeholder, value, onChange }) => {
+export const FormDetailsWrapper = ({ children }) => {
+  return <div className={styles["form__details"]}>{children}</div>;
+};
+
+export const FormGenreWrapper = ({ children }) => {
+  return <div className={styles["form__genre"]}>{children}</div>;
+};
+
+export const CustomInput = ({ placeholder, value, onChange }) => {
   return (
     <div className={styles["form__input-container"]}>
       <input
@@ -21,95 +26,34 @@ const CustomInput = ({ placeholder, value, onChange }) => {
   );
 };
 
-const Upload = () => {
-  const [artistName, setArtistName] = useState("");
-  const [titleName, setTitleName] = useState("");
-  const [genreList, setGenreList] = useState([]);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const files = formData.getAll("file");
-    const mp3file = files[1];
-    const [name, ex] = mp3file.name.split(".");
-    const Key = `${name}_${new Date().toISOString()}.${ex}`;
-    const genre = genreList.split(",").map((x) => {
-      return { S: x.toString() };
-    });
-    try {
-      const { data } = await axios.put("/api/entry", {
-        id: { S: Date.now().toString() },
-        title: { S: titleName },
-        artist: { S: artistName },
-        genre: { L: genre },
-      });
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-    // const s3Params = {
-    //   Bucket: process.env.BUCKET_NAME,
-    //   Key: Key,
-    //   ContentType: file.type,
-    //   Body: file,
-    // };
-    // const command = new PutObjectCommand(s3Params);
-    // try {
-    //   const data = await s3.send(command);
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
+export const UploadFormWrapper = ({ children, handleSubmit }) => {
   return (
-    <>
-      <form onSubmit={handleSubmit} className={styles["form"]}>
-        {/* ---------------Upload----------- */}
-        <div className={styles["form__coverImage"]}>
-          <label htmlFor="coverupload">
-            <CoverImageIcon className={styles["form__label-upload--svg"]} />
-          </label>
-          <input
-            id="coverupload"
-            className={styles["form__input-upload"]}
-            type="file"
-            name="file"
-          />
-        </div>
-        <div className={styles["form__audio"]}>
-          <label htmlFor="upload">
-            <UploadIcon className={styles["form__label-upload--svg"]} />
-          </label>
-          <input
-            id="upload"
-            className={styles["form__input-upload"]}
-            type="file"
-            name="file"
-          />
-        </div>
-        {/* --------------------------------------------- */}
-        <div className={styles["form__details"]}>
-          <CustomInput
-            placeholder="Enter title of music"
-            onChange={(e) => setTitleName(e.target.value)}
-            value={titleName}
-          />
-          <CustomInput
-            placeholder="Enter Artist"
-            onChange={(e) => setArtistName(e.target.value)}
-            value={artistName}
-          />
-        </div>
-        <div className={styles["form__genre"]}>
-          <CustomInput
-            placeholder="Enter Comma Separated Genre"
-            onChange={(e) => setGenreList(e.target.value)}
-            value={genreList}
-          />
-        </div>
-        <Button type="submit">Upload</Button>
-      </form>
-    </>
+    <form onSubmit={handleSubmit} className={styles["form"]}>
+      {children}
+    </form>
   );
 };
 
-export default Upload;
+export const UploadFileWrapper = ({ id, setState, pageNum, setPageNum }) => {
+  return (
+    <div>
+      <label htmlFor={id}>
+        {id === "coverupload" ? (
+          <CoverImageIcon className={styles["form__label-upload--svg"]} />
+        ) : (
+          <UploadIcon className={styles["form__label-upload--svg"]} />
+        )}
+      </label>
+      <input
+        id={id}
+        className={styles["form__input-upload"]}
+        type="file"
+        name="file"
+        onChange={(e) => {
+          setState(e.target.files[0]);
+          setPageNum(pageNum + 1);
+        }}
+      />
+    </div>
+  );
+};
