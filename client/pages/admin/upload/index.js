@@ -14,10 +14,91 @@ import axios from "axios";
 import Button from "../../../components/Button/button";
 import { s3 } from "../../../utils/s3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import styles from "./upload.module.scss";
+
+const pageInfo = [
+  {
+    name: "Upload Cover Image",
+    required: {
+      text: "Files Supported",
+      content: ["jpg"],
+    },
+  },
+  {
+    name: "Upload Audio File",
+    required: {
+      text: "Files Supported",
+      content: ["mp3"],
+    },
+  },
+  {
+    name: "Add title and artist name",
+    required: {
+      text: "Form required Fields",
+      content: ["Title", "Artist"],
+    },
+  },
+  {
+    name: "Add Genre",
+    required: {
+      text: "Form required Fields",
+      content: ["Genre"],
+    },
+  },
+];
+
+const StripperStatus = ({ pageNum, children, setPageNum }) => {
+  const StripperComp = ({ children: compChildren, onClick }) => {
+    return (
+      <div
+        className={`${
+          pageNum == compChildren &&
+          styles["upload--stripperStatus--left-pages-svg--selected"]
+        } ${styles["upload--stripperStatus--left-pages-svg"]}`}
+        onClick={onClick}
+      >
+        <span>{compChildren}</span>
+      </div>
+    );
+  };
+  return (
+    <>
+      <div className={styles["upload--stripperStatus"]}>
+        <div className={styles["upload--stripperStatus--left"]}>
+          <div className={styles["upload--stripperStatus--left-heading"]}>
+            {pageInfo[pageNum - 1]["name"]}
+          </div>
+          <div className={styles["upload--stripperStatus--left-pages"]}>
+            <StripperComp onClick={() => setPageNum(1)}>1</StripperComp>
+            <StripperComp onClick={() => setPageNum(2)}>2</StripperComp>
+            <StripperComp onClick={() => setPageNum(3)}>3</StripperComp>
+            <StripperComp onClick={() => setPageNum(4)}>4</StripperComp>
+          </div>
+        </div>
+        <div className={styles["upload--stripperStatus--right"]}>
+          <div className={styles["upload--stripperStatus--right-title"]}>
+            {pageInfo[pageNum - 1]["required"]["text"]}
+          </div>
+          <div className={styles["upload--stripperStatus--right-content"]}>
+            {pageInfo[pageNum - 1]["required"]["content"].map((item, idx) => (
+              <div
+                className={
+                  styles["upload--stripperStatus--right-content--chip"]
+                }
+              >
+                {pageInfo[pageNum - 1]["required"]["content"][idx]}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 const UploadPage = (props) => {
   const { data: session, status } = useSession();
-  const [pageNum, setPageNum] = useState(1);
+  const [pageNum, setPageNum] = useState(4);
   const [artistName, setArtistName] = useState("");
   const [titleName, setTitleName] = useState("");
   const [genreList, setGenreList] = useState("");
@@ -86,33 +167,51 @@ const UploadPage = (props) => {
             />
           )}
           {pageNum == 3 && (
-            <>
+            <div className={styles["uploadPage"]}>
               <FormDetailsWrapper>
                 <CustomInput
-                  placeholder="Enter title of music"
                   onChange={(e) => setTitleName(e.target.value)}
                   value={titleName}
-                />
+                >
+                  Title
+                </CustomInput>
                 <CustomInput
-                  placeholder="Enter Artist"
                   onChange={(e) => setArtistName(e.target.value)}
                   value={artistName}
-                />
+                >
+                  Artist
+                </CustomInput>
               </FormDetailsWrapper>
-              <div onClick={() => setPageNum(pageNum + 1)}>Next Page</div>
-            </>
+              <Button
+                type={"text"}
+                onClick={() => setPageNum(pageNum + 1)}
+                className={styles["uploadPage-nextPage"]}
+              >
+                Submit
+              </Button>
+            </div>
           )}
           {pageNum == 4 && (
-            <FormGenreWrapper>
-              <CustomInput
-                placeholder="Enter Comma Separated Genre"
-                onChange={(e) => setGenreList(e.target.value)}
-                value={genreList}
-              />
-            </FormGenreWrapper>
+            <>
+              <div className={styles["uploadPage"]}>
+                <FormGenreWrapper>
+                  <CustomInput
+                    placeholder="Enter Comma Separated Genre"
+                    onChange={(e) => setGenreList(e.target.value)}
+                    value={genreList}
+                  />
+                </FormGenreWrapper>
+                <Button type="submit" className={styles["uploadPage-nextPage"]}>
+                  Next Page
+                </Button>
+              </div>
+            </>
           )}
-          <Button type="submit">Upload</Button>
         </UploadFormWrapper>
+        <StripperStatus
+          pageNum={pageNum}
+          setPageNum={setPageNum}
+        ></StripperStatus>
       </Layout>
     );
   } else {
