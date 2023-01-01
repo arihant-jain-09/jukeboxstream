@@ -14,7 +14,6 @@ import Logout from "../../assets/logout.svg";
 import Upload from "../../assets/upload.svg";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
-  if (selected) console.log(text);
   return (
     <>
       <div
@@ -47,7 +46,6 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
 
 const Sidebar = ({ signOut, isAdmin }) => {
   const router = useRouter();
-  console.log(router.pathname);
   let sideItems;
 
   const userSideItems = [

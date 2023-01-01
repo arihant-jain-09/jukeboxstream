@@ -96,28 +96,38 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
   );
 };
 
+const UploadToS3 = async ({ Key, file, bucket }) => {
+  const s3Params = {
+    Bucket: bucket,
+    Key: Key,
+    ContentType: file.type,
+    Body: file,
+  };
+  const command = new PutObjectCommand(s3Params);
+  try {
+    const data = await s3.send(command);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const UploadPage = (props) => {
   const { data: session, status } = useSession();
-  const [pageNum, setPageNum] = useState(4);
+  const [pageNum, setPageNum] = useState(1);
   const [artistName, setArtistName] = useState("");
   const [titleName, setTitleName] = useState("");
   const [genreList, setGenreList] = useState("");
   const [mp3, setMP3] = useState(null);
   const [cover, setCover] = useState(null);
-  console.log(cover);
   console.log(mp3);
   if (status == "loading") {
     return <>...loading</>;
   }
   const groups = session.user.roles;
+
   if (groups && groups.find((e) => e === "admin")) {
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      // const formData = new FormData(e.target);
-      // const files = formData.getAll("file");
-      // const mp3file = files[1];
-      // const [name, ex] = mp3file.name.split(".");
-      // const Key = `${name}_${new Date().toISOString()}.${ex}`;
+    const AddToDynamoDB = async (folderName) => {
       const genre = genreList.split(",").map((x) => {
         return { S: x.toString() };
       });
@@ -125,26 +135,53 @@ const UploadPage = (props) => {
         const { data } = await axios.put("/api/entry", {
           id: { S: Date.now().toString() },
           title: { S: titleName },
+          s3Name: { S: `${folderName}.jpg` },
           artist: { S: artistName },
           genre: { L: genre },
         });
-        console.log(data);
+        return data;
       } catch (error) {
-        console.log(error);
+        return error;
       }
-      // const s3Params = {
-      //   Bucket: process.env.BUCKET_NAME,
-      //   Key: Key,
-      //   ContentType: file.type,
-      //   Body: file,
-      // };
-      // const command = new PutObjectCommand(s3Params);
-      // try {
-      //   const data = await s3.send(command);
-      //   console.log(data);
-      // } catch (error) {
-      //   console.log(error);
-      // }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const dateFormat = new Date().toISOString();
+      const mp3ex = mp3.name.substr(mp3.name.lastIndexOf("."));
+      let fileMP3 = mp3.slice(0, mp3.size);
+      let newMP3 = new File([fileMP3], `${titleName}_${dateFormat}${mp3ex}`, {
+        type: `${mp3.type}`,
+      });
+      if (cover) {
+        const coverex = cover.name.substr(cover.name.lastIndexOf("."));
+        let fileCover = cover.slice(0, cover.size);
+        let newCover = new File(
+          [fileCover],
+          `${titleName}_${dateFormat}${coverex}`,
+          {
+            type: `${mp3.type}`,
+          }
+        );
+      }
+
+      const folderName = `${titleName}_${dateFormat}`;
+      Promise.all([
+        UploadToS3({
+          Key: newMP3.name,
+          file: newMP3,
+          bucket: process.env.BUCKET_NAME,
+        }),
+        AddToDynamoDB(folderName),
+        cover &&
+          UploadToS3({
+            Key: `${folderName}/${newCover.name}`,
+            file: cover,
+            bucket: process.env.COVER_BUCKET_NAME,
+          }),
+      ]).then((values) => {
+        console.log(values);
+      });
     };
 
     return (
@@ -156,6 +193,7 @@ const UploadPage = (props) => {
               setState={setCover}
               pageNum={pageNum}
               setPageNum={setPageNum}
+              accept={"image/png, image/jpeg"}
             />
           )}
           {pageNum == 2 && (
@@ -164,19 +202,24 @@ const UploadPage = (props) => {
               setState={setMP3}
               pageNum={pageNum}
               setPageNum={setPageNum}
+              accept={"audio/mpeg"}
             />
           )}
           {pageNum == 3 && (
             <div className={styles["uploadPage"]}>
               <FormDetailsWrapper>
                 <CustomInput
-                  onChange={(e) => setTitleName(e.target.value)}
+                  onChange={(e) =>
+                    setTitleName(e.target.value.split(" ").join("_"))
+                  }
                   value={titleName}
                 >
                   Title
                 </CustomInput>
                 <CustomInput
-                  onChange={(e) => setArtistName(e.target.value)}
+                  onChange={(e) =>
+                    setArtistName(e.target.value.split(" ").join("_"))
+                  }
                   value={artistName}
                 >
                   Artist
@@ -187,7 +230,7 @@ const UploadPage = (props) => {
                 onClick={() => setPageNum(pageNum + 1)}
                 className={styles["uploadPage-nextPage"]}
               >
-                Submit
+                Next Page
               </Button>
             </div>
           )}
@@ -202,7 +245,7 @@ const UploadPage = (props) => {
                   />
                 </FormGenreWrapper>
                 <Button type="submit" className={styles["uploadPage-nextPage"]}>
-                  Next Page
+                  Submit
                 </Button>
               </div>
             </>

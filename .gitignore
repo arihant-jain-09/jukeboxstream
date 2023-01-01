@@ -2,6 +2,7 @@ node_modules
 videos
 audio
 *.pem
+lambda_backup.txt
 
 # Logs
 logs

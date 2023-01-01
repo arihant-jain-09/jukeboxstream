@@ -25,6 +25,7 @@ export default async function handler(req, res) {
         Item: {
           id: req.body.id,
           title: req.body.title,
+          s3Name: req.body.s3Name,
           artist: req.body.artist,
           genre: req.body.genre,
         },

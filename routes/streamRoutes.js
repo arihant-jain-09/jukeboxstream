@@ -13,9 +13,10 @@ router.get("/streams/all", async (req, res) => {
   });
   const { Items: images } = await db.send(command);
   for (let image of images) {
-    image.title = image.title.S;
-    const folderName = image.title.substr(0, image.title.lastIndexOf("."));
-    const s3ObjectKey = `${folderName}/${image.title}`;
+    console.log(image);
+    image.s3Name = image.s3Name.S;
+    const folderName = image.s3Name.substr(0, image.s3Name.lastIndexOf("."));
+    const s3ObjectKey = `${folderName}/${image.s3Name}`;
     const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;
     const privateKey = fs.readFileSync(
       new URL("../private_key.pem", import.meta.url),
@@ -31,7 +32,7 @@ router.get("/streams/all", async (req, res) => {
       dateLessThan,
       privateKey,
     });
-    console.log(`${folderName}/${image.title}`);
+    console.log(`${folderName}/${image.s3Name}`);
   }
   res.send(images);
 });
