@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 import styles from "./Sidebar.module.scss";
-
 import Home from "../../assets/home.svg";
 import Trending from "../../assets/trending.svg";
 import Library from "../../assets/library.svg";
@@ -182,7 +181,10 @@ const Sidebar = ({ signOut, isAdmin }) => {
   return (
     <>
       <div className={styles["sidebar"]}>
-        <div className={styles["sidebar__logo"]}>
+        <div
+          className={styles["sidebar__logo"]}
+          onClick={() => router.push("/")}
+        >
           <div className={styles["sidebar__logo-img"]}></div>
           <div className={styles["sidebar__logo-text"]}>Streamify</div>
         </div>

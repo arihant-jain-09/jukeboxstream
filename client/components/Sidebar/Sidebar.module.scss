@@ -10,6 +10,7 @@
   padding: 2rem 0 2rem 3rem;
   &__logo {
     margin-bottom: 4rem;
+    cursor: pointer;
     &-text {
       color: $secondary-color;
       font-size: $font-size-h2;

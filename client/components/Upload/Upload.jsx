@@ -50,6 +50,7 @@ export const UploadFileWrapper = ({
   pageNum,
   setPageNum,
   accept,
+  name,
 }) => {
   return (
     <div className={styles["upload-form-wrapper"]}>
@@ -64,7 +65,8 @@ export const UploadFileWrapper = ({
         id={id}
         className={styles["form__input-upload"]}
         type="file"
-        name="file"
+        name={name}
+        enctype="multipart/form-data"
         accept={accept}
         onChange={(e) => {
           setState(e.target.files[0]);

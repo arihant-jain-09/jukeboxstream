@@ -96,20 +96,10 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
   );
 };
 
-const UploadToS3 = async ({ Key, file, bucket }) => {
-  const s3Params = {
-    Bucket: bucket,
-    Key: Key,
-    ContentType: file.type,
-    Body: file,
-  };
-  const command = new PutObjectCommand(s3Params);
-  try {
-    const data = await s3.send(command);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
+const UploadToS3 = async ({ url, formData }) => {
+  await axios.post(url, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
 const UploadPage = (props) => {
@@ -131,18 +121,13 @@ const UploadPage = (props) => {
       const genre = genreList.split(",").map((x) => {
         return { S: x.toString() };
       });
-      try {
-        const { data } = await axios.put("/api/entry", {
-          id: { S: Date.now().toString() },
-          title: { S: titleName },
-          s3Name: { S: `${folderName}.jpg` },
-          artist: { S: artistName },
-          genre: { L: genre },
-        });
-        return data;
-      } catch (error) {
-        return error;
-      }
+      await axios.put("http://localhost:5000/api/upload/details", {
+        id: { S: Date.now().toString() },
+        title: { S: titleName },
+        s3Name: { S: `${folderName}.jpg` },
+        artist: { S: artistName },
+        genre: { L: genre },
+      });
     };
 
     const handleSubmit = async (e) => {
@@ -153,31 +138,35 @@ const UploadPage = (props) => {
       let newMP3 = new File([fileMP3], `${titleName}_${dateFormat}${mp3ex}`, {
         type: `${mp3.type}`,
       });
+      let newCover;
       if (cover) {
         const coverex = cover.name.substr(cover.name.lastIndexOf("."));
         let fileCover = cover.slice(0, cover.size);
-        let newCover = new File(
+        newCover = new File(
           [fileCover],
           `${titleName}_${dateFormat}${coverex}`,
           {
-            type: `${mp3.type}`,
+            type: `${cover.type}`,
           }
         );
       }
-
       const folderName = `${titleName}_${dateFormat}`;
+      const coverformData = new FormData();
+      const mp3formData = new FormData();
+      coverformData.append("cover", newCover);
+      if (cover) coverformData.append("name", `${folderName}/${newCover.name}`);
+      mp3formData.append("name", newMP3.name);
+      mp3formData.append("mp3", newMP3);
       Promise.all([
         UploadToS3({
-          Key: newMP3.name,
-          file: newMP3,
-          bucket: process.env.BUCKET_NAME,
+          url: "http://localhost:5000/api/upload/mp3",
+          formData: mp3formData,
         }),
         AddToDynamoDB(folderName),
         cover &&
           UploadToS3({
-            Key: `${folderName}/${newCover.name}`,
-            file: cover,
-            bucket: process.env.COVER_BUCKET_NAME,
+            url: "http://localhost:5000/api/upload/cover",
+            formData: coverformData,
           }),
       ]).then((values) => {
         console.log(values);
@@ -190,6 +179,7 @@ const UploadPage = (props) => {
           {pageNum == 1 && (
             <UploadFileWrapper
               id="coverupload"
+              name="cover"
               setState={setCover}
               pageNum={pageNum}
               setPageNum={setPageNum}
@@ -199,6 +189,7 @@ const UploadPage = (props) => {
           {pageNum == 2 && (
             <UploadFileWrapper
               id="upload"
+              name="mp3"
               setState={setMP3}
               pageNum={pageNum}
               setPageNum={setPageNum}
