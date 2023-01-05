@@ -124,7 +124,7 @@ const UploadPage = (props) => {
       await axios.put("http://localhost:5000/api/upload/details", {
         id: { S: Date.now().toString() },
         title: { S: titleName },
-        s3Name: { S: `${folderName}.jpg` },
+        s3Name: { S: `${folderName}.webp` },
         artist: { S: artistName },
         genre: { L: genre },
       });

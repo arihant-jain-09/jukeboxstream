@@ -17,12 +17,15 @@ router.post("/upload/cover", upload.single("cover"), async (req, res) => {
   const file = req.file;
   const name = req.body.name;
   const fileBuffer = await sharp(file.buffer)
+    .webp({ quality: 60 })
     .resize({ height: 1600, width: 1600, fit: "contain" })
     .toBuffer();
+  console.log(fileBuffer);
+  const fileName = `${name.substr(0, name.lastIndexOf("."))}.webp`;
   const s3Params = {
     Bucket: process.env.ASSETS_BUCKET_NAME,
-    Key: name,
-    ContentType: file.type,
+    Key: fileName,
+    ContentType: "image/webp",
     Body: fileBuffer,
   };
   const command = new PutObjectCommand(s3Params);
@@ -69,7 +72,6 @@ router.put("/upload/details", async (req, res) => {
     })
   );
   console.log(data["$metadata"]["httpStatusCode"]);
-
   return res.status(201).json(data);
 });
 
