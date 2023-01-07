@@ -5,6 +5,7 @@ import { getSignedUrl as cloudfrontSignedUrl } from "@aws-sdk/cloudfront-signer"
 import * as fs from "fs";
 import https from "https";
 import path from "path";
+import { Blob } from "buffer";
 
 const router = express.Router();
 
@@ -77,14 +78,16 @@ router.get("/streams/:id", async (req, res) => {
     function signed(url) {
       const pathInS3 = `${folderName}/${url}`;
       const tsSigned = `${process.env.CLOUDFRONT_DOMAIN}/${pathInS3}`;
+      const time = new Date(new Date().getTime() + 60 * 60 * 60000);
       let signedUrl = cloudfrontSignedUrl({
         url: tsSigned,
         keyPairId,
-        dateLessThan,
+        dateLessThan: time,
         privateKey,
       });
-      let qry = signedUrl.split("?").pop();
-      return url + "?" + qry;
+      // let qry = signedUrl.split("?").pop();
+      // return url + "?" + qry;
+      return signedUrl;
     }
 
     https
@@ -131,6 +134,7 @@ router.get("/streams/:id", async (req, res) => {
               body.push(elem);
             } else {
               let modifiedUrl = signed(elem);
+              // console.log(modifiedUrl);
               body.push(modifiedUrl);
             }
           });
