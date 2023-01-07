@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import "./App.module.scss";
+import styles from "./App.module.scss";
 import Layout, { LayoutContentWrapper } from "../Layout/Layout";
 import axios from "axios";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import Carousel from "../Carousel/Carousel";
-import styles from "../Layout/Layout.module.scss";
 import Header from "../Header/Header";
 import Player from "../Player/Player";
 
@@ -21,19 +20,13 @@ const App = (props) => {
     return () => {};
   }, []);
 
-  const [source, setSource] = useState(
-    "http://localhost:3000/media/No_f-cking.m3u8"
-  );
+  const [source, setSource] = useState(null);
 
   return (
-    <>
+    <div className={styles["app"]}>
       <Layout {...props}>
         <Header />
         <ImageGrid items={items} setSource={setSource} source={source} />
-        <Player
-          source={source}
-          poster="https://image.mux.com/3taBcOqKMfNG029QjBCJMKLviq13OrV6S/thumbnail.jpg"
-        />
 
         {/* {items && (
           <Carousel
@@ -46,7 +39,13 @@ const App = (props) => {
           />
         )} */}
       </Layout>
-    </>
+      {source && (
+        <Player
+          source={source}
+          poster="https://image.mux.com/3taBcOqKMfNG029QjBCJMKLviq13OrV6S/thumbnail.jpg"
+        />
+      )}
+    </div>
   );
 };
 

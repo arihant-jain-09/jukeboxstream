@@ -31,6 +31,7 @@
   }
   &__content {
     grid-column: content-start / content-end;
+
     &-wrapper {
       grid-column: content-start / content-end;
       display: grid;
@@ -38,7 +39,7 @@
         minmax(10rem, 1fr) repeat(7, minmax(min-content, 10rem))
         minmax(10rem, 1fr);
       grid-auto-rows: min-content;
-      padding: 4rem;
+      padding: 2rem 4rem 4rem 4rem;
       background: rgb(245, 254, 254);
       background: linear-gradient(
         90deg,

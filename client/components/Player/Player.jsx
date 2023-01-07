@@ -8,6 +8,9 @@ import {
   MediaSeekBackwardButton,
   MediaSeekForwardButton,
   MediaMuteButton,
+  MediaPlaybackRateButton,
+  MediaLoadingIndicator,
+  MediaDurationDisplay,
 } from "media-chrome/dist/react";
 import styles from "./Player.module.scss";
 import Hls from "hls.js";
@@ -29,26 +32,52 @@ const Player = ({ source, poster }) => {
   }, [source]);
 
   return (
-    <MediaController className={styles["player"]}>
-      <audio ref={ref} slot="media" crossorigin poster={poster}>
-        {/* <track
+    <div className={styles["player"]}>
+      <media-loading-indicator></media-loading-indicator>
+      <MediaController className={styles["player__mediaController"]} audio>
+        <audio ref={ref} slot="media" crossorigin poster={poster}>
+          {/* <track
           label="thumbnails"
           default
           kind="metadata"
           src="https://image.mux.com/3taBcOqKMfNG029QjBCJMKLviq13OrV6S/storyboard.vtt"
         /> */}
-      </audio>
+        </audio>
 
-      <MediaControlBar>
-        <MediaPlayButton></MediaPlayButton>
-        <MediaSeekBackwardButton></MediaSeekBackwardButton>
-        <MediaSeekForwardButton></MediaSeekForwardButton>
-        <MediaTimeRange></MediaTimeRange>
-        <MediaTimeDisplay showDuration></MediaTimeDisplay>
-        <MediaMuteButton></MediaMuteButton>
-        <MediaVolumeRange></MediaVolumeRange>
-      </MediaControlBar>
-    </MediaController>
+        <MediaControlBar
+          className={styles["player__mediaController__container"]}
+        >
+          <div className={styles["player__mediaController__container-top"]}>
+            <div
+              className={
+                styles["player__mediaController__container-top--playButton"]
+              }
+            >
+              <MediaPlayButton></MediaPlayButton>
+            </div>
+          </div>
+          <div className={styles["player__mediaController__container-bottom"]}>
+            <div
+              className={
+                styles["player__mediaController__container-bottom--left"]
+              }
+            >
+              <MediaTimeDisplay></MediaTimeDisplay>
+              <MediaTimeRange></MediaTimeRange>
+              <MediaDurationDisplay></MediaDurationDisplay>
+            </div>
+            <div
+              className={
+                styles["player__mediaController__container-bottom--right"]
+              }
+            >
+              <MediaMuteButton></MediaMuteButton>
+              <MediaVolumeRange></MediaVolumeRange>
+            </div>
+          </div>
+        </MediaControlBar>
+      </MediaController>
+    </div>
   );
 };
 

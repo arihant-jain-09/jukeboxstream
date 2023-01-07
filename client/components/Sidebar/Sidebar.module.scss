@@ -10,7 +10,21 @@
   padding: 2rem 0 2rem 3rem;
   &__logo {
     margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
     cursor: pointer;
+    &-svg {
+      margin-right: 0.75rem;
+      svg {
+        fill: $secondary-color;
+        height: 4rem;
+        width: auto;
+        path {
+          height: 4rem;
+          width: auto;
+        }
+      }
+    }
     &-text {
       color: $secondary-color;
       font-size: $font-size-h2;

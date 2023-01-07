@@ -1,3 +1,56 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
 .player {
-  grid-column: 1/-1;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  background-color: #181818;
+  display: flex;
+  justify-content: center;
+  &__mediaController {
+    position: relative;
+    --media-control-hover-background: #181818;
+    width: 50%;
+    &__container {
+      background-color: #181818;
+      padding: 1.5rem 2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      &-top {
+        &--playButton {
+          --media-icon-color: #000;
+          --media-control-background: white;
+          --media-control-hover-background: #3cbb6e;
+          media-play-button {
+            border-radius: 50%;
+            padding: 0.5rem;
+          }
+          @include flexCenter;
+        }
+      }
+      &-bottom {
+        display: flex;
+        &--left {
+          padding: 0 1rem;
+          flex: 1;
+          display: flex;
+          &--mediaTimeDisplay {
+          }
+          media-time-range {
+            flex: 1;
+            margin: 0 1.25rem;
+            --media-range-thumb-background: #3cbb6e;
+            --media-range-track-border-radius: 0.5rem;
+          }
+        }
+        &--right {
+          &--mediaMuteButton {
+          }
+          &--mediaVolumeRange {
+          }
+        }
+      }
+    }
+  }
 }
