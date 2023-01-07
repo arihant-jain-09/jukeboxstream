@@ -5,8 +5,17 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   &-item {
-    max-width: 120px;
-    max-height: 120px;
-    border-radius: $border-radius;
+    cursor: pointer;
+    img {
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: calc($border-radius * 5);
+    }
+    &--title {
+      font-size: $font-size-h4;
+      font-weight: 600;
+    }
+    &--artist {
+    }
   }
 }
