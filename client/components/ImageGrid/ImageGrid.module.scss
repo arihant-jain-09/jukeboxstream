@@ -6,10 +6,15 @@
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   &-item {
     cursor: pointer;
+    overflow: hidden;
     img {
       max-width: 120px;
       max-height: 120px;
       border-radius: calc($border-radius * 5);
+      transition: all 0.3s ease;
+      &:hover {
+        transform: scale(1.05);
+      }
     }
     &--title {
       font-size: $font-size-h4;

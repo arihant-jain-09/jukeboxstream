@@ -15,6 +15,8 @@ import {
 import styles from "./Player.module.scss";
 import Hls from "hls.js";
 import { useEffect, useRef } from "react";
+import Forward from "../../assets/forward.svg";
+import Backward from "../../assets/backward.svg";
 
 const Player = ({ source, poster }) => {
   const ref = useRef(null);
@@ -33,7 +35,6 @@ const Player = ({ source, poster }) => {
 
   return (
     <div className={styles["player"]}>
-      <media-loading-indicator></media-loading-indicator>
       <MediaController className={styles["player__mediaController"]} audio>
         <audio ref={ref} slot="media" crossorigin poster={poster}>
           {/* <track
@@ -50,10 +51,24 @@ const Player = ({ source, poster }) => {
           <div className={styles["player__mediaController__container-top"]}>
             <div
               className={
+                styles["player__mediaController__container-top--backwardButton"]
+              }
+            >
+              <Backward />
+            </div>
+            <div
+              className={
                 styles["player__mediaController__container-top--playButton"]
               }
             >
               <MediaPlayButton></MediaPlayButton>
+            </div>
+            <div
+              className={
+                styles["player__mediaController__container-top--forwardButton"]
+              }
+            >
+              <Forward />
             </div>
           </div>
           <div className={styles["player__mediaController__container-bottom"]}>

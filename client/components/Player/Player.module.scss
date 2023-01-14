@@ -5,22 +5,39 @@
   position: sticky;
   bottom: 0;
   background-color: #181818;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(20rem, 1fr)
+    [content-start] repeat(12, [col-start] minmax(min-content, 10rem) [col-end])
+    [content-end]
+    minmax(20rem, 1fr) [full-end];
+  grid-auto-rows: min-content;
   &__mediaController {
+    grid-column: content-start/content-end;
     position: relative;
     --media-control-hover-background: #181818;
-    width: 50%;
     &__container {
       background-color: #181818;
-      padding: 1.5rem 2rem;
+      padding: 1.5rem 0 0.5rem 0;
       width: 100%;
       display: flex;
       flex-direction: column;
       &-top {
+        @include flexCenter;
+        &--backwardButton {
+          margin-right: 3rem;
+          cursor: pointer;
+          &:hover {
+            svg {
+              path {
+                fill: $secondary-color;
+              }
+            }
+          }
+        }
         &--playButton {
           --media-icon-color: #000;
-          --media-control-background: white;
+          --media-control-background: #ffff;
           --media-control-hover-background: #3cbb6e;
           media-play-button {
             border-radius: 50%;
@@ -28,13 +45,26 @@
           }
           @include flexCenter;
         }
+        &--forwardButton {
+          margin-left: 3rem;
+          cursor: pointer;
+          &:hover {
+            svg {
+              path {
+                fill: $secondary-color;
+              }
+            }
+          }
+        }
       }
       &-bottom {
         display: flex;
+        --media-control-height: 2rem;
         &--left {
           padding: 0 1rem;
           flex: 1;
           display: flex;
+
           &--mediaTimeDisplay {
           }
           media-time-range {
@@ -45,7 +75,8 @@
           }
         }
         &--right {
-          &--mediaMuteButton {
+          media-mute-button {
+            // margin-right: 1rem;
           }
           &--mediaVolumeRange {
           }

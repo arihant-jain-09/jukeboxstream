@@ -7,6 +7,7 @@ import { getSignedUrl as cloudfrontSignedUrl } from "@aws-sdk/cloudfront-signer"
 import * as fs from "fs";
 import { s3 } from "../services/s3.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import axios from "axios";
 
 const router = express.Router();
 
@@ -59,20 +60,51 @@ router.post("/upload/mp3", upload.single("mp3"), async (req, res) => {
 });
 
 router.put("/upload/details", async (req, res) => {
-  const data = await db.send(
-    new PutItemCommand({
-      TableName: process.env.TABLE_NAME,
-      Item: {
-        id: req.body.id,
-        title: req.body.title,
-        s3Name: req.body.s3Name,
-        artist: req.body.artist,
-        genre: req.body.genre,
-      },
-    })
+  const dataToQueue = {
+    MessageBody: {
+      id: req.body.id,
+      title: req.body.title,
+      s3Name: req.body.s3Name,
+      artist: req.body.artist,
+      genre: req.body.genre,
+    },
+  };
+
+  const response = await axios.put(
+    `${process.env.API_GATEWAY}/mediaDetails`,
+    dataToQueue
   );
-  console.log(data["$metadata"]["httpStatusCode"]);
-  return res.status(201).json(data);
+  console.log(response);
+  // const data = await db.send(
+  //   new PutItemCommand({
+  //     TableName: process.env.TABLE_NAME,
+  //     Item: {
+  //       id: req.body.id,
+  //       title: req.body.title,
+  //       s3Name: req.body.s3Name,
+  //       artist: req.body.artist,
+  //       genre: req.body.genre,
+  //     },
+  //   })
+  // );
+  // console.log(data["$metadata"]["httpStatusCode"]);
+  return res.status(201).json(dataToQueue);
 });
+// router.put("/upload/details", async (req, res) => {
+//   const data = await db.send(
+//     new PutItemCommand({
+//       TableName: process.env.TABLE_NAME,
+//       Item: {
+//         id: req.body.id,
+//         title: req.body.title,
+//         s3Name: req.body.s3Name,
+//         artist: req.body.artist,
+//         genre: req.body.genre,
+//       },
+//     })
+//   );
+//   console.log(data["$metadata"]["httpStatusCode"]);
+//   return res.status(201).json(data);
+// });
 
 export default router;
