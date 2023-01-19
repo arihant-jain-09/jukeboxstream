@@ -82,6 +82,7 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
           <div className={styles["upload--stripperStatus--right-content"]}>
             {pageInfo[pageNum - 1]["required"]["content"].map((item, idx) => (
               <div
+                key={idx}
                 className={
                   styles["upload--stripperStatus--right-content--chip"]
                 }

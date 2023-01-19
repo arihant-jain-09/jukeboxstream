@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
 import App from "../components/App/App";
 import { useSession, signIn, signOut } from "next-auth/react";
 

@@ -226,10 +226,10 @@ const Sidebar = ({ signOut, isAdmin }) => {
           <div className={styles["sidebar__logo-text"]}>Streamify</div>
         </div>
         <div className={styles["sidebar__content"]}>
-          {sideItems.map((item) => {
+          {sideItems.map((item, idx) => {
             const [key] = Object.keys(item);
             return (
-              <div className={styles["sidebar__content_item"]}>
+              <div key={idx} className={styles["sidebar__content_item"]}>
                 <div className={styles["sidebar__content-head"]}>{key}</div>
                 {item[key].map((item) => {
                   if (item.text === "Logout")
