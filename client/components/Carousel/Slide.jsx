@@ -18,4 +18,5 @@ const Slide = React.memo(function (props) {
     </div>
   );
 });
+Slide.displayName = "Slide";
 export default Slide;

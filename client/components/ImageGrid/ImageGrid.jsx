@@ -22,13 +22,14 @@ const ImageGrid = ({ items, setSource, source }) => {
   return (
     <div className={styles["imageGrid"]}>
       {items &&
-        items.map((item) => {
+        items.map((item, idx) => {
           const {
             title: { S: titleName },
             artist: { S: artistName },
           } = item;
           return (
             <div
+              key={idx}
               className={styles["imageGrid-item"]}
               onClick={() => handleClick(item)}
             >
