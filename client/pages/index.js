@@ -20,7 +20,15 @@ export default function Home() {
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button
+        onClick={() =>
+          signIn("cognito", {
+            callbackUrl: process.env.NEXTAUTH_URL,
+          })
+        }
+      >
+        Sign in
+      </button>
     </>
   );
 }
