@@ -27,6 +27,7 @@ export default NextAuth({
       issuer: process.env.COGNITO_DOAMIN,
     }),
   ],
+  secret: process.env.JWT_SECRET,
   callbacks: {
     jwt({ token, account, profile }) {
       if (account) {
