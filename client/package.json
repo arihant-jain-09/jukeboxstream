@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.234.0",
+    "@reduxjs/toolkit": "^1.9.1",
     "aws-sdk": "^2.1278.0",
     "axios": "^1.2.1",
     "eslint": "8.30.0",
@@ -22,7 +23,9 @@
     "next-redux-wrapper": "^8.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-redux": "^8.0.5",
     "react-stacked-center-carousel": "^1.0.12",
+    "redux-logger": "^3.0.6",
     "sass": "^1.57.1"
   },
   "devDependencies": {

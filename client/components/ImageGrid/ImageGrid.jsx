@@ -1,13 +1,18 @@
 import axios from "axios";
 import React, { useState } from "react";
 import styles from "./ImageGrid.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { SetCurrentSong } from "../../redux/userSlice";
 const ImageGrid = ({ items, setSource, source }) => {
+  const dispatch = useDispatch();
   const [currentSong, setCurrentSong] = useState(null);
 
   const handleClick = (item) => {
     const {
       id: { S: itemId },
     } = item;
+
+    dispatch(SetCurrentSong(item));
 
     axios
       .get(`http://localhost:5000/api/streams/${itemId}`)
