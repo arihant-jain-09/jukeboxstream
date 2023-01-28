@@ -4,7 +4,6 @@ import { getM3u8 } from "../../services/GetM3u8.js";
 
 module.exports = class MusicPlayer {
   constructor(songs) {
-    console.log("......Initialize Music Player......");
     this.musiclist = songs || [];
     this.musicQ = new Queue();
     this.total_Song_Count = songs ? songs.length : 0;
@@ -12,6 +11,9 @@ module.exports = class MusicPlayer {
     if (songs?.length > 0) {
       this.musicQ.enqueue(songs[0]);
     }
+  }
+  static intializeList(list) {
+    return new MusicPlayer(list);
   }
   addSong(artist, s3Name, id, genre, title, cover) {
     this.musiclist.splice(

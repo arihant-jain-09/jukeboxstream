@@ -1,10 +1,9 @@
 import styles from "./ImageGrid.module.scss";
 import { useDispatch } from "react-redux";
 import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/userSlice";
-import MusicPlayer from "../OOPS/MusicPlayer.js";
-const ImageGrid = ({ items, setSource, source }) => {
+
+const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
-  const player = new MusicPlayer(items);
   const handleClick = async (item, idx) => {
     const {
       id: { S: itemId },

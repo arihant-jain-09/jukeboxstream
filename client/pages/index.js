@@ -1,6 +1,6 @@
 import Head from "next/head";
-import App from "../components/App/App";
 import { useSession, signIn, signOut } from "next-auth/react";
+import AppWrapper from "../components/App/AppWrapper";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -13,7 +13,7 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <App />
+        <AppWrapper />
       </>
     );
   }

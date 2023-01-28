@@ -1,36 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./App.module.scss";
 import Layout, { LayoutContentWrapper } from "../Layout/Layout";
-import axios from "axios";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import Carousel from "../Carousel/Carousel";
 import Header from "../Header/Header";
 import Player from "../Player/Player";
-import { SetAllSongs } from "../../redux/userSlice";
-import { useDispatch } from "react-redux";
+import MusicPlayer from "../OOPS/MusicPlayer.js";
 
-const App = (props) => {
-  const [items, setItems] = useState(null);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/streams/all")
-      .then(({ data }) => {
-        setItems(data);
-        dispatch(SetAllSongs(data));
-      })
-      .catch((e) => console.log(e));
-    return () => {};
-  }, []);
-
+const App = ({ items, ...props }) => {
+  const player = new MusicPlayer(items);
   const [source, setSource] = useState(null);
 
   return (
     <div className={styles["app"]}>
       <Layout {...props}>
         <Header />
-        <ImageGrid items={items} setSource={setSource} source={source} />
+        <ImageGrid
+          items={items}
+          setSource={setSource}
+          source={source}
+          player={player}
+        />
 
         {/* {items && (
           <Carousel
