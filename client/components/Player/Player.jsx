@@ -17,9 +17,13 @@ import Hls from "hls.js";
 import { useEffect, useRef } from "react";
 import Forward from "../../assets/forward.svg";
 import Backward from "../../assets/backward.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { SetCurrentTime, SetIsPlaying } from "../../redux/userSlice";
 
 const Player = ({ source, poster }) => {
   const ref = useRef(null);
+  const dispatch = useDispatch();
+  const { isPlaying } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (Hls.isSupported()) {
@@ -36,7 +40,15 @@ const Player = ({ source, poster }) => {
   return (
     <div className={styles["player"]}>
       <MediaController className={styles["player__mediaController"]} audio>
-        <audio ref={ref} slot="media" crossorigin poster={poster}>
+        <audio
+          ref={ref}
+          slot="media"
+          crossorigin
+          poster={poster}
+          onTimeUpdate={(e) => {
+            dispatch(SetCurrentTime(e.target.currentTime));
+          }}
+        >
           {/* <track
           label="thumbnails"
           default
@@ -60,6 +72,7 @@ const Player = ({ source, poster }) => {
               className={
                 styles["player__mediaController__container-top--playButton"]
               }
+              onClick={() => dispatch(SetIsPlaying(!isPlaying))}
             >
               <MediaPlayButton></MediaPlayButton>
             </div>

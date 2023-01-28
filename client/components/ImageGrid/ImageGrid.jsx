@@ -1,27 +1,29 @@
-import axios from "axios";
-import React, { useState } from "react";
 import styles from "./ImageGrid.module.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentSong } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
+import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/userSlice";
+import MusicPlayer from "../OOPS/MusicPlayer.js";
 const ImageGrid = ({ items, setSource, source }) => {
   const dispatch = useDispatch();
-  const [currentSong, setCurrentSong] = useState(null);
-
-  const handleClick = (item) => {
+  const player = new MusicPlayer(items);
+  const handleClick = async (item, idx) => {
     const {
       id: { S: itemId },
     } = item;
+    let src = await player.playSong(itemId, true);
+    if (src) {
+      setSource(src);
+      dispatch(SetCurrentSong(item));
+      dispatch(SetCurrentSongIndex(idx));
+    }
 
-    dispatch(SetCurrentSong(item));
-
-    axios
-      .get(`http://localhost:5000/api/streams/${itemId}`)
-      .then(({ data }) => {
-        if ((data.status = 200)) {
-          setSource(data.body);
-        }
-      })
-      .catch((e) => console.log(e));
+    // axios
+    //   .get(`http://localhost:5000/api/streams/${itemId}`)
+    //   .then(({ data }) => {
+    //     if ((data.status = 200)) {
+    //       setSource(data.body);
+    //     }
+    //   })
+    //   .catch((e) => console.log(e));
   };
 
   return (
@@ -36,7 +38,7 @@ const ImageGrid = ({ items, setSource, source }) => {
             <div
               key={idx}
               className={styles["imageGrid-item"]}
-              onClick={() => handleClick(item)}
+              onClick={() => handleClick(item, idx)}
             >
               <img
                 className={styles["imageGrid-item--img"]}

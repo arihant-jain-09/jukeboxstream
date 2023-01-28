@@ -12,6 +12,7 @@ import Settings from "../../assets/settings.svg";
 import Logout from "../../assets/logout.svg";
 import Upload from "../../assets/upload.svg";
 import Loading from "../../assets/loading.svg";
+import { useSelector } from "react-redux";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
   return (
@@ -45,6 +46,7 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
 };
 
 const Sidebar = ({ signOut, isAdmin }) => {
+  const { isPlaying } = useSelector((state) => state.user);
   const router = useRouter();
   let sideItems;
 
@@ -189,37 +191,43 @@ const Sidebar = ({ signOut, isAdmin }) => {
           <div className={styles["sidebar__logo-svg"]}>
             <svg slot="loading" viewBox="-12 -15 48 60">
               <path d="M0 0h4v10H0z">
-                <animateTransform
-                  attributeType="xml"
-                  attributeName="transform"
-                  type="translate"
-                  values="0 0; 0 20; 0 0"
-                  begin="0"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
+                {isPlaying && (
+                  <animateTransform
+                    attributeType="xml"
+                    attributeName="transform"
+                    type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0"
+                    dur="0.6s"
+                    repeatCount="indefinite"
+                  />
+                )}
               </path>
               <path d="M10 0h4v10h-4z">
-                <animateTransform
-                  attributeType="xml"
-                  attributeName="transform"
-                  type="translate"
-                  values="0 0; 0 20; 0 0"
-                  begin="0.2s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
+                {isPlaying && (
+                  <animateTransform
+                    attributeType="xml"
+                    attributeName="transform"
+                    type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0.2s"
+                    dur="0.6s"
+                    repeatCount="indefinite"
+                  />
+                )}
               </path>
               <path d="M20 0h4v10h-4z">
-                <animateTransform
-                  attributeType="xml"
-                  attributeName="transform"
-                  type="translate"
-                  values="0 0; 0 20; 0 0"
-                  begin="0.4s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
+                {isPlaying && (
+                  <animateTransform
+                    attributeType="xml"
+                    attributeName="transform"
+                    type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0.4s"
+                    dur="0.6s"
+                    repeatCount="indefinite"
+                  />
+                )}
               </path>
             </svg>
           </div>

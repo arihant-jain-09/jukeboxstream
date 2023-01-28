@@ -7,14 +7,18 @@ import ImageGrid from "../ImageGrid/ImageGrid";
 import Carousel from "../Carousel/Carousel";
 import Header from "../Header/Header";
 import Player from "../Player/Player";
+import { SetAllSongs } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 const App = (props) => {
   const [items, setItems] = useState(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/streams/all")
       .then(({ data }) => {
         setItems(data);
+        dispatch(SetAllSongs(data));
       })
       .catch((e) => console.log(e));
     return () => {};
