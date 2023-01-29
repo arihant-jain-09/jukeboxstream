@@ -1,6 +1,7 @@
 import styles from "./ImageGrid.module.scss";
 import { useDispatch } from "react-redux";
 import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/userSlice";
+import AddToQueue from "../../assets/addToQueue.svg";
 
 const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
@@ -25,6 +26,14 @@ const ImageGrid = ({ items, setSource, source, player }) => {
     //   .catch((e) => console.log(e));
   };
 
+  const addItemToQueue = (item, idx) => {
+    const {
+      id: { S: itemId },
+    } = item;
+    player.addSongToQueue(itemId);
+    console.log(player.printQueue());
+  };
+
   return (
     <div className={styles["imageGrid"]}>
       {items &&
@@ -34,19 +43,35 @@ const ImageGrid = ({ items, setSource, source, player }) => {
             artist: { S: artistName },
           } = item;
           return (
-            <div
-              key={idx}
-              className={styles["imageGrid-item"]}
-              onClick={() => handleClick(item, idx)}
-            >
+            <div key={idx} className={styles["imageGrid-item"]}>
               <img
                 className={styles["imageGrid-item--img"]}
                 src={item.cover}
                 alt="not found"
+                onClick={() => handleClick(item, idx)}
               />
-              <div className={styles["imageGrid-item--title"]}>{titleName}</div>
-              <div className={styles["imageGrid-item--artist"]}>
-                {artistName}
+              <div className={styles["imageGrid-item__wrapper"]}>
+                <div className={styles["imageGrid-item__wrapper--left"]}>
+                  <div
+                    className={styles["imageGrid-item__wrapper--left--title"]}
+                  >
+                    {titleName}
+                  </div>
+                  <div
+                    className={styles["imageGrid-item__wrapper--left--artist"]}
+                  >
+                    {artistName}
+                  </div>
+                </div>
+                <div className={styles["imageGrid-item__wrapper--right"]}>
+                  <div
+                    className={
+                      styles["imageGrid-item__wrapper--right--addToQueue"]
+                    }
+                  >
+                    <AddToQueue onClick={() => addItemToQueue(item, idx)} />
+                  </div>
+                </div>
               </div>
             </div>
           );

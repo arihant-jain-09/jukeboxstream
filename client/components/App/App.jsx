@@ -38,6 +38,7 @@ const App = ({ items, ...props }) => {
         <Player
           source={source}
           poster="https://image.mux.com/3taBcOqKMfNG029QjBCJMKLviq13OrV6S/thumbnail.jpg"
+          player={player}
         />
       )}
     </div>
