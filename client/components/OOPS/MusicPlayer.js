@@ -8,6 +8,7 @@ module.exports = class MusicPlayer {
     this.musicQ = new Queue();
     this.total_Song_Count = songs ? songs.length : 0;
     this.isPlaying = false;
+    this.currentSong = null;
     if (songs?.length > 0) {
       this.musicQ.append(songs[0]);
     }
@@ -26,7 +27,6 @@ module.exports = class MusicPlayer {
 
   addSongToQueue(id) {
     let exists = false;
-    let src;
     for (let i = 0; i < this.total_Song_Count; i++) {
       if (this.musiclist[i].id.S === id) {
         exists = true;
@@ -55,6 +55,31 @@ module.exports = class MusicPlayer {
     }
   }
 
+  playNextSong() {
+    if (this.musicQ.getSize() > 0) {
+      console.log(this.getCurrentSong());
+      console.log(this.printQueue());
+      // let val = this.musicQ.nextValue(this.currentSong);
+      // this.setCurrentSong(val);
+      // this.isPlaying = true;
+    }
+  }
+
+  playMusicFromQueue() {
+    if (this.musicQ.getSize() > 0) {
+      this.setCurrentSong(this.musicQ.head);
+      this.isPlaying = true;
+    }
+  }
+
+  setCurrentSong(val) {
+    this.currentSong = val;
+  }
+
+  getCurrentSong() {
+    return this.currentSong;
+  }
+
   playSong = async (id, addToQ) => {
     let exists = false;
     let src;
@@ -70,7 +95,8 @@ module.exports = class MusicPlayer {
             console.log("song is present in first half");
             console.log("The song " + this.musiclist[i].title.S);
             if (addToQ) {
-              this.musicQ.append(this.musiclist[i]);
+              let val = this.musicQ.append(this.musiclist[i]);
+              this.setCurrentSong(val);
             }
             this.musiclist = [...this.musiclist, this.musiclist[i]];
             this.isPlaying = true;
@@ -87,8 +113,9 @@ module.exports = class MusicPlayer {
         console.log("Song is present in second half");
         console.log("The song " + this.musiclist[i].title.S);
         if (addToQ) {
-          this.musicQ.append(this.musiclist[i]);
+          let val = this.musicQ.append(this.musiclist[i]);
           this.isPlaying = true;
+          this.setCurrentSong(val);
         }
         return;
       }

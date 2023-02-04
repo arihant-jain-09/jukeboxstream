@@ -21,7 +21,7 @@ export default function Home() {
     <>
       Not signed in <br />
       <button
-        onClick={() => {
+        onClick={(e) => {
           e.preventDefault();
           signIn("cognito", {
             callbackUrl: process.env.NEXTAUTH_URL,

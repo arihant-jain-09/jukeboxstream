@@ -34,6 +34,15 @@ module.exports = class Queue {
     this.size++;
   }
 
+  backValue(currNodeVal) {
+    console.log("---backValue---");
+    // console.log(currNodeVal.prev);
+  }
+
+  nextValue(currNode) {
+    return currNode.next;
+  }
+
   append(value) {
     const node = new Node(value);
     if (this.isEmpty()) {
@@ -45,6 +54,7 @@ module.exports = class Queue {
       this.tail = node;
     }
     this.size++;
+    return node;
   }
 
   removeFromFront() {
@@ -92,12 +102,12 @@ module.exports = class Queue {
       console.log("List is empty");
     } else {
       let curr = this.tail;
-      let list = "";
+      let list = [];
       while (curr) {
-        list += `${curr.value}<->`;
+        list.push(curr.value);
         curr = curr.prev;
       }
-      console.log(list);
+      return list;
     }
   }
 };

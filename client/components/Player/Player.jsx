@@ -20,7 +20,7 @@ import Backward from "../../assets/backward.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentTime, SetIsPlaying } from "../../redux/userSlice";
 
-const Player = ({ source, poster }) => {
+const Player = ({ source, poster, player }) => {
   const ref = useRef(null);
   const dispatch = useDispatch();
   const { isPlaying } = useSelector((state) => state.user);
@@ -65,6 +65,7 @@ const Player = ({ source, poster }) => {
               className={
                 styles["player__mediaController__container-top--backwardButton"]
               }
+              onClick={() => player.musicQ.backValue()}
             >
               <Backward />
             </div>
@@ -80,6 +81,7 @@ const Player = ({ source, poster }) => {
               className={
                 styles["player__mediaController__container-top--forwardButton"]
               }
+              onClick={() => player.playNextSong()}
             >
               <Forward />
             </div>

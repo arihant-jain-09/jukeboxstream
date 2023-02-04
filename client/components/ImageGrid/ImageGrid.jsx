@@ -10,6 +10,7 @@ const ImageGrid = ({ items, setSource, source, player }) => {
       id: { S: itemId },
     } = item;
     let src = await player.playSong(itemId, true);
+    console.log(player.getCurrentSong());
     if (src) {
       setSource(src);
       dispatch(SetCurrentSong(item));
