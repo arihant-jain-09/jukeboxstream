@@ -13,6 +13,9 @@ const AppWrapper = (props) => {
     axios
       .get("http://localhost:5000/api/streams/all")
       .then(({ data }) => {
+        data = data.map((item) => {
+          return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+        });
         setItems(data);
         dispatch(SetAllSongs(data));
       })

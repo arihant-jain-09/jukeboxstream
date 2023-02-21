@@ -231,7 +231,7 @@ const Sidebar = ({ signOut, isAdmin }) => {
               </path>
             </svg>
           </div>
-          <div className={styles["sidebar__logo-text"]}>Streamify</div>
+          <div className={styles["sidebar__logo-text"]}>JukeBox</div>
         </div>
         <div className={styles["sidebar__content"]}>
           {sideItems.map((item, idx) => {

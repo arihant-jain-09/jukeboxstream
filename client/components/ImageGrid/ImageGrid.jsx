@@ -1,16 +1,22 @@
 import styles from "./ImageGrid.module.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/userSlice";
 import AddToQueue from "../../assets/addToQueue.svg";
+import Love from "../../assets/love.svg";
+import Play from "../../assets/play.svg";
+import { useState } from "react";
 
 const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
+  const [currentSongId, setCurrentSongId] = useState(null);
+
   const handleClick = async (item, idx) => {
     const {
       id: { S: itemId },
     } = item;
     let src = await player.playSong(itemId, true);
     console.log(player.getCurrentSong());
+    setCurrentSongId(idx);
     if (src) {
       setSource(src);
       dispatch(SetCurrentSong(item));
@@ -26,7 +32,7 @@ const ImageGrid = ({ items, setSource, source, player }) => {
     //   })
     //   .catch((e) => console.log(e));
   };
-
+  console.log(items);
   const addItemToQueue = (item, idx) => {
     const {
       id: { S: itemId },
@@ -42,14 +48,29 @@ const ImageGrid = ({ items, setSource, source, player }) => {
           const {
             title: { S: titleName },
             artist: { S: artistName },
+            duration: { S: duration },
+            views: { S: views },
           } = item;
           return (
-            <div key={idx} className={styles["imageGrid-item"]}>
+            <div
+              key={idx}
+              className={styles["imageGrid-item"]}
+              onClick={() => handleClick(item, idx)}
+            >
+              <div
+                className={`${
+                  currentSongId === idx
+                    ? styles["imageGrid-item--play"]
+                    : styles["imageGrid-item--play"]
+                }`}
+              >
+                <Play />
+              </div>
+
               <img
                 className={styles["imageGrid-item--img"]}
                 src={item.cover}
                 alt="not found"
-                onClick={() => handleClick(item, idx)}
               />
               <div className={styles["imageGrid-item__wrapper"]}>
                 <div className={styles["imageGrid-item__wrapper--left"]}>
@@ -64,7 +85,27 @@ const ImageGrid = ({ items, setSource, source, player }) => {
                     {artistName}
                   </div>
                 </div>
+                <div className={styles["imageGrid-item__wrapper--middle"]}>
+                  <div
+                    className={
+                      styles["imageGrid-item__wrapper--middle--duration"]
+                    }
+                  >
+                    {duration}
+                  </div>
+                  <div
+                    className={styles["imageGrid-item__wrapper--middle--like"]}
+                  >
+                    <Love />
+                  </div>
+                </div>
+
                 <div className={styles["imageGrid-item__wrapper--right"]}>
+                  <div
+                    className={styles["imageGrid-item__wrapper--right--like"]}
+                  >
+                    {views}
+                  </div>
                   <div
                     className={
                       styles["imageGrid-item__wrapper--right--addToQueue"]
