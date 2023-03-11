@@ -34,6 +34,7 @@ export default NextAuth({
         console.log("Account exists");
         // modify token
         token.role = profile["cognito:groups"];
+        token.id = profile.sub;
       }
       return token;
     },
@@ -42,6 +43,7 @@ export default NextAuth({
       if (session.user) {
         // modify session
         session.user.roles = token.role;
+        session.user.id = token.id;
       }
       return session;
     },

@@ -1,14 +1,29 @@
 import styles from "./ImageGrid.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/userSlice";
+import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/itemSlice";
 import AddToQueue from "../../assets/addToQueue.svg";
 import Love from "../../assets/love.svg";
+import FilledLove from "../../assets/filledLove.svg";
 import Play from "../../assets/play.svg";
+import Pause from "../../assets/pause.svg";
 import { useState } from "react";
+import client from "../../services/redis";
+import { itemsKey, userLikesKey } from "../../utils/redis_keys";
+import { useEffect } from "react";
 
 const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
   const [currentSongId, setCurrentSongId] = useState(null);
+  const { isPlaying } = useSelector((state) => state.item);
+  const { id: userId } = useSelector((state) => state.user);
+  const [likeSet, setLikeSet] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const likeSet = await client.smembers(userLikesKey(userId));
+      setLikeSet(likeSet);
+    })();
+  }, []);
 
   const handleClick = async (item, idx) => {
     const {
@@ -32,13 +47,37 @@ const ImageGrid = ({ items, setSource, source, player }) => {
     //   })
     //   .catch((e) => console.log(e));
   };
-  console.log(items);
+  if (items && items.length > 0) console.log(items);
   const addItemToQueue = (item, idx) => {
     const {
       id: { S: itemId },
     } = item;
     player.addSongToQueue(itemId);
     console.log(player.printQueue());
+  };
+
+  const handleLike = async (itemId) => {
+    const result = await client.sadd(userLikesKey(userId), itemId);
+    if (result) {
+      const incrementHash = await client.hincrby(itemsKey(itemId), "likes", 1);
+      if (incrementHash) {
+        console.log("incremented");
+        setLikeSet([...likeSet, +itemId]);
+      } else console.log("not incremented");
+    } else console.log("already present");
+    return;
+  };
+
+  const handleUnlike = async (itemId) => {
+    const result = await client.srem(userLikesKey(userId), itemId);
+    if (result) {
+      const incrementHash = await client.hincrby(itemsKey(itemId), "likes", -1);
+      if (incrementHash) {
+        console.log("decremented");
+        setLikeSet(likeSet.filter((item) => item !== +itemId));
+      } else console.log("not decremented");
+    } else console.log("already absent");
+    return;
   };
 
   return (
@@ -50,21 +89,33 @@ const ImageGrid = ({ items, setSource, source, player }) => {
             artist: { S: artistName },
             duration: { S: duration },
             views: { S: views },
+            id: { S: itemId },
           } = item;
+
           return (
             <div
               key={idx}
               className={styles["imageGrid-item"]}
-              onClick={() => handleClick(item, idx)}
+              // className={`${styles["imageGrid-item"]} ${
+              //   currentSongId === idx && styles["imageGrid-item--disableHover"]
+              // }`}
             >
               <div
-                className={`${
-                  currentSongId === idx
-                    ? styles["imageGrid-item--play"]
-                    : styles["imageGrid-item--play"]
+                className={`${styles["imageGrid-item--play"]} ${
+                  currentSongId === idx &&
+                  styles["imageGrid-item--play--playing"]
                 }`}
               >
-                <Play />
+                {isPlaying && currentSongId === idx ? (
+                  <Pause />
+                ) : (
+                  <Play
+                    onClick={() => {
+                      if (currentSongId === idx) return;
+                      else handleClick(item, idx);
+                    }}
+                  />
+                )}
               </div>
 
               <img
@@ -95,8 +146,13 @@ const ImageGrid = ({ items, setSource, source, player }) => {
                   </div>
                   <div
                     className={styles["imageGrid-item__wrapper--middle--like"]}
+                    onClick={() => {
+                      if (likeSet.includes(+itemId)) {
+                        handleUnlike(itemId);
+                      } else handleLike(itemId);
+                    }}
                   >
-                    <Love />
+                    {likeSet.includes(+itemId) ? <FilledLove /> : <Love />}
                   </div>
                 </div>
 

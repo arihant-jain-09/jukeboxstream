@@ -3,7 +3,7 @@ videos
 audio
 *.pem
 lambda_backup.txt
-
+.real.env
 # Logs
 logs
 *.log

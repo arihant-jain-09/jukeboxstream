@@ -18,12 +18,12 @@ import { useEffect, useRef } from "react";
 import Forward from "../../assets/forward.svg";
 import Backward from "../../assets/backward.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentTime, SetIsPlaying } from "../../redux/userSlice";
+import { SetCurrentTime, SetIsPlaying } from "../../redux/itemSlice";
 
 const Player = ({ source, poster, player }) => {
   const ref = useRef(null);
   const dispatch = useDispatch();
-  const { isPlaying } = useSelector((state) => state.user);
+  const { isPlaying } = useSelector((state) => state.item);
 
   useEffect(() => {
     if (Hls.isSupported()) {

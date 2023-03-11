@@ -6,6 +6,8 @@ import * as fs from "fs";
 import https from "https";
 import path from "path";
 import { Blob } from "buffer";
+import { client } from "../services/redis.js";
+import { itemsKey } from "../utils/redis-keys.js";
 
 const router = express.Router();
 
@@ -42,20 +44,23 @@ router.get("/streams/all", async (req, res) => {
 
 router.get("/streams/:id", async (req, res) => {
   const musicId = req.params.id;
-  console.log(musicId);
-  const command = new GetItemCommand({
-    AttributesToGet: ["s3Name"],
-    TableName: "streams",
-    Key: {
-      id: { S: musicId },
-    },
-  });
+  const Item = await client.hget(itemsKey(musicId), "s3Name");
+  // const command = new GetItemCommand({
+  //   AttributesToGet: ["s3Name"],
+  //   TableName: "streams",
+  //   Key: {
+  //     id: { S: musicId },
+  //   },
+  // });
 
-  const { Item } = await db.send(command);
+  // const { Item } = await db.send(command);
+  // console.log("from dynamodb");
+  // console.log(Item);
   if (Item) {
-    const {
-      s3Name: { S: s3Name },
-    } = Item;
+    // const {
+    //   s3Name: { S: s3Name },
+    // } = Item;
+    const s3Name = Item;
     const folderName = s3Name.substr(0, s3Name.lastIndexOf("."));
     const s3ObjectKey = `${folderName}/${folderName}.m3u8`;
     const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;

@@ -17,6 +17,7 @@
         transform: scale(1.05);
       }
     }
+
     &--play {
       cursor: pointer;
       display: flex;
@@ -41,6 +42,7 @@
       &--playing {
         width: auto;
         opacity: 1;
+        color: $secondary-light-color;
       }
     }
     &:hover &--play {
@@ -72,6 +74,13 @@
         display: flex;
         align-items: center;
         gap: 4rem;
+        &--like {
+          cursor: pointer;
+          transition: all 0.2s ease;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
       }
       &--right {
         margin-left: auto;

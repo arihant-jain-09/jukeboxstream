@@ -46,7 +46,7 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
 };
 
 const Sidebar = ({ signOut, isAdmin }) => {
-  const { isPlaying } = useSelector((state) => state.user);
+  const { isPlaying } = useSelector((state) => state.item);
   const router = useRouter();
   let sideItems;
 
@@ -107,6 +107,9 @@ const Sidebar = ({ signOut, isAdmin }) => {
         {
           Svg: Logout,
           text: "Logout",
+          onClick: () => {
+            signOut();
+          },
           selected: router.pathname === "/logout",
         },
       ],
@@ -173,6 +176,9 @@ const Sidebar = ({ signOut, isAdmin }) => {
         {
           Svg: Logout,
           text: "Logout",
+          onClick: () => {
+            signOut();
+          },
           selected: router.pathname === "/logout",
         },
       ],

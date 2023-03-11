@@ -4,9 +4,10 @@
 /node_modules
 /.pnp
 .pnp.js
-
+.real.env.local
 # testing
 /coverage
+amplify
 
 # next.js
 /.next/

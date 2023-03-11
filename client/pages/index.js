@@ -1,10 +1,13 @@
 import Head from "next/head";
 import { useSession, signIn, signOut } from "next-auth/react";
 import AppWrapper from "../components/App/AppWrapper";
-
+import { useDispatch } from "react-redux";
+import { SetUser } from "../redux/userSlice";
 export default function Home() {
   const { data: session } = useSession();
   if (session) {
+    const dispatch = useDispatch();
+    dispatch(SetUser(session.user));
     return (
       <>
         <Head>
