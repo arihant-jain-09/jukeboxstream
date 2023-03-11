@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { SetUser } from "../redux/userSlice";
 export default function Home() {
   const { data: session } = useSession();
+  const dispatch = useDispatch();
   if (session) {
-    const dispatch = useDispatch();
     dispatch(SetUser(session.user));
     return (
       <>
