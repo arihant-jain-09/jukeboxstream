@@ -18,8 +18,9 @@ const Filter = () => {
         </div>
         {open && (
           <div className={styles["filter__sort-dropdown"]}>
-            {arr.map((item) => (
+            {arr.map((item, idx) => (
               <div
+                key={idx}
                 className={styles["filter__sort-dropdown--item"]}
                 onClick={() => setSelected(item)}
               >

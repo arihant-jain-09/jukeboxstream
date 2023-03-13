@@ -19,8 +19,9 @@ const Genre = () => {
   return (
     <>
       <div className={styles["genre"]}>
-        {genreList.map((genre) => (
+        {genreList.map((genre, idx) => (
           <div
+            key={idx}
             onClick={() => handleGenreClick(genre)}
             className={`${styles["genre__custom"]} ${
               selectedGenre.includes(genre) && styles["genre__custom--selected"]

@@ -35,6 +35,7 @@ const Filter = () => {
         <div className={styles["filter__sort-items"]}>
           {sortList.map((item, idx) => (
             <div
+              key={idx}
               onClick={() => handleSortClick(item, idx)}
               className={`${styles["filter__sort-items--custom"]} ${
                 selectedSort === idx &&
