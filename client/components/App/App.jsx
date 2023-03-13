@@ -7,6 +7,7 @@ import Carousel from "../Carousel/Carousel";
 import Header from "../Header/Header";
 import Player from "../Player/Player";
 import MusicPlayer from "../OOPS/MusicPlayer.js";
+import Filter from "../Filters/Filter";
 
 const App = ({ items, ...props }) => {
   const player = new MusicPlayer(items);
@@ -16,6 +17,7 @@ const App = ({ items, ...props }) => {
     <div className={styles["app"]}>
       <Layout {...props}>
         <Header />
+        <Filter />
         <ImageGrid
           items={items}
           setSource={setSource}

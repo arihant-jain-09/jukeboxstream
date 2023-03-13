@@ -128,6 +128,7 @@ const UploadPage = (props) => {
         s3Name: { S: `${folderName}.webp` },
         artist: { S: artistName },
         genre: { L: genre },
+        // createdAt: { N: Date.now().toString() },
       });
     };
 

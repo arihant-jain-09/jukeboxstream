@@ -1,0 +1,20 @@
+.genre {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  // padding: 0.75rem 2rem;
+  overflow-x: scroll;
+  // margin-bottom: 1rem;
+  &__custom {
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid black;
+    border-radius: 0.25rem;
+
+    &--selected {
+      background-color: #707b83;
+      color: white;
+      border-color: #707b83;
+    }
+  }
+}

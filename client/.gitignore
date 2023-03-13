@@ -8,7 +8,6 @@
 # testing
 /coverage
 amplify
-
 # next.js
 /.next/
 /out/

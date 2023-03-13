@@ -1,0 +1,53 @@
+@import "../../styles/variables";
+.filter {
+  grid-column: 1/-1;
+  display: flex;
+  padding: 0.75rem 2rem;
+  justify-content: space-between;
+  user-select: none;
+  white-space: nowrap;
+  &__sort {
+    position: relative;
+    display: flex;
+    overflow-x: scroll;
+    &-button {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid black;
+      padding: 0 0.75rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      margin-right: 1.5rem;
+    }
+    &-items {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      // padding: 0.75rem 2rem;
+      overflow-x: scroll;
+      &--custom {
+        cursor: pointer;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid black;
+        border-radius: 0.25rem;
+        &--selected {
+          background-color: #707b83;
+          color: white;
+          border-color: #707b83;
+        }
+      }
+    }
+
+    // &-dropdown {
+    //   position: absolute;
+    //   top: 100%;
+    //   background-color: $primary-color;
+    //   border-radius: 0.25rem;
+    //   &--item {
+    //     padding: 0.25rem 1rem;
+    //     cursor: pointer;
+    //   }
+    // }
+  }
+}

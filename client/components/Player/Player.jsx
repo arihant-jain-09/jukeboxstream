@@ -19,12 +19,18 @@ import Forward from "../../assets/forward.svg";
 import Backward from "../../assets/backward.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentTime, SetIsPlaying } from "../../redux/itemSlice";
+import axios from "axios";
+import { INCR_SONG_VIEW } from "../../utils/api-end-points";
+// import ioredis from "ioredis";
 
 const Player = ({ source, poster, player }) => {
   const ref = useRef(null);
   const dispatch = useDispatch();
-  const { isPlaying } = useSelector((state) => state.item);
-
+  const {
+    isPlaying,
+    currentSong: { id: itemId },
+  } = useSelector((state) => state.item);
+  const { id: userId } = useSelector((state) => state.user);
   useEffect(() => {
     if (Hls.isSupported()) {
       const hls = new Hls();
@@ -37,6 +43,8 @@ const Player = ({ source, poster, player }) => {
     return () => {};
   }, [source]);
 
+  // console.log(ref?.current?.currentTime);
+
   return (
     <div className={styles["player"]}>
       <MediaController className={styles["player__mediaController"]} audio>
@@ -45,7 +53,18 @@ const Player = ({ source, poster, player }) => {
           slot="media"
           crossorigin
           poster={poster}
-          onTimeUpdate={(e) => {
+          onTimeUpdate={async (e) => {
+            // console.log(e.target.duration * 0.3);
+            // if (e.target.currentTime > 1) {
+            //   // const check = await client.pfadd(itemByViewsKey(id), userId);
+            //   // console.log(check);
+            //   const { data } = await axios.post(INCR_SONG_VIEW, {
+            //     userId,
+            //     itemId: itemId.S,
+            //   });
+            //   console.log(data);
+            // }
+            console.log(e.target.currentTime);
             dispatch(SetCurrentTime(e.target.currentTime));
           }}
         >

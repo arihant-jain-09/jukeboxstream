@@ -67,6 +67,7 @@ router.put("/upload/details", async (req, res) => {
       s3Name: req.body.s3Name,
       artist: req.body.artist,
       genre: req.body.genre,
+      // createdAt: req.body.createdAt,
     },
   };
 

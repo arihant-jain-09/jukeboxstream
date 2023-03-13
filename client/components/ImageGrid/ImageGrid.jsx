@@ -7,9 +7,13 @@ import FilledLove from "../../assets/filledLove.svg";
 import Play from "../../assets/play.svg";
 import Pause from "../../assets/pause.svg";
 import { useState } from "react";
-import client from "../../services/redis";
-import { itemsKey, userLikesKey } from "../../utils/redis_keys";
 import { useEffect } from "react";
+import axios from "axios";
+import {
+  DECREASE_SONG_LIKES,
+  GET_USER_LIKES,
+  INCREASE_SONG_LIKES,
+} from "../../utils/api-end-points";
 
 const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
@@ -20,8 +24,10 @@ const ImageGrid = ({ items, setSource, source, player }) => {
 
   useEffect(() => {
     (async () => {
-      const likeSet = await client.smembers(userLikesKey(userId));
-      setLikeSet(likeSet);
+      console.log(`${GET_USER_LIKES}/${userId}`);
+      const { data } = await axios.get(`${GET_USER_LIKES}/${userId}`);
+      console.log("result: ", data);
+      setLikeSet(data);
     })();
   }, []);
 
@@ -57,26 +63,16 @@ const ImageGrid = ({ items, setSource, source, player }) => {
   };
 
   const handleLike = async (itemId) => {
-    const result = await client.sadd(userLikesKey(userId), itemId);
-    if (result) {
-      const incrementHash = await client.hincrby(itemsKey(itemId), "likes", 1);
-      if (incrementHash) {
-        console.log("incremented");
-        setLikeSet([...likeSet, +itemId]);
-      } else console.log("not incremented");
-    } else console.log("already present");
-    return;
+    const { data } = await axios.post(INCREASE_SONG_LIKES, { userId, itemId });
+    console.log(data.message);
+    if (data?.message == 1) setLikeSet([...likeSet, itemId]);
   };
 
   const handleUnlike = async (itemId) => {
-    const result = await client.srem(userLikesKey(userId), itemId);
-    if (result) {
-      const incrementHash = await client.hincrby(itemsKey(itemId), "likes", -1);
-      if (incrementHash) {
-        console.log("decremented");
-        setLikeSet(likeSet.filter((item) => item !== +itemId));
-      } else console.log("not decremented");
-    } else console.log("already absent");
+    const { data } = await axios.post(DECREASE_SONG_LIKES, { userId, itemId });
+    console.log(data.message);
+    if (data?.message == 1)
+      setLikeSet(likeSet.filter((item) => item !== itemId));
     return;
   };
 
@@ -146,13 +142,13 @@ const ImageGrid = ({ items, setSource, source, player }) => {
                   </div>
                   <div
                     className={styles["imageGrid-item__wrapper--middle--like"]}
-                    onClick={() => {
-                      if (likeSet.includes(+itemId)) {
+                    onClick={async () => {
+                      if (likeSet.includes(itemId)) {
                         handleUnlike(itemId);
                       } else handleLike(itemId);
                     }}
                   >
-                    {likeSet.includes(+itemId) ? <FilledLove /> : <Love />}
+                    {likeSet.includes(itemId) ? <FilledLove /> : <Love />}
                   </div>
                 </div>
 
