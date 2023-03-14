@@ -32,9 +32,9 @@
         border: 1px solid black;
         border-radius: 0.25rem;
         &--selected {
-          background-color: #707b83;
-          color: white;
-          border-color: #707b83;
+          background-color: $pale-pink;
+          color: $tertiary-color;
+          border-color: $pale-pink;
         }
       }
     }

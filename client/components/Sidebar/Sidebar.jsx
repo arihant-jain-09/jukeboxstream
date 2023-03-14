@@ -12,7 +12,7 @@ import Settings from "../../assets/settings.svg";
 import Logout from "../../assets/logout.svg";
 import Upload from "../../assets/upload.svg";
 import Loading from "../../assets/loading.svg";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
   return (
@@ -46,7 +46,7 @@ const SidebarLogoutItem = ({ Svg, text, signOut }) => {
 };
 
 const Sidebar = ({ signOut, isAdmin }) => {
-  const { isPlaying } = useSelector((state) => state.item);
+  // const { isPlaying } = useSelector((state) => state.item);
   const router = useRouter();
   let sideItems;
 
@@ -195,7 +195,7 @@ const Sidebar = ({ signOut, isAdmin }) => {
           onClick={() => router.push("/")}
         >
           <div className={styles["sidebar__logo-svg"]}>
-            <svg slot="loading" viewBox="-12 -15 48 60">
+            {/* <svg slot="loading" viewBox="-12 -15 48 60">
               <path d="M0 0h4v10H0z">
                 {isPlaying && (
                   <animateTransform
@@ -235,7 +235,7 @@ const Sidebar = ({ signOut, isAdmin }) => {
                   />
                 )}
               </path>
-            </svg>
+            </svg> */}
           </div>
           <div className={styles["sidebar__logo-text"]}>JukeBox</div>
         </div>

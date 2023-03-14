@@ -1,11 +1,24 @@
 @import "./typography/typography";
-$background-color-dark: #1f1d2b;
+
+$pale-green: #b7eed2;
+$pale-yellow: #fbe2a1;
+$pale-pink: #fdd6ce;
+$dark-grey: #3b3d3a;
+
+// $background-color-dark: #1f1d2b;
 $primary-color: #ea7c69;
-$secondary-color: #3cbb6e;
+$secondary-color: $pale-green;
+// $secondary-color: #3cbb6e;
+$secondary-light-1-color: #c6e2d7;
+$secondary-light-2-color: #e2ebe6;
+$tertiary-color: $dark-grey;
+$bg-color: #ecf1ed;
+
 $secondary-light-color: rgb(112, 210, 148);
 $form-bg: #2d303e;
 $text-light: #abbbc2;
 $text-navy: #5b658e;
+$text-color: #747c77;
 $svg-color: #707b83;
 $white: #fff;
 $border-radius: 0.5rem;

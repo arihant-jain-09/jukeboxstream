@@ -1,9 +1,11 @@
+@import "../../styles/variables";
 .layout {
   display: grid;
   grid-template-columns:
-    [full-start sidebar-start] 25rem
+    [full-start sidebar-start] 20rem
+    // [full-start sidebar-start] 25rem
     [sidebar-end content-start] repeat(
-      12,
+      13,
       [col-start] minmax(min-content, 10rem) [col-end]
     )
     minmax(10rem, 1fr) [full-end content-end];
@@ -40,7 +42,8 @@
         minmax(10rem, 1fr);
       grid-auto-rows: min-content;
       padding: 2rem 4rem 4rem 4rem;
-      background: rgb(245, 254, 254);
+      background: $bg-color;
+      // background: rgb(245, 254, 254);
       background: linear-gradient(
         90deg,
         rgba(245, 254, 254, 1) 0%,
