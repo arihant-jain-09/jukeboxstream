@@ -19,14 +19,25 @@ import {
   INCREASE_SONG_LIKES,
 } from "../../utils/api-end-points";
 
-const ImageGrid = ({ items, setSource, source, player }) => {
+const ImageGrid = () => {
   const dispatch = useDispatch();
-  const [currentSongId, setCurrentSongId] = useState(null);
   const { isPlaying, activeSong } = useSelector((state) => state.player);
   const { id: userId } = useSelector((state) => state.user);
   const [likeSet, setLikeSet] = useState([]);
+  const [items, setItems] = useState(null);
 
   useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/streams/all")
+      .then(({ data }) => {
+        data = data.map((item) => {
+          return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+        });
+        setItems(data);
+        dispatch(SetAllSongs(data));
+      })
+      .catch((e) => console.log(e));
+
     (async () => {
       console.log(`${GET_USER_LIKES}/${userId}`);
       const { data } = await axios.get(`${GET_USER_LIKES}/${userId}`);
@@ -35,38 +46,14 @@ const ImageGrid = ({ items, setSource, source, player }) => {
     })();
   }, []);
 
-  const handleClick = async (item, idx) => {
-    const {
-      id: { N: itemId },
-    } = item;
+  const handlePauseSong = async () => {
+    dispatch(SetIsPlaying(false));
+  };
+  const handlePlaySong = async (item) => {
     dispatch(SetActiveSong(item));
     dispatch(SetIsPlaying(true));
-    // let src = await player.playSong(itemId, true);
-    // console.log(player.getCurrentSong());
-    // setCurrentSongId(idx);
-    // if (src) {
-    //   setSource(src);
-    //   dispatch(SetActiveSong(item));
-    //   dispatch(SetCurrentIndex(idx));
-    // }
-
-    // axios
-    //   .get(`http://localhost:5000/api/streams/${itemId}`)
-    //   .then(({ data }) => {
-    //     if ((data.status = 200)) {
-    //       setSource(data.body);
-    //     }
-    //   })
-    //   .catch((e) => console.log(e));
   };
   // if (items && items.length > 0) console.log(items);
-  const addItemToQueue = (item, idx) => {
-    const {
-      id: { N: itemId },
-    } = item;
-    player.addSongToQueue(itemId);
-    console.log(player.printQueue());
-  };
 
   const handleLike = async (itemId) => {
     const { data } = await axios.post(INCREASE_SONG_LIKES, { userId, itemId });
@@ -97,24 +84,27 @@ const ImageGrid = ({ items, setSource, source, player }) => {
           return (
             <div
               key={idx}
-              className={styles["imageGrid-item"]}
-              // className={`${styles["imageGrid-item"]} ${
-              //   currentSongId === idx && styles["imageGrid-item--disableHover"]
-              // }`}
+              className={`${styles["imageGrid-item"]} ${
+                activeSong?.id?.N === itemId &&
+                styles["imageGrid-item--disableHover"]
+              }`}
             >
               <div
                 className={`${styles["imageGrid-item--play"]} ${
-                  currentSongId === idx &&
+                  activeSong?.id?.N === itemId &&
                   styles["imageGrid-item--play--playing"]
                 }`}
               >
-                {isPlaying && currentSongId === idx ? (
-                  <Pause />
+                {isPlaying && activeSong?.id?.N === itemId ? (
+                  <Pause
+                    onClick={() => {
+                      handlePauseSong();
+                    }}
+                  />
                 ) : (
                   <Play
                     onClick={() => {
-                      if (currentSongId === idx) return;
-                      else handleClick(item, idx);
+                      handlePlaySong(item, itemId);
                     }}
                   />
                 )}
@@ -169,7 +159,7 @@ const ImageGrid = ({ items, setSource, source, player }) => {
                       styles["imageGrid-item__wrapper--right--addToQueue"]
                     }
                   >
-                    <AddToQueue onClick={() => addItemToQueue(item, idx)} />
+                    {/* <AddToQueue onClick={() => addItemToQueue(item, itemId)} /> */}
                   </div>
                 </div>
               </div>

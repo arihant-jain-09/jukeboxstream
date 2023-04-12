@@ -36,6 +36,7 @@ const MusicComponent = () => {
   }, [currentIndex]);
 
   useEffect(() => {
+    console.log("fetch colors");
     (async () => {
       const { data } = await axios.get(
         `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`
@@ -82,22 +83,9 @@ const MusicComponent = () => {
     setBuffered((bufferedEnd / duration) * 100);
   };
 
-  console.log("Buffered: ", buffered);
-
-  console.log(colors?.DarkVibrant);
-  console.log(colors?.LightVibrant);
-
   return (
     <div
       className={styles["musicComponent"]}
-      // style={{
-      //   background:
-      //     "linear-gradient(
-      //       "to bottom right",
-      //   colors?.DarkVibrant,
-      //   colors?.LightVibrant
-      //     ); ",
-      // }}
       style={{
         background: `linear-gradient(to bottom,  ${colors?.DarkVibrant} 0%,${colors?.LightVibrant} 100%)`,
       }}

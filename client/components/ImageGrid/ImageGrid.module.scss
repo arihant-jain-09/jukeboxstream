@@ -9,6 +9,10 @@
     overflow: hidden;
     display: flex;
     transition: all 1s ease;
+    &--disableHover &--play {
+      animation: none !important;
+    }
+
     img {
       width: 4rem;
       height: 100%;
@@ -19,6 +23,7 @@
     }
 
     &--play {
+      z-index: 1000;
       cursor: pointer;
       display: flex;
       align-items: center;

@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { useSession, signIn, signOut } from "next-auth/react";
-import AppWrapper from "../components/App/AppWrapper";
 import { useDispatch } from "react-redux";
 import { SetUser } from "../redux/userSlice";
+import App from "../components/App/App";
 export default function Home() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <AppWrapper />
+        <App />
       </>
     );
   }
