@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { SetAllSongs } from "../../redux/itemSlice";
+import { SetAllSongs } from "../../redux/features/playerSlice";
 import App from "./App";
 import { useEffect } from "react";
 
@@ -23,6 +23,7 @@ const AppWrapper = (props) => {
     return () => {};
   }, []);
 
+  // return <div></div>;
   return <App {...props} items={items} />;
 };
 

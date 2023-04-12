@@ -18,7 +18,7 @@ import { useEffect, useRef } from "react";
 import Forward from "../../assets/forward.svg";
 import Backward from "../../assets/backward.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentTime, SetIsPlaying } from "../../redux/itemSlice";
+import { SetCurrentTime, SetIsPlaying } from "../../redux/features/playerSlice";
 import axios from "axios";
 import { INCR_SONG_VIEW } from "../../utils/api-end-points";
 // import ioredis from "ioredis";
@@ -28,8 +28,9 @@ const Player = ({ source, poster, player }) => {
   const dispatch = useDispatch();
   const {
     isPlaying,
-    currentSong: { id: itemId },
-  } = useSelector((state) => state.item);
+    activeSong: { id: itemId },
+  } = useSelector((state) => state.player);
+
   const { id: userId } = useSelector((state) => state.user);
   useEffect(() => {
     if (Hls.isSupported()) {

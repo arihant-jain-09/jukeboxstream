@@ -5,6 +5,7 @@ import {
   userLikesKey,
   itemByLikesKey,
   itemByViewsKey,
+  itemColorKey,
 } from "../utils/redis-keys.js";
 
 const router = express.Router();
@@ -17,8 +18,16 @@ router.post("/song/view/incr", async (req, res) => {
   console.log(result);
 });
 
+// ---------------------------Colors--------------------------
+router.get("/song/colors/:songId", async (req, res) => {
+  const songId = +req.params.songId;
+  const result = await client.hgetall(itemColorKey(songId));
+  console.log(result);
+  res.status(200).json(result);
+});
+
+// -----------------------------------------------------------------
 // ---------------------------Filter-------------------------------
-1;
 router.get("/song/filter/:idx", async (req, res) => {
   const idx = +req.params.idx;
   if (idx === 0) {

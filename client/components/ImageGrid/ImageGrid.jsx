@@ -1,6 +1,10 @@
 import styles from "./ImageGrid.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentSong, SetCurrentSongIndex } from "../../redux/itemSlice";
+import {
+  SetActiveSong,
+  SetCurrentIndex,
+  SetIsPlaying,
+} from "../../redux/features/playerSlice";
 import AddToQueue from "../../assets/addToQueue.svg";
 import Love from "../../assets/love.svg";
 import FilledLove from "../../assets/filledLove.svg";
@@ -18,7 +22,7 @@ import {
 const ImageGrid = ({ items, setSource, source, player }) => {
   const dispatch = useDispatch();
   const [currentSongId, setCurrentSongId] = useState(null);
-  const { isPlaying } = useSelector((state) => state.item);
+  const { isPlaying, activeSong } = useSelector((state) => state.player);
   const { id: userId } = useSelector((state) => state.user);
   const [likeSet, setLikeSet] = useState([]);
 
@@ -33,16 +37,18 @@ const ImageGrid = ({ items, setSource, source, player }) => {
 
   const handleClick = async (item, idx) => {
     const {
-      id: { S: itemId },
+      id: { N: itemId },
     } = item;
-    let src = await player.playSong(itemId, true);
-    console.log(player.getCurrentSong());
-    setCurrentSongId(idx);
-    if (src) {
-      setSource(src);
-      dispatch(SetCurrentSong(item));
-      dispatch(SetCurrentSongIndex(idx));
-    }
+    dispatch(SetActiveSong(item));
+    dispatch(SetIsPlaying(true));
+    // let src = await player.playSong(itemId, true);
+    // console.log(player.getCurrentSong());
+    // setCurrentSongId(idx);
+    // if (src) {
+    //   setSource(src);
+    //   dispatch(SetActiveSong(item));
+    //   dispatch(SetCurrentIndex(idx));
+    // }
 
     // axios
     //   .get(`http://localhost:5000/api/streams/${itemId}`)
@@ -53,10 +59,10 @@ const ImageGrid = ({ items, setSource, source, player }) => {
     //   })
     //   .catch((e) => console.log(e));
   };
-  if (items && items.length > 0) console.log(items);
+  // if (items && items.length > 0) console.log(items);
   const addItemToQueue = (item, idx) => {
     const {
-      id: { S: itemId },
+      id: { N: itemId },
     } = item;
     player.addSongToQueue(itemId);
     console.log(player.printQueue());
@@ -85,7 +91,7 @@ const ImageGrid = ({ items, setSource, source, player }) => {
             artist: { S: artistName },
             duration: { S: duration },
             views: { S: views },
-            id: { S: itemId },
+            id: { N: itemId },
           } = item;
 
           return (

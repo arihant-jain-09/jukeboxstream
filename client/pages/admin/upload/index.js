@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Layout from "../../../components/Layout/Layout";
-import MP3 from "../../../components/Upload/mp3";
 import {
   CustomInput,
   FormDetailsWrapper,
@@ -28,7 +27,7 @@ const pageInfo = [
     name: "Upload Audio File",
     required: {
       text: "Files Supported",
-      content: ["mp3"],
+      content: ["mp3,.wav"],
     },
   },
   {
@@ -109,37 +108,54 @@ const UploadPage = (props) => {
   const [artistName, setArtistName] = useState("");
   const [titleName, setTitleName] = useState("");
   const [genreList, setGenreList] = useState("");
-  const [mp3, setMP3] = useState(null);
+  const [music, setmusic] = useState(null);
   const [cover, setCover] = useState(null);
-  console.log(mp3);
+  console.log(music);
   if (status == "loading") {
     return <>...loading</>;
   }
   const groups = session.user.roles;
 
   if (groups && groups.find((e) => e === "admin")) {
-    const AddToDynamoDB = async (folderName) => {
+    // const AddToDynamoDB = async (folderName) => {
+    //   const genre = genreList.split(",").map((x) => {
+    //     return { S: x.toString() };
+    //   });
+    //   await axios.put("http://localhost:5000/api/upload/details", {
+    //     id: { S: Date.now().toString() },
+    //     title: { S: titleName },
+    //     s3Name: { S: `${folderName}.webp` },
+    //     artist: { S: artistName },
+    //     genre: { L: genre },
+    //     // createdAt: { N: Date.now().toString() },
+    //   });
+    // };
+
+    const dynamoJSON = () => {
       const genre = genreList.split(",").map((x) => {
         return { S: x.toString() };
       });
-      await axios.put("http://localhost:5000/api/upload/details", {
-        id: { S: Date.now().toString() },
+      const timestamp = Date.now().toString();
+      return {
+        id: { N: timestamp },
         title: { S: titleName },
-        s3Name: { S: `${folderName}.webp` },
         artist: { S: artistName },
         genre: { L: genre },
-        // createdAt: { N: Date.now().toString() },
-      });
+      };
     };
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       const dateFormat = new Date().toISOString();
-      const mp3ex = mp3.name.substr(mp3.name.lastIndexOf("."));
-      let fileMP3 = mp3.slice(0, mp3.size);
-      let newMP3 = new File([fileMP3], `${titleName}_${dateFormat}${mp3ex}`, {
-        type: `${mp3.type}`,
-      });
+      const musicex = music.name.substr(music.name.lastIndexOf("."));
+      let filemusic = music.slice(0, music.size);
+      let newMusic = new File(
+        [filemusic],
+        `${titleName}_${dateFormat}${musicex}`,
+        {
+          type: `${music.type}`,
+        }
+      );
       let newCover;
       if (cover) {
         const coverex = cover.name.substr(cover.name.lastIndexOf("."));
@@ -153,26 +169,38 @@ const UploadPage = (props) => {
         );
       }
       const folderName = `${titleName}_${dateFormat}`;
-      const coverformData = new FormData();
-      const mp3formData = new FormData();
-      coverformData.append("cover", newCover);
-      if (cover) coverformData.append("name", `${folderName}/${newCover.name}`);
-      mp3formData.append("name", newMP3.name);
-      mp3formData.append("mp3", newMP3);
+      const formData = new FormData();
+      // const musicformData = new FormData();
+      formData.append("cover", newCover);
+      if (cover) {
+        formData.append("cover_path", `${folderName}/${newCover.name}`);
+        formData.append("cover_name", `${newCover.name}`);
+      }
+      formData.append("music_path", `${folderName}/${newMusic.name}`);
+      formData.append("music_name", `${newMusic.name}`);
+      formData.append("music", newMusic);
+      formData.append("dynamo", JSON.stringify(dynamoJSON()));
+      console.log(formData);
+      // Promise.all([
+      //   UploadToS3({
+      //     url: "http://localhost:5000/api/upload/music",
+      //     formData: musicformData,
+      //   }),
+      //   AddToDynamoDB(folderName),
+      //   cover &&
+      //     UploadToS3({
+      //       url: "http://localhost:5000/api/upload/cover",
+      //       formData: formData,
+      //     }),
+      // ]).then((values) => {
+      //   console.log(values);
+      // });
       Promise.all([
         UploadToS3({
-          url: "http://localhost:5000/api/upload/mp3",
-          formData: mp3formData,
+          url: "http://localhost:5000/api/upload/files",
+          formData: formData,
         }),
-        AddToDynamoDB(folderName),
-        cover &&
-          UploadToS3({
-            url: "http://localhost:5000/api/upload/cover",
-            formData: coverformData,
-          }),
-      ]).then((values) => {
-        console.log(values);
-      });
+      ]);
     };
 
     return (
@@ -191,8 +219,8 @@ const UploadPage = (props) => {
           {pageNum == 2 && (
             <UploadFileWrapper
               id="upload"
-              name="mp3"
-              setState={setMP3}
+              name="music"
+              setState={setmusic}
               pageNum={pageNum}
               setPageNum={setPageNum}
               accept={"audio/mpeg"}

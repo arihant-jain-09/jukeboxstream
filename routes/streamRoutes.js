@@ -16,12 +16,11 @@ router.get("/streams/all", async (req, res) => {
     TableName: "streams",
     Select: "ALL_ATTRIBUTES",
   });
-  const { Items: images } = await db.send(command);
-  for (let image of images) {
-    console.log(image);
-    image.s3Name = image.s3Name.S;
-    const folderName = image.s3Name.substr(0, image.s3Name.lastIndexOf("."));
-    const s3ObjectKey = `${folderName}/${image.s3Name}`;
+  const { Items: items } = await db.send(command);
+  for (let item of items) {
+    console.log(item);
+    const name = item.name.S;
+    const s3ObjectKey = `${name}/images/default/${name}.webp`;
     const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;
     const privateKey = fs.readFileSync(
       new URL("../private_key.pem", import.meta.url),
@@ -31,22 +30,22 @@ router.get("/streams/all", async (req, res) => {
     );
     const keyPairId = process.env.CLOUDFRONT_KEY_PAIR_ID;
     const dateLessThan = new Date(new Date().getTime() + 60 * 60000);
-    image.cover = cloudfrontSignedUrl({
+    item.cover = cloudfrontSignedUrl({
       url,
       keyPairId,
       dateLessThan,
       privateKey,
     });
-    console.log(`${folderName}/${image.s3Name}`);
+    console.log(s3ObjectKey);
   }
-  res.send(images);
+  res.send(items);
 });
 
 router.get("/streams/:id", async (req, res) => {
   const musicId = req.params.id;
-  const Item = await client.hget(itemsKey(musicId), "s3Name");
+  const Item = await client.hget(itemsKey(musicId), "name");
   // const command = new GetItemCommand({
-  //   AttributesToGet: ["s3Name"],
+  //   AttributesToGet: ["name"],
   //   TableName: "streams",
   //   Key: {
   //     id: { S: musicId },
@@ -58,11 +57,12 @@ router.get("/streams/:id", async (req, res) => {
   // console.log(Item);
   if (Item) {
     // const {
-    //   s3Name: { S: s3Name },
+    //   name: { S: name },
     // } = Item;
-    const s3Name = Item;
-    const folderName = s3Name.substr(0, s3Name.lastIndexOf("."));
-    const s3ObjectKey = `${folderName}/${folderName}.m3u8`;
+    const name = Item;
+    // const name = name.substr(0, name.lastIndexOf("."));
+    const s3ObjectKey = `${name}/${name}.m3u8`;
+    console.log(s3ObjectKey);
     const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;
     const privateKey = fs.readFileSync(
       new URL("../private_key.pem", import.meta.url),
@@ -81,7 +81,7 @@ router.get("/streams/:id", async (req, res) => {
     let response = {};
 
     function signed(url) {
-      const pathInS3 = `${folderName}/${url}`;
+      const pathInS3 = `${name}/${url}`;
       const tsSigned = `${process.env.CLOUDFRONT_DOMAIN}/${pathInS3}`;
       const time = new Date(new Date().getTime() + 60 * 60 * 60000);
       let signedUrl = cloudfrontSignedUrl({

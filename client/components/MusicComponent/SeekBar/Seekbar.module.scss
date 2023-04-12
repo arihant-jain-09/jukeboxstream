@@ -1,0 +1,117 @@
+@import "../../../styles/variables";
+.seekbar {
+  display: flex;
+  align-items: center;
+  // @media screen and (-webkit-min-device-pixel-ratio: 0) {
+  //   input[type="range"] {
+  //     overflow: hidden;
+  //     // width: 100%;
+  //     -webkit-appearance: none;
+  //     // background-color: #9a905d;
+  //   }
+
+  //   input[type="range"]::-webkit-slider-runnable-track {
+  //     height: 10px;
+  //     -webkit-appearance: none;
+  //     color: #13bba4;
+  //     margin-top: -1px;
+  //   }
+
+  //   input[type="range"]::-webkit-slider-thumb {
+  //     width: 10px;
+  //     -webkit-appearance: none;
+  //     height: 10px;
+  //     cursor: ew-resize;
+  //     background: #434343;
+  //     box-shadow: -80px 0 0 80px #43e5f7;
+  //   }
+  // }
+  // /** FF*/
+  // input[type="range"]::-moz-range-progress {
+  //   background-color: #43e5f7;
+  // }
+  // input[type="range"]::-moz-range-track {
+  //   background-color: #9a905d;
+  // }
+  // /* IE*/
+  // input[type="range"]::-ms-fill-lower {
+  //   background-color: #43e5f7;
+  // }
+  // input[type="range"]::-ms-fill-upper {
+  //   background-color: #9a905d;
+  // }
+
+  // input[type="range"] {
+  //   appearance: none;
+  //   -webkit-appearance: none;
+  //   cursor: pointer;
+  //   width: 100%;
+  //   height: 0.5rem;
+  //   // background: transparent;
+  //   outline: none;
+  //   opacity: 0.7;
+  //   -webkit-transition: 0.2s;
+  //   transition: opacity 0.2s;
+  // }
+
+  // input[type="range"]::-webkit-slider-thumb {
+  //   -webkit-appearance: none; /* Override default look */
+  //   appearance: none;
+  //   background-color: $secondary-light-color;
+  //   height: 1.5rem;
+  //   width: 1.5rem;
+  //   border-radius: 50%;
+  // }
+
+  // /* slider thumb */
+  // input[type="range"]::-moz-range-thumb {
+  //   border: none; /*Removes extra border that FF applies*/
+  //   border-radius: 0; /*Removes default border-radius that FF applies*/
+
+  //   /*custom styles*/
+  //   background-color: #5cd5eb;
+  //   height: 2rem;
+  //   width: 1rem;
+  // }
+
+  // input[type="range"]:focus::-moz-range-thumb {
+  //   border: 1px solid #053a5f;
+  //   outline: 3px solid #053a5f;
+  //   outline-offset: 0.125rem;
+  // }
+
+  // // input[type="range"]::-webkit-slider-runnable-track {
+  // //   height: 8px;
+  // //   background: linear-gradient(
+  // //     to right,
+  // //     #4caf50 0%,
+  // //     #4caf50 calc(50% - 2px),
+  // //     #ccc calc(50% - 2px),
+  // //     #ccc 100%
+  // //   );
+  // // }
+
+  // input[type="range"]::-webkit-slider-thumb:active {
+  //   box-shadow: 0px 0px 6px #999;
+  // }
+
+  // input[type="range"]:focus {
+  //   opacity: 1;
+  // }
+  // // /* Styles for the buffered part of the input range slider */
+  // // input[type="range"]::-webkit-slider-thumb {
+  // //   background-color: rgba(255, 255, 255, 0.5);
+  // // }
+
+  // // input[type=range]::-webkit-slider-thumb {
+  // //   box-shadow: 1px 1px 1px #000000;
+  // //   border: 1px solid #000000;
+  // //   height: 30px;
+  // //   width: 15px;
+  // //   border-radius: 5px;
+  // //   background: #FFFFFF;
+  // //   cursor: pointer;
+  // //   -webkit-appearance: none;
+  // //   margin-top: -11px;
+  // // }
+}
