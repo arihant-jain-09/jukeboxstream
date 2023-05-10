@@ -6,8 +6,10 @@ import Backward from "../../../assets/backward.svg";
 import Play from "../../../assets/play.svg";
 import Pause from "../../../assets/pause.svg";
 import Shuffle from "../../../assets/shuffle.svg";
+import styled from "styled-components";
 
 const Controls = ({
+  colors,
   isPlaying,
   repeat,
   setRepeat,
@@ -18,32 +20,74 @@ const Controls = ({
   handlePrevSong,
   handleNextSong,
 }) => {
-  console.log(isPlaying);
+  // console.log(colors.Vibrant);
+  const SvgWrapper = styled.div`
+    padding: 0.1rem;
+    cursor: pointer;
+    &:hover svg {
+      fill: ${colors.DarkVibrant};
+      path {
+        color: ${colors.DarkVibrant};
+      }
+    }
+  `;
+
   return (
     <div className={styles["controls"]}>
-      <Repeat
-        width="20"
-        height="20"
-        color={repeat ? "red" : "white"}
+      <SvgWrapper
+        className={styles["controls__svgWrapper"]}
+        other={true}
         onClick={() => setRepeat((prev) => !prev)}
-        className="hidden sm:block cursor-pointer"
-      />
+      >
+        <Repeat
+          width="20"
+          height="20"
+          color={repeat ? colors.DarkVibrant : "white"}
+          className="hidden sm:block cursor-pointer"
+        />
+      </SvgWrapper>
+      <SvgWrapper
+        className={styles["controls__svgWrapper"]}
+        onClick={handlePrevSong}
+      >
+        <Backward width="20" height="20" fill="#FFF" />
+      </SvgWrapper>
+
       {/* {currentSongs?.length && ( */}
-      <Backward width="20" height="20" fill="#FFF" onClick={handlePrevSong} />
+
       {/* )} */}
       {isPlaying ? (
-        <Pause width="20" color="#FFF" onClick={handlePlayPause} />
+        <SvgWrapper
+          className={styles["controls__svgWrapper"]}
+          onClick={handlePlayPause}
+        >
+          <Pause width="20" color="#FFF" />
+        </SvgWrapper>
       ) : (
-        <Play height="20" color="#FFF" onClick={handlePlayPause} />
+        <SvgWrapper
+          className={styles["controls__svgWrapper"]}
+          onClick={handlePlayPause}
+        >
+          <Play height="20" color="#FFF" />
+        </SvgWrapper>
       )}
       {/* {currentSongs?.length && ( */}
-      <Forward width="20" height="20" fill="#FFF" onClick={handleNextSong} />
-      {/* )} */}
-      <Shuffle
-        color={shuffle ? "red" : "white"}
+      <SvgWrapper
+        className={styles["controls__svgWrapper"]}
+        onClick={handleNextSong}
+      >
+        <Forward width="20" height="20" fill="#FFF" />
+      </SvgWrapper>
+      <SvgWrapper
+        className={styles["controls__svgWrapper"]}
+        other={true}
         onClick={() => setShuffle((prev) => !prev)}
-        className="hidden sm:block cursor-pointer"
-      />
+      >
+        <Shuffle
+          color={shuffle ? colors.DarkVibrant : "white"}
+          // color={shuffle ? "red" : "white"}
+        />
+      </SvgWrapper>
     </div>
   );
 };

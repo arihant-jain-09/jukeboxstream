@@ -1,4 +1,9 @@
 @import "../../../styles/variables";
+
+.time {
+  color: $white;
+  margin: 0 0.5rem;
+}
 .seekbar {
   display: flex;
   align-items: center;

@@ -2,6 +2,7 @@ import styles from "./ImageGrid.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetActiveSong,
+  SetAllSongs,
   SetCurrentIndex,
   SetIsPlaying,
 } from "../../redux/features/playerSlice";

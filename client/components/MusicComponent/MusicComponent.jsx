@@ -45,7 +45,7 @@ const MusicComponent = () => {
       console.log(data);
     })();
     return () => {};
-  }, [activeSong?.id?.S]);
+  }, [activeSong?.id?.N]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
@@ -115,6 +115,7 @@ const MusicComponent = () => {
             repeat={repeat}
             setRepeat={setRepeat}
             shuffle={shuffle}
+            colors={colors}
             setShuffle={setShuffle}
             currentSongs={currentSongs}
             handlePlayPause={handlePlayPause}

@@ -12,6 +12,7 @@ import Settings from "../../assets/settings.svg";
 import Logout from "../../assets/logout.svg";
 import Upload from "../../assets/upload.svg";
 import Loading from "../../assets/loading.svg";
+import Nearby from "../../assets/nearby.svg";
 // import { useSelector } from "react-redux";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
@@ -57,9 +58,17 @@ const Sidebar = ({ signOut, isAdmin }) => {
           Svg: Home,
           text: "Home",
           onClick: () => {
-            console.log("clicked Home");
+            router.push("/");
           },
           selected: router.pathname === "/",
+        },
+        {
+          Svg: Nearby,
+          text: "Nearby",
+          selected: router.pathname === "/Nearby",
+          onClick: () => {
+            router.push("/Nearby");
+          },
         },
         {
           Svg: Trending,

@@ -154,6 +154,7 @@ router.post(
               { isCover: false },
               { isMusic: false, dynamo }
             );
+
             res.send("Failed to upload");
           }
         });

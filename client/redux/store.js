@@ -14,7 +14,7 @@ const makeStore = () =>
       player: PlayerReducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(API.middleware),
+      getDefaultMiddleware().concat(API.middleware).concat(logger),
     // middleware: [logger, API.middleware],
     devTools: true,
   });
