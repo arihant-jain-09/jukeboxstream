@@ -10,6 +10,10 @@ const topic = AddGeoPointOfUser();
 router.post("/location", async (req, res) => {
   console.log(req.body);
   const { latitude, longitude, userId } = req.body;
+  if (!userId) {
+    res.send({ message: "userId is required" });
+    return;
+  }
   const producer = kafka.producer();
 
   producer.on("producer.connect", () => {
