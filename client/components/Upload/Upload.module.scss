@@ -68,3 +68,74 @@
   // width: 50%;
   // height: 50%;
 }
+
+.upload {
+  &--stripperStatus {
+    font-family: $font-secondary;
+    font-weight: 600;
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: space-between;
+    color: #ededed;
+    &--left {
+      &-heading {
+        font-size: $font-size-h4;
+        color: black;
+        grid-column: 1/-1;
+        margin-bottom: 2rem;
+      }
+      &-pages {
+        display: flex;
+        align-items: center;
+        & > :not(:first-child) {
+          margin-left: 1.5rem;
+        }
+        &-svg {
+          cursor: pointer;
+          width: 3rem;
+          height: 3rem;
+          background-color: currentColor;
+          border-radius: 50%;
+          background-color: currentColor;
+          outline: 1px solid currentColor;
+          outline-offset: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &--selected {
+            color: $secondary-light-color;
+          }
+          span {
+            color: black;
+          }
+        }
+      }
+    }
+    &--right {
+      color: black;
+      &-title {
+        font-size: $font-size-h4;
+        margin-bottom: 2rem;
+      }
+      &-content {
+        display: flex;
+        & > *:not(:first-child) {
+          margin-left: 1rem;
+        }
+        &--chip {
+          background-color: #ededed;
+          padding: 1rem 1.25rem;
+        }
+      }
+    }
+  }
+}
+
+.uploadPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &-nextPage {
+    margin-top: 4rem;
+  }
+}

@@ -5,15 +5,76 @@ import { getSignedUrl as cloudfrontSignedUrl } from "@aws-sdk/cloudfront-signer"
 import * as fs from "fs";
 import https from "https";
 import path from "path";
-import { Blob } from "buffer";
 import { client } from "../services/redis.js";
-import { itemsKey } from "../utils/redis-keys.js";
+import { itemsKey, userItemsKey } from "../utils/redis-keys.js";
+import {
+  CognitoIdentityProviderClient,
+  // GetUserCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 const router = express.Router();
+const cognito = new CognitoIdentityProviderClient();
+
+// const getCognitoUserId = async (req, res, next) => {
+//   const token = req.headers.authorization; // Assuming the token is sent in the 'Authorization' header
+//   const params = {
+//     AccessToken: token,
+//   };
+//   try {
+//     const command = new GetUserCommand(params);
+//     const response = await cognito.send(command);
+//     console.log(response);
+//     // req.cognitoUserId = Username; // Store the Cognito user ID in the request object for later use
+//     next();
+//   } catch (error) {
+//     // Handle error (e.g., invalid token)
+//     res.status(401).json({ error: "Invalid token" });
+//   }
+// };
+
+// router.get("/streams", async (req, res) => {
+//   res.send("success");
+// });
+
+router.post("/streams/all", async (req, res) => {
+  // console.log(req.Username);
+  const { userId } = req.body;
+  const command = new ScanCommand({
+    TableName: process.env.DYNAMODB_USER_TABLE_NAME,
+    Select: "ALL_ATTRIBUTES",
+    FilterExpression: "userId = :userID",
+    ExpressionAttributeValues: {
+      ":userID": { S: userId }, // Replace "your_userID" with the specific userID you want to query
+    },
+  });
+  const { Items: items } = await db.send(command);
+  for (let item of items) {
+    console.log(item);
+    const name = item.name.S;
+    const s3ObjectKey = `${userId}/${name}/images/default/${name}.webp`;
+    const url = `${process.env.CLOUDFRONT_USER_DOMAIN}/${s3ObjectKey}`;
+    const privateKey = fs.readFileSync(
+      new URL("../private_key.pem", import.meta.url),
+      {
+        encoding: "utf8",
+      }
+    );
+    const keyPairId = process.env.CLOUDFRONT_KEY_PAIR_ID;
+    const dateLessThan = new Date(new Date().getTime() + 60 * 60000);
+    item.cover = cloudfrontSignedUrl({
+      url,
+      keyPairId,
+      dateLessThan,
+      privateKey,
+    });
+    console.log(s3ObjectKey);
+  }
+  res.send(items);
+});
 
 router.get("/streams/all", async (req, res) => {
   const command = new ScanCommand({
-    TableName: "streams",
+    TableName: process.env.DYNAMODB_TABLE_NAME,
     Select: "ALL_ATTRIBUTES",
   });
   const { Items: items } = await db.send(command);
@@ -43,7 +104,16 @@ router.get("/streams/all", async (req, res) => {
 
 router.get("/streams/:id", async (req, res) => {
   const musicId = req.params.id;
-  const Item = await client.hget(itemsKey(musicId), "name");
+  const userId = req.query.userId;
+  const cloudfrontDomain = userId
+    ? process.env.CLOUDFRONT_USER_DOMAIN
+    : process.env.CLOUDFRONT_DOMAIN;
+  console.log("userId: " + userId);
+  console.log("cloudfrontDomain: " + cloudfrontDomain);
+  const Item = await client.hget(
+    userId ? userItemsKey(userId, musicId) : itemsKey(musicId),
+    "name"
+  );
   // const command = new GetItemCommand({
   //   AttributesToGet: ["name"],
   //   TableName: "streams",
@@ -61,9 +131,11 @@ router.get("/streams/:id", async (req, res) => {
     // } = Item;
     const name = Item;
     // const name = name.substr(0, name.lastIndexOf("."));
-    const s3ObjectKey = `${name}/${name}.m3u8`;
+    const s3ObjectKey = userId
+      ? `${userId}/${name}/${name}.m3u8`
+      : `${name}/${name}.m3u8`;
     console.log(s3ObjectKey);
-    const url = `${process.env.CLOUDFRONT_DOMAIN}/${s3ObjectKey}`;
+    const url = `${cloudfrontDomain}/${s3ObjectKey}`;
     const privateKey = fs.readFileSync(
       new URL("../private_key.pem", import.meta.url),
       {
@@ -78,11 +150,12 @@ router.get("/streams/:id", async (req, res) => {
       dateLessThan,
       privateKey,
     });
+    console.log(m3u8Url);
     let response = {};
 
     function signed(url) {
-      const pathInS3 = `${name}/${url}`;
-      const tsSigned = `${process.env.CLOUDFRONT_DOMAIN}/${pathInS3}`;
+      const pathInS3 = userId ? `${userId}/${name}/${url}` : `${name}/${url}`;
+      const tsSigned = `${cloudfrontDomain}/${pathInS3}`;
       const time = new Date(new Date().getTime() + 60 * 60 * 60000);
       let signedUrl = cloudfrontSignedUrl({
         url: tsSigned,

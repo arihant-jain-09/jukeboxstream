@@ -1,11 +1,14 @@
 import React from "react";
 import Genre from "../Genre/Genre";
 import styles from "./Filter.module.scss";
+import { useDispatch } from "react-redux";
 // import Sort from "../../assets/sort.svg";
 import axios from "axios";
 import { FILTER_SONG_BY } from "../../utils/api-end-points";
+import { SetAllSongs } from "../../redux/features/playerSlice";
 
 const Filter = () => {
+  const dispatch = useDispatch();
   const [selectedSort, setSelectedSort] = React.useState(null);
   const sortList = [
     "Most Views",
@@ -20,6 +23,8 @@ const Filter = () => {
     if (idx == 2) {
       console.log(`${FILTER_SONG_BY}/${idx}`);
       const { data } = await axios.get(`${FILTER_SONG_BY}/${idx}`);
+      // let songs = { ...data, duration: { S: "3:48" }, views: { S: "121k" } };
+      // dispatch(SetAllSongs(songs));
       console.log(data);
     }
   };

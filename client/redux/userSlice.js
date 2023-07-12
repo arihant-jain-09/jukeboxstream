@@ -5,13 +5,16 @@ export const userSlice = createSlice({
   initialState: {
     email: null,
     id: null,
+    accessToken: null,
     location: null,
   },
   reducers: {
     SetUser: (state, action) => {
-      let { email, id } = action.payload;
+      console.log(action.payload);
+      let { email, id, accessToken } = action.payload;
       state.email = email;
       state.id = id;
+      state.accessToken = accessToken;
     },
     SetLocation: (state, action) => {
       state.location = action.payload;

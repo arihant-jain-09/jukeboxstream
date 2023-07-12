@@ -6,9 +6,15 @@ import {
   itemByLikesKey,
   itemByViewsKey,
   itemColorKey,
+  userItemColorKey,
 } from "../utils/redis-keys.js";
 
 const router = express.Router();
+
+router.get("/flushdb", async (req, res) => {
+  const result = await client.flushdb();
+  res.status(200).json(result);
+});
 
 // ---------------------------Hyperloglog--------------------------
 router.post("/song/view/incr", async (req, res) => {
@@ -26,6 +32,14 @@ router.get("/song/colors/:songId", async (req, res) => {
   res.status(200).json(result);
 });
 
+router.post("/song/colors/:songId", async (req, res) => {
+  const { userId } = req.body;
+  const songId = +req.params.songId;
+  const result = await client.hgetall(userItemColorKey(userId, songId));
+  console.log(result);
+  res.status(200).json(result);
+});
+
 // -----------------------------------------------------------------
 // ---------------------------Filter-------------------------------
 router.get("/song/filter/:idx", async (req, res) => {
@@ -38,16 +52,18 @@ router.get("/song/filter/:idx", async (req, res) => {
     res.send("filter by least views");
   } else if (idx === 2) {
     console.log("filter by most likes");
+
     const idByLikes = await client.zrange(
       itemByLikesKey(),
       0,
       -1,
-      "WITHSCORES",
+      // "WITHSCORES",
       "REV",
       "LIMIT",
       0,
       10
     );
+    console.log(idByLikes);
     const results = idByLikes.map((item) => client.hgetall(itemsKey(item)));
     const final = await Promise.all(results);
     res.send(final);

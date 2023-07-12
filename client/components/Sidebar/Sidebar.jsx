@@ -13,6 +13,7 @@ import Logout from "../../assets/logout.svg";
 import Upload from "../../assets/upload.svg";
 import Loading from "../../assets/loading.svg";
 import Nearby from "../../assets/nearby.svg";
+import MySongs from "../../assets/song.svg";
 // import { useSelector } from "react-redux";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
@@ -61,6 +62,22 @@ const Sidebar = ({ signOut, isAdmin }) => {
             router.push("/");
           },
           selected: router.pathname === "/",
+        },
+        {
+          Svg: MySongs,
+          text: "MySongs",
+          onClick: () => {
+            router.push("/mysongs");
+          },
+          selected: router.pathname === "/mysongs",
+        },
+        {
+          Svg: Upload,
+          text: "Upload",
+          onClick: () => {
+            router.push("/upload");
+          },
+          selected: router.pathname === "/upload",
         },
         {
           Svg: Nearby,

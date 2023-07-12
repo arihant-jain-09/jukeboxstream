@@ -11,6 +11,8 @@ export const playerSlice = createSlice({
     isActive: false,
     activeSong: {},
     genreList: [],
+    colors: {},
+    m3u8: {},
   },
   reducers: {
     SetAllSongs: (state, action) => {
@@ -63,6 +65,12 @@ export const playerSlice = createSlice({
     SetCurrentTime: (state, action) => {
       state.currentTime = action.payload;
     },
+    SetColors: (state, action) => {
+      state.colors = action.payload;
+    },
+    SetData: (state, action) => {
+      state.m3u8 = action.payload;
+    },
   },
 });
 
@@ -77,6 +85,8 @@ export const {
   // SetSelectedPlaylistForEdit,
   SetIsPlaying,
   SetCurrentTime,
+  SetColors,
+  SetData,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

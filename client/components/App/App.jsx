@@ -17,15 +17,18 @@ const App = (...props) => {
   const { isPlaying, activeSong } = useSelector((state) => state.player);
 
   return (
-    <div className={styles["app"]}>
-      <div className={styles["layout"]}>
+    <div className="app">
+      <div className="layout">
         <Sidebar {...props} />
-        <div className={styles["layout__content-middle"]}>
+        <div className="layout__content-middle">
           <Header />
           <Filter />
-          <ImageGrid />
+          <ImageGrid
+            apiRoute="http://localhost:5000/api/streams/all"
+            type="GET"
+          />
         </div>
-        <div className={styles["layout__content-right"]}>
+        <div className="layout__content-right">
           <Notifications />
           {activeSong?.title && <MusicComponent />}
         </div>

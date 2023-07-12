@@ -20,24 +20,44 @@ import {
   INCREASE_SONG_LIKES,
 } from "../../utils/api-end-points";
 
-const ImageGrid = () => {
+const ImageGrid = ({ apiRoute, type }) => {
   const dispatch = useDispatch();
   const { isPlaying, activeSong } = useSelector((state) => state.player);
-  const { id: userId } = useSelector((state) => state.user);
+  const { id: userId, accessToken } = useSelector((state) => state.user);
   const [likeSet, setLikeSet] = useState([]);
   const [items, setItems] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/streams/all")
-      .then(({ data }) => {
-        data = data.map((item) => {
-          return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
-        });
-        setItems(data);
-        dispatch(SetAllSongs(data));
-      })
-      .catch((e) => console.log(e));
+    if (type == "GET") {
+      // axios
+      //   .get("http://localhost:5000/api/streams", {
+      //     headers: { Authorization: accessToken },
+      //   })
+      //   .then((resp) => {
+      //     console.log(resp);
+      //   });
+      axios
+        .get(apiRoute)
+        .then(({ data }) => {
+          data = data.map((item) => {
+            return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+          });
+          setItems(data);
+          dispatch(SetAllSongs(data));
+        })
+        .catch((e) => console.log(e));
+    } else {
+      axios
+        .post(apiRoute, { userId })
+        .then(({ data }) => {
+          data = data.map((item) => {
+            return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+          });
+          setItems(data);
+          dispatch(SetAllSongs(data));
+        })
+        .catch((e) => console.log(e));
+    }
 
     (async () => {
       console.log(`${GET_USER_LIKES}/${userId}`);

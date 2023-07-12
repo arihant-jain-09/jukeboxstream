@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 
 const Admin = (props) => {
   const { data: session, status } = useSession();
+  console.log(session);
   if (status == "loading") {
     return <>...loading</>;
   }

@@ -25,9 +25,9 @@ const Controls = ({
     padding: 0.1rem;
     cursor: pointer;
     &:hover svg {
-      fill: ${colors.DarkVibrant};
+      fill: ${colors?.DarkVibrant};
       path {
-        color: ${colors.DarkVibrant};
+        color: ${colors?.DarkVibrant};
       }
     }
   `;

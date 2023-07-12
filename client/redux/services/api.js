@@ -19,6 +19,9 @@ export const API = createApi({
     getSongDetails: builder.query({
       query: ({ id }) => `streams/${id}`,
     }),
+    getUserSongDetails: builder.query({
+      query: ({ id, userId }) => `streams/${id}?userId=${userId}`,
+    }),
     // getSongRelated: builder.query({ query: ({ songid }) => `v1/tracks/related?track_id=${songid}` }),
   }),
 });
@@ -30,5 +33,6 @@ export const {
   //   useGetSongsBySearchQuery,
   //   useGetArtistDetailsQuery,
   useGetSongDetailsQuery,
+  useGetUserSongDetailsQuery,
   //   useGetSongRelatedQuery,
 } = API;

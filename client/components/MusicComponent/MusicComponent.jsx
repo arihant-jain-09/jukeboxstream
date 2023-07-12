@@ -7,13 +7,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
 import Seekbar from "./SeekBar/Seekbar";
-import { useGetSongDetailsQuery } from "../../redux/services/api";
-import { SetIsPlaying } from "../../redux/features/playerSlice";
+import {
+  useGetSongDetailsQuery,
+  useGetUserSongDetailsQuery,
+} from "../../redux/services/api";
+import {
+  SetColors,
+  SetIsPlaying,
+  SetData,
+} from "../../redux/features/playerSlice";
 import axios from "axios";
 
-const MusicComponent = () => {
-  const { activeSong, currentSongs, currentIndex, isActive, isPlaying } =
-    useSelector((state) => state.player);
+const MusicComponent = ({ type }) => {
+  const {
+    activeSong,
+    currentSongs,
+    currentIndex,
+    isActive,
+    isPlaying,
+    colors,
+    m3u8,
+  } = useSelector((state) => state.player);
   const [duration, setDuration] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -22,14 +36,29 @@ const MusicComponent = () => {
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const dispatch = useDispatch();
-  const [colors, setColors] = useState(null);
-  console.log("Music Component");
-  console.log(activeSong);
-  const { data, isFetching, error } = useGetSongDetailsQuery({
-    id: activeSong?.id?.N,
-  });
-  // console.log(data);
+  // const [colors, setColors] = useState(null);
+  const { id: userId, accessToken } = useSelector((state) => state.user);
+  // console.log("Music Component");
+  // console.log(activeSong);
+  // const { data, isFetching, error } = useGetSongDetailsQuery({
+  //   id: activeSong?.id?.N,
+  // });
+  const { data, isFetching, error } =
+    type == "user"
+      ? useGetUserSongDetailsQuery({
+          id: activeSong?.id?.N,
+          userId,
+        })
+      : useGetSongDetailsQuery({
+          id: activeSong?.id?.N,
+        });
   // console.log(error);
+  useEffect(() => {
+    if (data) dispatch(SetData(data));
+    return () => {};
+  }, [data]);
+
+  // console.log(data?.body);
 
   useEffect(() => {
     if (currentSongs.length) dispatch(SetIsPlaying(true));
@@ -37,13 +66,26 @@ const MusicComponent = () => {
 
   useEffect(() => {
     console.log("fetch colors");
-    (async () => {
-      const { data } = await axios.get(
-        `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`
-      );
-      setColors(data);
-      console.log(data);
-    })();
+    if (type == "user") {
+      console.log("user type");
+      (async () => {
+        const { data } = await axios.post(
+          `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`,
+          { userId }
+        );
+        dispatch(SetColors(data));
+        console.log(data);
+      })();
+    } else {
+      (async () => {
+        const { data } = await axios.get(
+          `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`
+        );
+        dispatch(SetColors(data));
+        console.log(data);
+      })();
+    }
+
     return () => {};
   }, [activeSong?.id?.N]);
 
@@ -124,7 +166,7 @@ const MusicComponent = () => {
           />
 
           <Player
-            source={data?.body}
+            source={data?.body || m3u8?.body}
             volume={volume}
             isPlaying={isPlaying}
             seekTime={seekTime}

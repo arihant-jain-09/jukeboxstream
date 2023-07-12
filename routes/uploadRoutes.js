@@ -56,6 +56,10 @@ router.post(
   ]),
   async (req, res) => {
     const producer = kafka.producer();
+    const bucket_name = process.env.S3_BUCKET_NAME;
+    const output_bucket = process.env.S3_OUTPUT_BUCKET_NAME;
+    const dynamoDBTable = process.env.DYNAMODB_TABLE_NAME;
+    const dynamoDominantColors = process.env.DYNAMODB_DOMINANT_TABLE_NAME;
 
     producer.on("producer.connect", () => {
       console.log(`KafkaProvider: connected`);
@@ -70,8 +74,8 @@ router.post(
     if (req.files.cover && req.files.music) {
       try {
         await Promise.all([
-          uploadLoadToS3(req.files.cover[0], "jukeboxstream", cover_path),
-          uploadLoadToS3(req.files.music[0], "jukeboxstream", music_path),
+          uploadLoadToS3(req.files.cover[0], bucket_name, cover_path),
+          uploadLoadToS3(req.files.music[0], bucket_name, music_path),
         ]).then(async ([isCover, isMusic]) => {
           const isCoverSuccess = isCover["$metadata"].httpStatusCode === 200;
           const isMusicSuccess = isMusic["$metadata"].httpStatusCode === 200;
@@ -83,12 +87,20 @@ router.post(
                 isCover: true,
                 S3Name: cover_path,
                 cover_name: cover_name,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
               },
               {
                 isMusic: true,
                 S3Name: music_path,
                 music_name: music_name,
                 dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
               }
             );
             res.send("Uploaded both");
@@ -99,6 +111,10 @@ router.post(
                 isCover: true,
                 S3Name: cover_path,
                 cover_name: cover_name,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
               },
               { isMusic: false, dynamo }
             );
@@ -112,6 +128,10 @@ router.post(
                 S3Name: music_path,
                 music_name: music_name,
                 dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
               }
             );
             res.send("Only Uploaded music");
@@ -145,6 +165,166 @@ router.post(
                 S3Name: music_path,
                 music_name: music_name,
                 dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+              }
+            );
+            res.send("Only Uploaded music");
+          } else {
+            await ProduceMsgToKafka(
+              producer,
+              { isCover: false },
+              { isMusic: false, dynamo }
+            );
+
+            res.send("Failed to upload");
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else res.send(req.files);
+  }
+);
+
+router.post(
+  "/upload/files/:userId",
+  upload.fields([
+    {
+      name: "cover",
+      maxCount: 1,
+    },
+    {
+      name: "music",
+      maxCount: 1,
+    },
+  ]),
+  async (req, res) => {
+    let { userId } = req.params;
+    const producer = kafka.producer();
+    const bucket_name = process.env.S3_USER_BUCKET_NAME;
+    const output_bucket = process.env.S3_USER_OUTPUT_BUCKET_NAME;
+    const dynamoDBTable = process.env.DYNAMODB_USER_TABLE_NAME;
+    const dynamoDominantColors = process.env.DYNAMODB_USER_DOMINANT_TABLE_NAME;
+
+    producer.on("producer.connect", () => {
+      console.log(`KafkaProvider: connected`);
+    });
+    producer.on("producer.disconnect", () => {
+      console.log(`KafkaProvider: disconnected`);
+    });
+    producer.on("producer.network.request_timeout", (payload) => {
+      console.log(`KafkaProvider: request timeout ${payload.clientId}`);
+    });
+    let { cover_path, music_path, cover_name, music_name, dynamo } = req.body;
+    cover_path = `${userId}/${cover_path}`;
+    music_path = `${userId}/${music_path}`;
+    if (req.files.cover && req.files.music) {
+      try {
+        await Promise.all([
+          uploadLoadToS3(req.files.cover[0], bucket_name, cover_path),
+          uploadLoadToS3(req.files.music[0], bucket_name, music_path),
+        ]).then(async ([isCover, isMusic]) => {
+          console.log(userId);
+          const isCoverSuccess = isCover["$metadata"].httpStatusCode === 200;
+          const isMusicSuccess = isMusic["$metadata"].httpStatusCode === 200;
+          await producer.connect();
+          if (isCoverSuccess && isMusicSuccess) {
+            await ProduceMsgToKafka(
+              producer,
+              {
+                isCover: true,
+                S3Name: cover_path,
+                cover_name: cover_name,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+                userId,
+              },
+              {
+                isMusic: true,
+                S3Name: music_path,
+                music_name: music_name,
+                dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+                userId,
+              }
+            );
+            res.send("Uploaded both");
+          } else if (isCoverSuccess) {
+            await ProduceMsgToKafka(
+              producer,
+              {
+                isCover: true,
+                S3Name: cover_path,
+                cover_name: cover_name,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+                userId,
+              },
+              { isMusic: false, dynamo }
+            );
+            res.send("Only Uploaded cover");
+          } else if (isMusicSuccess) {
+            await ProduceMsgToKafka(
+              producer,
+              { isCover: false },
+              {
+                isMusic: true,
+                S3Name: music_path,
+                music_name: music_name,
+                dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+                userId,
+              }
+            );
+            res.send("Only Uploaded music");
+          } else {
+            await ProduceMsgToKafka(
+              producer,
+              { isCover: false },
+              { isMusic: false, dynamo }
+            );
+            res.send("Failed to upload");
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      // console.log(req.files.cover[0].originalname);
+      // console.log(req.files.music[0].originalname);
+    } else if (req.files.music) {
+      try {
+        await Promise.all([
+          uploadLoadToS3(req.files.music[0], "userbox", music_path),
+        ]).then(async ([isMusic]) => {
+          const isMusicSuccess = isMusic["$metadata"].httpStatusCode === 200;
+          await producer.connect();
+          if (isMusicSuccess) {
+            await ProduceMsgToKafka(
+              producer,
+              { isCover: false },
+              {
+                isMusic: true,
+                S3Name: music_path,
+                music_name: music_name,
+                dynamo,
+                bucket_name,
+                output_bucket,
+                dynamoDBTable,
+                dynamoDominantColors,
+                userId,
               }
             );
             res.send("Only Uploaded music");
