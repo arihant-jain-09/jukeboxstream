@@ -1,16 +1,16 @@
 // const BASEAPI = "http://localhost:5000/api";
-const BASEAPI = `${process.env.NEXT_PUBLIC_BASEURL}/api`;
+const BASEAPI = `${process.env.NEXT_PUBLIC_BASEURL}`;
 
 /**
  * REDIS ROUTES
  */
-export const INCREASE_SONG_LIKES = `${BASEAPI}/song/likes/incr`;
-export const DECREASE_SONG_LIKES = `${BASEAPI}/song/likes/decr`;
-export const GET_USER_LIKES = `${BASEAPI}/likes/user`;
+export const INCREASE_SONG_LIKES = `${BASEAPI}/api/song/likes/incr`;
+export const DECREASE_SONG_LIKES = `${BASEAPI}/api/song/likes/decr`;
+export const GET_USER_LIKES = `${BASEAPI}/api/likes/user`;
 
-export const FILTER_SONG_BY = `${BASEAPI}/song/filter`;
+export const FILTER_SONG_BY = `${BASEAPI}/api/song/filter`;
 
-export const INCR_SONG_VIEW = `${BASEAPI}/song/view/incr`;
+export const INCR_SONG_VIEW = `${BASEAPI}/api/song/view/incr`;
 
 // /------------------------------------------------------------/
 
@@ -19,6 +19,6 @@ export const INCR_SONG_VIEW = `${BASEAPI}/song/view/incr`;
  */
 export const BASE_GET_SONG = `${BASEAPI}/streams`;
 export const GET_ALL_SONGS = `${BASEAPI}/streams/all`;
-export const BASE_GET_SONG_COLOR = `${BASEAPI}/song/colors`;
-export const BASE_UPLOAD_IMAGE = `${BASEAPI}/upload/files`;
-export const BASE_LOCATION_ROUTE = `${BASEAPI}/location`;
+export const BASE_GET_SONG_COLOR = `${BASEAPI}/api/song/colors`;
+export const BASE_UPLOAD_IMAGE = `${BASEAPI}/api/upload/files`;
+export const BASE_LOCATION_ROUTE = `${BASEAPI}/api/location`;
