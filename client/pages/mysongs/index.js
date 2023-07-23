@@ -6,6 +6,7 @@ import ImageGrid from "../../components/ImageGrid/ImageGrid";
 import Notifications from "../../components/Notifications/Notifications";
 import MusicComponent from "../../components/MusicComponent/MusicComponent";
 import { useSelector } from "react-redux";
+import { GET_ALL_SONGS } from "../../utils/api-end-points";
 
 const MySongs = (props) => {
   const { isPlaying, activeSong } = useSelector((state) => state.player);
@@ -18,7 +19,7 @@ const MySongs = (props) => {
           <Header />
           <Filter />
           <ImageGrid
-            apiRoute="http://localhost:5000/api/streams/all"
+            apiRoute={GET_ALL_SONGS}
             type="POST"
           />
         </div>

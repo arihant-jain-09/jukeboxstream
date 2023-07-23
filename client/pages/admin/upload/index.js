@@ -1,16 +1,12 @@
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
 import Layout from "../../../components/Layout/Layout";
 import Upload from "../../../components/Upload";
+import { BASE_UPLOAD_IMAGE } from "../../../utils/api-end-points";
+import useCheckAdminStatus from "../../../utils/checkAdminStatus";
 
 const UploadComponent = () => {
-  const { data: session, status } = useSession();
-  if (status == "loading") {
-    return <>...loading</>;
-  }
-  const groups = session.user.roles;
-  if (groups && groups.find((e) => e === "admin")) {
-    return <Upload backRoute="http://localhost:5000/api/upload/files" />;
+  const [isAdmin] = useCheckAdminStatus();
+  if (isAdmin) {
+    return <Upload backRoute={BASE_UPLOAD_IMAGE} />;
   } else {
     return <div>Not an Admin</div>;
   }

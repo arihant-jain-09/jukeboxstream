@@ -17,6 +17,7 @@ import {
   SetData,
 } from "../../redux/features/playerSlice";
 import axios from "axios";
+import { BASE_GET_SONG_COLOR } from "../../utils/api-end-points";
 
 const MusicComponent = ({ type }) => {
   const {
@@ -70,7 +71,7 @@ const MusicComponent = ({ type }) => {
       console.log("user type");
       (async () => {
         const { data } = await axios.post(
-          `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`,
+          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N}`,
           { userId }
         );
         dispatch(SetColors(data));
@@ -79,7 +80,7 @@ const MusicComponent = ({ type }) => {
     } else {
       (async () => {
         const { data } = await axios.get(
-          `http://localhost:5000/api/song/colors/${activeSong?.id?.N}`
+          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N}`
         );
         dispatch(SetColors(data));
         console.log(data);

@@ -12,10 +12,10 @@ import MusicPlayer from "../OOPS/MusicPlayer.js";
 import MusicComponent from "../MusicComponent/MusicComponent";
 import Notifications from "../Notifications/Notifications";
 import { useSelector } from "react-redux";
+import { GET_ALL_SONGS } from "../../utils/api-end-points";
 
 const App = (...props) => {
   const { isPlaying, activeSong } = useSelector((state) => state.player);
-
   return (
     <div className="app">
       <div className="layout">
@@ -24,7 +24,7 @@ const App = (...props) => {
           <Header />
           <Filter />
           <ImageGrid
-            apiRoute="http://localhost:5000/api/streams/all"
+            apiRoute={GET_ALL_SONGS}
             type="GET"
           />
         </div>

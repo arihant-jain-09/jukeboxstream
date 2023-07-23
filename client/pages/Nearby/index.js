@@ -5,6 +5,7 @@ import Button from "../../components/Button/button";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLocation } from "../../redux/userSlice";
+import { BASE_LOCATION_ROUTE } from "../../utils/api-end-points";
 
 const Nearby = (props) => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const Nearby = (props) => {
     if (location) {
       (async () => {
         const { data } = await axios.post(
-          `http://localhost:5000/api/location`,
+          BASE_LOCATION_ROUTE,
           {
             latitude: location.latitude,
             longitude: location.longitude,
