@@ -51,6 +51,7 @@ const Sidebar = ({ signOut, isAdmin }) => {
   // const { isPlaying } = useSelector((state) => state.item);
   const router = useRouter();
   let sideItems;
+  console.log("isAdmin", isAdmin);
 
   const userSideItems = [
     {

@@ -144,6 +144,7 @@ const MusicComponent = ({ type }) => {
       />
       {!isFetching && (
         <div className={styles["musicComponent__player"]}>
+          <div className={styles["musicComponent__player--container"]}>
           <Seekbar
             value={currentTime}
             min="0"
@@ -165,6 +166,7 @@ const MusicComponent = ({ type }) => {
             handlePrevSong={handlePrevSong}
             handleNextSong={handleNextSong}
           />
+          </div>
 
           <Player
             source={data?.body || m3u8?.body}

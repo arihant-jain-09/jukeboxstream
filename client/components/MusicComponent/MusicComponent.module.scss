@@ -4,7 +4,8 @@
   flex-direction: column;
   align-items: center;
   border-radius: $border-radius;
-  padding: 2rem 4rem 4rem 4rem;
+  // padding: 2rem 4rem 4rem 4rem;
+  padding: 2rem 0;
   background: attr(data-muted);
   // background: linear-gradient(
   //   98.3deg,
@@ -13,9 +14,16 @@
   // );
   background-blend-mode: multiply;
   position: relative;
+  @media screen and (max-width: 576px) {
+    flex-direction: row;
+    border-radius: 0
+  }
   &__header {
     color: #fff;
     margin-bottom: 2rem;
+    @media screen and (max-width: 576px) {
+      display: none;
+    }
   }
   &__image {
     width: 100%;
@@ -26,8 +34,17 @@
       object-fit: cover;
       border-radius: 1rem;
     }
+
   }
   &__player {
     width: 100%;
+    &--container{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      @media screen and (max-width: 576px) {
+        flex-direction: column-reverse;
+      }
+    }
   }
 }

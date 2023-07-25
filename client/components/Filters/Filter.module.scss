@@ -6,7 +6,9 @@
   justify-content: space-between;
   user-select: none;
   white-space: nowrap;
+
   &__sort {
+    margin-left: 2rem;
     position: relative;
     display: flex;
     overflow-x: scroll;

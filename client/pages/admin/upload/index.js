@@ -6,7 +6,7 @@ import useCheckAdminStatus from "../../../utils/checkAdminStatus";
 const UploadComponent = () => {
   const [isAdmin] = useCheckAdminStatus();
   if (isAdmin) {
-    return <Upload backRoute={BASE_UPLOAD_IMAGE} />;
+    return <Upload backRoute={BASE_UPLOAD_IMAGE} isAdmin="true" />;
   } else {
     return <div>Not an Admin</div>;
   }

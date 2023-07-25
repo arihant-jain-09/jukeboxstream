@@ -6,14 +6,30 @@
 }
 .seekbar {
   display: flex;
+  justify-content: center;
   align-items: center;
+  padding: 0 2rem;
+  @media screen and (max-width: 992px) {
+    padding: 0 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    margin-right: 1rem;
+  }
+  
+  input[type="range"] {
+    // width: 100%;
+    @media screen and (max-width: 576px) {
+      padding: 0 2rem;
+      margin: 0 .75rem;
+    }
+  }
   // @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  //   input[type="range"] {
-  //     overflow: hidden;
-  //     // width: 100%;
-  //     -webkit-appearance: none;
-  //     // background-color: #9a905d;
-  //   }
+    // input[type="range"] {
+    //   overflow: hidden;
+    //   // width: 100%;
+    //   -webkit-appearance: none;
+    //   // background-color: #9a905d;
+    // }
 
   //   input[type="range"]::-webkit-slider-runnable-track {
   //     height: 10px;

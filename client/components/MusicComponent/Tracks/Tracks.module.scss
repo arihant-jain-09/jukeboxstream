@@ -1,13 +1,33 @@
 .tracks {
+  padding: 0 4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media screen and (max-width: 992px) {
+    padding: 0 3rem;
+  }
+  @media screen and (max-width: 576px) {
+    flex-direction: row;
+    padding:  0 2rem;
+    margin-right: 4rem;
+  }
+  
   &__img {
+    width: 100%;
+    height: 100%;
     img {
       width: 100%;
-      height: 70%;
+      height: 100%;
       object-fit: cover;
       border-radius: 1rem;
+    }
+    @media screen and (max-width: 576px) {
+      width: 8rem;
+      height: 8rem;
+      margin-right: 2rem;
+      img{
+        border-radius: 0;
+      }
     }
   }
   &__text {
@@ -20,5 +40,9 @@
     p {
       margin: 0.5rem 0;
     }
+    @media screen and (max-width: 576px) {
+      align-items: flex-start;
+    }
+
   }
 }

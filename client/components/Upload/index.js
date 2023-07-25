@@ -193,7 +193,7 @@ const UploadPage = (props) => {
   };
 
   return (
-    <Layout {...props} isAdmin="true">
+    <Layout {...props}>
       <UploadFormWrapper handleSubmit={handleSubmit}>
         {pageNum == 1 && (
           <UploadFileWrapper

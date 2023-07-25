@@ -20,6 +20,8 @@ import {
   INCREASE_SONG_LIKES,
 } from "../../utils/api-end-points";
 
+import {API} from 'aws-amplify'
+
 const ImageGrid = ({ apiRoute, type }) => {
   const dispatch = useDispatch();
   const { isPlaying, activeSong } = useSelector((state) => state.player);
@@ -28,6 +30,12 @@ const ImageGrid = ({ apiRoute, type }) => {
   const [items, setItems] = useState(null);
 
   useEffect(() => {
+    // if(process.env.NEXT_PUBLIC_ENV != "dev"){
+      
+    // }
+    // else{
+      
+    // }
     if (type == "GET") {
       // axios
       //   .get("http://localhost:5000/api/streams", {

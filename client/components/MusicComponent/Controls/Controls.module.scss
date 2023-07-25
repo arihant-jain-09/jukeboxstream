@@ -1,6 +1,21 @@
 .controls {
+  padding: 0 4rem;
   margin-top: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 992px) {
+    padding: 0 2rem;
+  }
+  @media screen and (max-width: 860px) {
+    padding: 0 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    justify-content: center;
+    margin-top: 0;
+    margin-bottom: .5rem;
+    & > *:not(:first-child){
+      margin-left: 1rem;
+    }
+  }
 }

@@ -8,6 +8,11 @@ const awsmobile = {
             "name": "streams",
             "endpoint": "https://d01yp3zqae.execute-api.ap-south-1.amazonaws.com/dev",
             "region": "ap-south-1"
+        },
+        {
+            "name": "song",
+            "endpoint": "https://up65sdnxjb.execute-api.ap-south-1.amazonaws.com/dev",
+            "region": "ap-south-1"
         }
     ],
     "aws_cognito_region": "ap-south-1",

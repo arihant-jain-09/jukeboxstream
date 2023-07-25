@@ -9,7 +9,7 @@ export const LayoutContentMiddle = ({ children }) => {
   <div className={styles["layout__content-middle"]}>{children}</div>;
 };
 export const LayoutContentRight = ({ children }) => {
-  <div className={styles["layout__content-middle"]}>{children}</div>;
+  <div className={styles["layout__content-right"]}>{children}</div>;
 };
 const Layout = (props) => {
   return (
