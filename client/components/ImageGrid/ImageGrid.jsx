@@ -21,6 +21,7 @@ import {
 } from "../../utils/api-end-points";
 
 import {API} from 'aws-amplify'
+import { GETAPI, POSTAPI } from "../../utils/callAPI";
 
 const ImageGrid = ({ apiRoute, type }) => {
   const dispatch = useDispatch();
@@ -44,20 +45,29 @@ const ImageGrid = ({ apiRoute, type }) => {
       //   .then((resp) => {
       //     console.log(resp);
       //   });
-      axios
-        .get(apiRoute)
-        .then(({ data }) => {
-          data = data.map((item) => {
-            return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
-          });
-          setItems(data);
-          dispatch(SetAllSongs(data));
-        })
-        .catch((e) => console.log(e));
+      // axios
+      //   .get(apiRoute)
+        // .then(({ data }) => {
+        //   data = data.map((item) => {
+        //     return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+        //   });
+        //   setItems(data);
+        //   dispatch(SetAllSongs(data));
+        // })
+        // .catch((e) => console.log(e));
+      GETAPI(apiRoute,"streams")
+      .then(( data ) => {
+        data = data.map((item) => {
+          return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+        });
+        setItems(data);
+        dispatch(SetAllSongs(data));
+      })
+      .catch((e) => console.log(e));
     } else {
-      axios
-        .post(apiRoute, { userId })
-        .then(({ data }) => {
+      POSTAPI(apiRoute, { userId },"streams")
+        .then(( data ) => {
+          console.log(data);
           data = data.map((item) => {
             return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
           });
