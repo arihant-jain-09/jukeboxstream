@@ -99,30 +99,72 @@ const ImageGrid = ({ apiRoute, type }) => {
   // if (items && items.length > 0) console.log(items);
 
   const handleLike = async (itemId) => {
-    const { data } = await axios.post(INCREASE_SONG_LIKES, { userId, itemId });
-    console.log(data.message);
-    if (data?.message == 1) setLikeSet([...likeSet, itemId]);
+    POSTAPI(INCREASE_SONG_LIKES, { userId, itemId }, 'song')
+      .then((data) => {
+        console.log(data.message);
+        if (data?.message == 1) setLikeSet([...likeSet, itemId]);
+      })
+      .catch((e) => console.log(e));
+
+    // const { data } = await axios.post(INCREASE_SONG_LIKES, { userId, itemId });
+    // console.log(data.message);
+    // if (data?.message == 1) setLikeSet([...likeSet, itemId]);
   };
 
   const handleUnlike = async (itemId) => {
-    const { data } = await axios.post(DECREASE_SONG_LIKES, { userId, itemId });
-    console.log(data.message);
-    if (data?.message == 1)
-      setLikeSet(likeSet.filter((item) => item !== itemId));
-    return;
+    POSTAPI(DECREASE_SONG_LIKES, { userId, itemId }, 'song')
+      .then((data) => {
+        if (data?.message == 1)
+          setLikeSet(likeSet.filter((item) => item !== itemId));
+      })
+      .catch((e) => console.log(e));
+
+    // const { data } = await axios.post(DECREASE_SONG_LIKES, { userId, itemId });
+    // console.log(data.message);
+    // if (data?.message == 1)
+    //   setLikeSet(likeSet.filter((item) => item !== itemId));
+    // return;
   };
 
   return (
     <div className={styles['imageGrid']}>
       {items &&
         items.map((item, idx) => {
-          const {
-            title: { S: titleName },
-            artist: { S: artistName },
-            duration: { S: duration },
-            views: { S: views },
-            id: { N: itemId },
-          } = item;
+          let titleName = '',
+            artistName = '',
+            duration = '',
+            views = '',
+            itemId = '';
+          if (process.env.ENV == 'dev') {
+            const {
+              title: { S: titleNameTemp },
+              artist: { S: artistNameTemp },
+              duration: { S: durationTemp },
+              views: { S: viewsTemp },
+              id: { N: itemIdTemp },
+            } = item;
+
+            // Assign the destructured values to the variables
+            titleName = titleNameTemp;
+            artistName = artistNameTemp;
+            duration = durationTemp;
+            views = viewsTemp;
+            itemId = itemIdTemp;
+          } else {
+            const {
+              title: titleNameTemp,
+              artist: artistNameTemp,
+              duration: { S: durationTemp },
+              views: { S: viewsTemp },
+              id: itemIdTemp,
+            } = item;
+            // Assign the destructured values to the variables
+            titleName = titleNameTemp;
+            artistName = artistNameTemp;
+            duration = durationTemp;
+            views = viewsTemp;
+            itemId = itemIdTemp;
+          }
 
           return (
             <div
