@@ -44,6 +44,7 @@ const MusicComponent = ({ type }) => {
   // const { data, isFetching, error } = useGetSongDetailsQuery({
   //   id: activeSong?.id?.N,
   // });
+  console.log(activeSong);
   const { data, isFetching, error } =
     type == "user"
       ? useGetUserSongDetailsQuery({

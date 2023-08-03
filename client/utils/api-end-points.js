@@ -13,7 +13,7 @@ export const INCR_SONG_VIEW = `${BASEAPI}/api/song/view/incr`;
 export const FILTER_SONG_BY = `${BASEAPI}/api/song/filter`;
 
 // ------------ LIKES ---------------
-export const GET_USER_LIKES = `${BASEAPI}/api/likes/user`;
+export const GET_USER_LIKES = `/api/likes/user`;
 
 // /------------------------------------------------------------/
 

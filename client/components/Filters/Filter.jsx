@@ -28,7 +28,7 @@ const Filter = () => {
       console.log(data);
     }
   };
-  console.log(sortList[selectedSort]);
+  if(selectedSort) console.log(sortList[selectedSort]);
   return (
     <div className={styles["filter"]}>
       <Genre />

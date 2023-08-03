@@ -1,27 +1,26 @@
-import styles from "./ImageGrid.module.scss";
-import { useDispatch, useSelector } from "react-redux";
+import styles from './ImageGrid.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   SetActiveSong,
   SetAllSongs,
   SetCurrentIndex,
   SetIsPlaying,
-} from "../../redux/features/playerSlice";
-import AddToQueue from "../../assets/addToQueue.svg";
-import Love from "../../assets/love.svg";
-import FilledLove from "../../assets/filledLove.svg";
-import Play from "../../assets/play.svg";
-import Pause from "../../assets/pause.svg";
-import { useState } from "react";
-import { useEffect } from "react";
-import axios from "axios";
+} from '../../redux/features/playerSlice';
+import AddToQueue from '../../assets/addToQueue.svg';
+import Love from '../../assets/love.svg';
+import FilledLove from '../../assets/filledLove.svg';
+import Play from '../../assets/play.svg';
+import Pause from '../../assets/pause.svg';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 import {
   DECREASE_SONG_LIKES,
   GET_USER_LIKES,
   INCREASE_SONG_LIKES,
-} from "../../utils/api-end-points";
+} from '../../utils/api-end-points';
 
-import {API} from 'aws-amplify'
-import { GETAPI, POSTAPI } from "../../utils/callAPI";
+import { GETAPI, POSTAPI } from '../../utils/callAPI';
 
 const ImageGrid = ({ apiRoute, type }) => {
   const dispatch = useDispatch();
@@ -32,12 +31,12 @@ const ImageGrid = ({ apiRoute, type }) => {
 
   useEffect(() => {
     // if(process.env.NEXT_PUBLIC_ENV != "dev"){
-      
+
     // }
     // else{
-      
+
     // }
-    if (type == "GET") {
+    if (type == 'GET') {
       // axios
       //   .get("http://localhost:5000/api/streams", {
       //     headers: { Authorization: accessToken },
@@ -47,29 +46,29 @@ const ImageGrid = ({ apiRoute, type }) => {
       //   });
       // axios
       //   .get(apiRoute)
-        // .then(({ data }) => {
-        //   data = data.map((item) => {
-        //     return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
-        //   });
-        //   setItems(data);
-        //   dispatch(SetAllSongs(data));
-        // })
-        // .catch((e) => console.log(e));
-      GETAPI(apiRoute,"streams")
-      .then(( data ) => {
-        data = data.map((item) => {
-          return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
-        });
-        setItems(data);
-        dispatch(SetAllSongs(data));
-      })
-      .catch((e) => console.log(e));
+      // .then(({ data }) => {
+      //   data = data.map((item) => {
+      //     return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+      //   });
+      //   setItems(data);
+      //   dispatch(SetAllSongs(data));
+      // })
+      // .catch((e) => console.log(e));
+      GETAPI(apiRoute, 'streams')
+        .then((data) => {
+          data = data.map((item) => {
+            return { ...item, duration: { S: '3:48' }, views: { S: '121k' } };
+          });
+          setItems(data);
+          dispatch(SetAllSongs(data));
+        })
+        .catch((e) => console.log(e));
     } else {
-      POSTAPI(apiRoute, { userId },"streams")
-        .then(( data ) => {
+      POSTAPI(apiRoute, { userId }, 'streams')
+        .then((data) => {
           console.log(data);
           data = data.map((item) => {
-            return { ...item, duration: { S: "3:48" }, views: { S: "121k" } };
+            return { ...item, duration: { S: '3:48' }, views: { S: '121k' } };
           });
           setItems(data);
           dispatch(SetAllSongs(data));
@@ -78,10 +77,15 @@ const ImageGrid = ({ apiRoute, type }) => {
     }
 
     (async () => {
-      console.log(`${GET_USER_LIKES}/${userId}`);
-      const { data } = await axios.get(`${GET_USER_LIKES}/${userId}`);
-      console.log("result: ", data);
-      setLikeSet(data);
+      // console.log(`${GET_USER_LIKES}/${userId}`);
+      // const { data } = await axios.get(`${GET_USER_LIKES}/${userId}`);
+      // console.log('result: ', data);
+      // setLikeSet(data);
+      GETAPI(GET_USER_LIKES + '/' + userId, 'likes')
+        .then((data) => {
+          setLikeSet(data);
+        })
+        .catch((e) => console.log(e));
     })();
   }, []);
 
@@ -109,7 +113,7 @@ const ImageGrid = ({ apiRoute, type }) => {
   };
 
   return (
-    <div className={styles["imageGrid"]}>
+    <div className={styles['imageGrid']}>
       {items &&
         items.map((item, idx) => {
           const {
@@ -123,15 +127,15 @@ const ImageGrid = ({ apiRoute, type }) => {
           return (
             <div
               key={idx}
-              className={`${styles["imageGrid-item"]} ${
+              className={`${styles['imageGrid-item']} ${
                 activeSong?.id?.N === itemId &&
-                styles["imageGrid-item--disableHover"]
+                styles['imageGrid-item--disableHover']
               }`}
             >
               <div
-                className={`${styles["imageGrid-item--play"]} ${
+                className={`${styles['imageGrid-item--play']} ${
                   activeSong?.id?.N === itemId &&
-                  styles["imageGrid-item--play--playing"]
+                  styles['imageGrid-item--play--playing']
                 }`}
               >
                 {isPlaying && activeSong?.id?.N === itemId ? (
@@ -150,33 +154,33 @@ const ImageGrid = ({ apiRoute, type }) => {
               </div>
 
               <img
-                className={styles["imageGrid-item--img"]}
+                className={styles['imageGrid-item--img']}
                 src={item.cover}
                 alt="not found"
               />
-              <div className={styles["imageGrid-item__wrapper"]}>
-                <div className={styles["imageGrid-item__wrapper--left"]}>
+              <div className={styles['imageGrid-item__wrapper']}>
+                <div className={styles['imageGrid-item__wrapper--left']}>
                   <div
-                    className={styles["imageGrid-item__wrapper--left--title"]}
+                    className={styles['imageGrid-item__wrapper--left--title']}
                   >
                     {titleName}
                   </div>
                   <div
-                    className={styles["imageGrid-item__wrapper--left--artist"]}
+                    className={styles['imageGrid-item__wrapper--left--artist']}
                   >
                     {artistName}
                   </div>
                 </div>
-                <div className={styles["imageGrid-item__wrapper--middle"]}>
+                <div className={styles['imageGrid-item__wrapper--middle']}>
                   <div
                     className={
-                      styles["imageGrid-item__wrapper--middle--duration"]
+                      styles['imageGrid-item__wrapper--middle--duration']
                     }
                   >
                     {duration}
                   </div>
                   <div
-                    className={styles["imageGrid-item__wrapper--middle--like"]}
+                    className={styles['imageGrid-item__wrapper--middle--like']}
                     onClick={async () => {
                       if (likeSet.includes(itemId)) {
                         handleUnlike(itemId);
@@ -187,15 +191,15 @@ const ImageGrid = ({ apiRoute, type }) => {
                   </div>
                 </div>
 
-                <div className={styles["imageGrid-item__wrapper--right"]}>
+                <div className={styles['imageGrid-item__wrapper--right']}>
                   <div
-                    className={styles["imageGrid-item__wrapper--right--like"]}
+                    className={styles['imageGrid-item__wrapper--right--like']}
                   >
                     {views}
                   </div>
                   <div
                     className={
-                      styles["imageGrid-item__wrapper--right--addToQueue"]
+                      styles['imageGrid-item__wrapper--right--addToQueue']
                     }
                   >
                     {/* <AddToQueue onClick={() => addItemToQueue(item, itemId)} /> */}
