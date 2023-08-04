@@ -13,7 +13,6 @@ import Play from '../../assets/play.svg';
 import Pause from '../../assets/pause.svg';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import axios from 'axios';
 import {
   DECREASE_SONG_LIKES,
   GET_USER_LIKES,
@@ -170,17 +169,18 @@ const ImageGrid = ({ apiRoute, type }) => {
             <div
               key={idx}
               className={`${styles['imageGrid-item']} ${
-                activeSong?.id?.N === itemId &&
+                (activeSong?.id?.N === itemId || activeSong?.id === itemId) &&
                 styles['imageGrid-item--disableHover']
               }`}
             >
               <div
                 className={`${styles['imageGrid-item--play']} ${
-                  activeSong?.id?.N === itemId &&
+                  (activeSong?.id?.N === itemId || activeSong?.id === itemId) &&
                   styles['imageGrid-item--play--playing']
                 }`}
               >
-                {isPlaying && activeSong?.id?.N === itemId ? (
+                {isPlaying &&
+                (activeSong?.id?.N === itemId || activeSong?.id === itemId) ? (
                   <Pause
                     onClick={() => {
                       handlePauseSong();

@@ -67,7 +67,6 @@ const MusicComponent = ({ type }) => {
   }, [currentIndex]);
 
   useEffect(() => {
-    console.log('fetch colors');
     if (type == 'user') {
       console.log('user type');
       (async () => {
@@ -91,7 +90,7 @@ const MusicComponent = ({ type }) => {
     }
 
     return () => {};
-  }, [activeSong?.id?.N]);
+  }, [activeSong?.id?.N || activeSong?.id]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
