@@ -7,8 +7,8 @@ console.log(BASEAPI);
  */
 
 // ------------ SONG ---------------
-export const INCREASE_SONG_LIKES = `${BASEAPI}/api/song/likes/incr`;
-export const DECREASE_SONG_LIKES = `${BASEAPI}/api/song/likes/decr`;
+export const INCREASE_SONG_LIKES = `/api/song/likes/incr`;
+export const DECREASE_SONG_LIKES = `/api/song/likes/decr`;
 export const INCR_SONG_VIEW = `${BASEAPI}/api/song/view/incr`;
 export const FILTER_SONG_BY = `${BASEAPI}/api/song/filter`;
 

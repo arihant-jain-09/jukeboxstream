@@ -98,9 +98,8 @@ const ImageGrid = ({ apiRoute, type }) => {
   // if (items && items.length > 0) console.log(items);
 
   const handleLike = async (itemId) => {
-    POSTAPI(INCREASE_SONG_LIKES, { userId, itemId }, 'song')
+    POSTAPI(INCREASE_SONG_LIKES, { userId, itemId }, 'likes')
       .then((data) => {
-        console.log(data.message);
         if (data?.message == 1) setLikeSet([...likeSet, itemId]);
       })
       .catch((e) => console.log(e));
@@ -111,7 +110,7 @@ const ImageGrid = ({ apiRoute, type }) => {
   };
 
   const handleUnlike = async (itemId) => {
-    POSTAPI(DECREASE_SONG_LIKES, { userId, itemId }, 'song')
+    POSTAPI(DECREASE_SONG_LIKES, { userId, itemId }, 'likes')
       .then((data) => {
         if (data?.message == 1)
           setLikeSet(likeSet.filter((item) => item !== itemId));
@@ -124,7 +123,6 @@ const ImageGrid = ({ apiRoute, type }) => {
     //   setLikeSet(likeSet.filter((item) => item !== itemId));
     // return;
   };
-
   return (
     <div className={styles['imageGrid']}>
       {items &&
@@ -224,12 +222,16 @@ const ImageGrid = ({ apiRoute, type }) => {
                   <div
                     className={styles['imageGrid-item__wrapper--middle--like']}
                     onClick={async () => {
-                      if (likeSet.includes(itemId)) {
+                      if (likeSet.map(Number).includes(itemId)) {
                         handleUnlike(itemId);
                       } else handleLike(itemId);
                     }}
                   >
-                    {likeSet.includes(itemId) ? <FilledLove /> : <Love />}
+                    {likeSet.map(Number).includes(itemId) ? (
+                      <FilledLove />
+                    ) : (
+                      <Love />
+                    )}
                   </div>
                 </div>
 
