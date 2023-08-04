@@ -1,23 +1,23 @@
-import React from "react";
-import Controls from "./Controls/Controls";
-import Track from "./Tracks/Tracks";
-import styles from "./MusicComponent.module.scss";
-import Player from "./Player/Player";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { useEffect } from "react";
-import Seekbar from "./SeekBar/Seekbar";
+import React from 'react';
+import Controls from './Controls/Controls';
+import Track from './Tracks/Tracks';
+import styles from './MusicComponent.module.scss';
+import Player from './Player/Player';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Seekbar from './SeekBar/Seekbar';
 import {
   useGetSongDetailsQuery,
   useGetUserSongDetailsQuery,
-} from "../../redux/services/api";
+} from '../../redux/services/api';
 import {
   SetColors,
   SetIsPlaying,
   SetData,
-} from "../../redux/features/playerSlice";
-import { BASE_GET_SONG_COLOR } from "../../utils/api-end-points";
-import { GETAPI, POSTAPI } from "../../utils/callAPI";
+} from '../../redux/features/playerSlice';
+import { BASE_GET_SONG_COLOR } from '../../utils/api-end-points';
+import { GETAPI, POSTAPI } from '../../utils/callAPI';
 
 const MusicComponent = ({ type }) => {
   const {
@@ -44,15 +44,15 @@ const MusicComponent = ({ type }) => {
   // const { data, isFetching, error } = useGetSongDetailsQuery({
   //   id: activeSong?.id?.N,
   // });
-  console.log(activeSong);
+  // console.log(activeSong);
   const { data, isFetching, error } =
-    type == "user"
+    type == 'user'
       ? useGetUserSongDetailsQuery({
-          id: activeSong?.id?.N,
+          id: activeSong?.id?.N || activeSong?.id,
           userId,
         })
       : useGetSongDetailsQuery({
-          id: activeSong?.id?.N,
+          id: activeSong?.id?.N || activeSong?.id,
         });
   // console.log(error);
   useEffect(() => {
@@ -67,17 +67,24 @@ const MusicComponent = ({ type }) => {
   }, [currentIndex]);
 
   useEffect(() => {
-    console.log("fetch colors");
-    if (type == "user") {
-      console.log("user type");
+    console.log('fetch colors');
+    if (type == 'user') {
+      console.log('user type');
       (async () => {
-        const data = await POSTAPI(`${BASE_GET_SONG_COLOR}/${activeSong?.id?.N}`, { userId }, "song")
+        const data = await POSTAPI(
+          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N || activeSong?.id}`,
+          { userId },
+          'song'
+        );
         dispatch(SetColors(data));
         console.log(data);
       })();
     } else {
       (async () => {
-        const data  = await GETAPI(`${BASE_GET_SONG_COLOR}/${activeSong?.id?.N}`, "song")
+        const data = await GETAPI(
+          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N || activeSong?.id}`,
+          'song'
+        );
         dispatch(SetColors(data));
         console.log(data);
       })();
@@ -124,12 +131,12 @@ const MusicComponent = ({ type }) => {
 
   return (
     <div
-      className={styles["musicComponent"]}
+      className={styles['musicComponent']}
       style={{
         background: `linear-gradient(to bottom,  ${colors?.DarkVibrant} 0%,${colors?.LightVibrant} 100%)`,
       }}
     >
-      <div className={styles["musicComponent__header"]}>Now Playing</div>
+      <div className={styles['musicComponent__header']}>Now Playing</div>
       {/* <div className={styles["musicComponent__image"]}>
         <img src="/red.jpg" alt="red" />
       </div> */}
@@ -139,29 +146,29 @@ const MusicComponent = ({ type }) => {
         activeSong={activeSong}
       />
       {!isFetching && (
-        <div className={styles["musicComponent__player"]}>
-          <div className={styles["musicComponent__player--container"]}>
-          <Seekbar
-            value={currentTime}
-            min="0"
-            max={duration}
-            onInput={(event) => setSeekTime(event.target.value)}
-            buffered={buffered}
-            colors={colors}
-          />
-          <Controls
-            isPlaying={isPlaying}
-            isActive={isActive}
-            repeat={repeat}
-            setRepeat={setRepeat}
-            shuffle={shuffle}
-            colors={colors}
-            setShuffle={setShuffle}
-            currentSongs={currentSongs}
-            handlePlayPause={handlePlayPause}
-            handlePrevSong={handlePrevSong}
-            handleNextSong={handleNextSong}
-          />
+        <div className={styles['musicComponent__player']}>
+          <div className={styles['musicComponent__player--container']}>
+            <Seekbar
+              value={currentTime}
+              min="0"
+              max={duration}
+              onInput={(event) => setSeekTime(event.target.value)}
+              buffered={buffered}
+              colors={colors}
+            />
+            <Controls
+              isPlaying={isPlaying}
+              isActive={isActive}
+              repeat={repeat}
+              setRepeat={setRepeat}
+              shuffle={shuffle}
+              colors={colors}
+              setShuffle={setShuffle}
+              currentSongs={currentSongs}
+              handlePlayPause={handlePlayPause}
+              handlePrevSong={handlePrevSong}
+              handleNextSong={handleNextSong}
+            />
           </div>
 
           <Player
