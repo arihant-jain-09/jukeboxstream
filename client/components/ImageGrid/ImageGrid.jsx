@@ -163,6 +163,8 @@ const ImageGrid = ({ apiRoute, type }) => {
             itemId = itemIdTemp;
           }
 
+          console.log(titleName, artistName, duration, views, itemId);
+
           return (
             <div
               key={idx}
@@ -203,12 +205,12 @@ const ImageGrid = ({ apiRoute, type }) => {
                   <div
                     className={styles['imageGrid-item__wrapper--left--title']}
                   >
-                    {titleName}
+                    {titleName.S || titleName}
                   </div>
                   <div
                     className={styles['imageGrid-item__wrapper--left--artist']}
                   >
-                    {artistName}
+                    {artistName.S || artistName}
                   </div>
                 </div>
                 <div className={styles['imageGrid-item__wrapper--middle']}>

@@ -18,6 +18,11 @@ const awsmobile = {
             "name": "likes",
             "endpoint": "https://drivl95k41.execute-api.ap-south-1.amazonaws.com/dev",
             "region": "ap-south-1"
+        },
+        {
+            "name": "upload",
+            "endpoint": "https://yno4evt8p4.execute-api.ap-south-1.amazonaws.com/dev",
+            "region": "ap-south-1"
         }
     ],
     "aws_cognito_region": "ap-south-1",

@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import '../../styles/variables';
 .imageGrid {
   grid-column: 1/-1;
   padding: 2rem;
@@ -14,9 +14,9 @@
     }
 
     img {
-      width: 4rem;
-      height: 100%;
-      border-radius: calc($border-radius * 5);
+      width: 6rem;
+      height: 6rem;
+      border-radius: calc($border-radius * 3);
       &:hover {
         transform: scale(1.05);
       }

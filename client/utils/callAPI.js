@@ -24,8 +24,10 @@ export const POSTAPI = async (path, args, name) => {
     return data;
   } else {
     const arr_of_routes = awsconfig.aws_cloud_logic_custom;
+    console.log(arr_of_routes);
     const endpoint = arr_of_routes.filter((route) => route.name == name)[0]
       .endpoint;
+    console.log(endpoint);
     const { data } = await axios.post(endpoint + path, args);
     return data;
   }

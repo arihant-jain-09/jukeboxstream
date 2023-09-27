@@ -1,46 +1,47 @@
-import React, { useState } from "react";
-import Layout from "../Layout/Layout";
+import React, { useState } from 'react';
+import Layout from '../Layout/Layout';
 import {
   CustomInput,
   FormDetailsWrapper,
   FormGenreWrapper,
   UploadFileWrapper,
-} from "./Upload";
-import { UploadFormWrapper } from "./Upload";
-import CoverImageIcon from "../../assets/cover.svg";
-import axios from "axios";
-import Button from "../Button/button";
-import { s3 } from "../../utils/s3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import styles from "./Upload.module.scss";
+} from './Upload';
+import { UploadFormWrapper } from './Upload';
+import CoverImageIcon from '../../assets/cover.svg';
+import axios from 'axios';
+import Button from '../Button/button';
+import { s3 } from '../../utils/s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import styles from './Upload.module.scss';
+import { POSTAPI } from '../../utils/callAPI';
 
 const pageInfo = [
   {
-    name: "Upload Cover Image",
+    name: 'Upload Cover Image',
     required: {
-      text: "Files Supported",
-      content: ["jpg"],
+      text: 'Files Supported',
+      content: ['jpg'],
     },
   },
   {
-    name: "Upload Audio File",
+    name: 'Upload Audio File',
     required: {
-      text: "Files Supported",
-      content: ["mp3,.wav"],
+      text: 'Files Supported',
+      content: ['mp3,.wav'],
     },
   },
   {
-    name: "Add title and artist name",
+    name: 'Add title and artist name',
     required: {
-      text: "Form required Fields",
-      content: ["Title", "Artist"],
+      text: 'Form required Fields',
+      content: ['Title', 'Artist'],
     },
   },
   {
-    name: "Add Genre",
+    name: 'Add Genre',
     required: {
-      text: "Form required Fields",
-      content: ["Genre"],
+      text: 'Form required Fields',
+      content: ['Genre'],
     },
   },
 ];
@@ -51,8 +52,8 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
       <div
         className={`${
           pageNum == compChildren &&
-          styles["upload--stripperStatus--left-pages-svg--selected"]
-        } ${styles["upload--stripperStatus--left-pages-svg"]}`}
+          styles['upload--stripperStatus--left-pages-svg--selected']
+        } ${styles['upload--stripperStatus--left-pages-svg']}`}
         onClick={onClick}
       >
         <span>{compChildren}</span>
@@ -61,31 +62,31 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
   };
   return (
     <>
-      <div className={styles["upload--stripperStatus"]}>
-        <div className={styles["upload--stripperStatus--left"]}>
-          <div className={styles["upload--stripperStatus--left-heading"]}>
-            {pageInfo[pageNum - 1]["name"]}
+      <div className={styles['upload--stripperStatus']}>
+        <div className={styles['upload--stripperStatus--left']}>
+          <div className={styles['upload--stripperStatus--left-heading']}>
+            {pageInfo[pageNum - 1]['name']}
           </div>
-          <div className={styles["upload--stripperStatus--left-pages"]}>
+          <div className={styles['upload--stripperStatus--left-pages']}>
             <StripperComp onClick={() => setPageNum(1)}>1</StripperComp>
             <StripperComp onClick={() => setPageNum(2)}>2</StripperComp>
             <StripperComp onClick={() => setPageNum(3)}>3</StripperComp>
             <StripperComp onClick={() => setPageNum(4)}>4</StripperComp>
           </div>
         </div>
-        <div className={styles["upload--stripperStatus--right"]}>
-          <div className={styles["upload--stripperStatus--right-title"]}>
-            {pageInfo[pageNum - 1]["required"]["text"]}
+        <div className={styles['upload--stripperStatus--right']}>
+          <div className={styles['upload--stripperStatus--right-title']}>
+            {pageInfo[pageNum - 1]['required']['text']}
           </div>
-          <div className={styles["upload--stripperStatus--right-content"]}>
-            {pageInfo[pageNum - 1]["required"]["content"].map((item, idx) => (
+          <div className={styles['upload--stripperStatus--right-content']}>
+            {pageInfo[pageNum - 1]['required']['content'].map((item, idx) => (
               <div
                 key={idx}
                 className={
-                  styles["upload--stripperStatus--right-content--chip"]
+                  styles['upload--stripperStatus--right-content--chip']
                 }
               >
-                {pageInfo[pageNum - 1]["required"]["content"][idx]}
+                {pageInfo[pageNum - 1]['required']['content'][idx]}
               </div>
             ))}
           </div>
@@ -96,16 +97,22 @@ const StripperStatus = ({ pageNum, children, setPageNum }) => {
 };
 
 const UploadToS3 = async ({ url, formData }) => {
-  await axios.post(url, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  console.log('url for upload', url);
+  POSTAPI(url, formData, 'upload')
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((e) => console.log(e));
+  // await axios.post(url, formData, {
+  //   headers: { "Content-Type": "multipart/form-data" },
+  // });
 };
 
 const UploadPage = (props) => {
   const [pageNum, setPageNum] = useState(1);
-  const [artistName, setArtistName] = useState("");
-  const [titleName, setTitleName] = useState("");
-  const [genreList, setGenreList] = useState("");
+  const [artistName, setArtistName] = useState('');
+  const [titleName, setTitleName] = useState('');
+  const [genreList, setGenreList] = useState('');
   const [music, setmusic] = useState(null);
   const [cover, setCover] = useState(null);
   const { backRoute } = props;
@@ -125,7 +132,7 @@ const UploadPage = (props) => {
   // };
 
   const dynamoJSON = () => {
-    const genre = genreList.split(",").map((x) => {
+    const genre = genreList.split(',').map((x) => {
       return { S: x.toString() };
     });
     const timestamp = Date.now().toString();
@@ -140,7 +147,7 @@ const UploadPage = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const dateFormat = new Date().toISOString();
-    const musicex = music.name.substr(music.name.lastIndexOf("."));
+    const musicex = music.name.substr(music.name.lastIndexOf('.'));
     let filemusic = music.slice(0, music.size);
     let newMusic = new File(
       [filemusic],
@@ -151,7 +158,7 @@ const UploadPage = (props) => {
     );
     let newCover;
     if (cover) {
-      const coverex = cover.name.substr(cover.name.lastIndexOf("."));
+      const coverex = cover.name.substr(cover.name.lastIndexOf('.'));
       let fileCover = cover.slice(0, cover.size);
       newCover = new File([fileCover], `${titleName}_${dateFormat}${coverex}`, {
         type: `${cover.type}`,
@@ -160,15 +167,15 @@ const UploadPage = (props) => {
     const folderName = `${titleName}_${dateFormat}`;
     const formData = new FormData();
     // const musicformData = new FormData();
-    formData.append("cover", newCover);
+    formData.append('cover', newCover);
     if (cover) {
-      formData.append("cover_path", `${folderName}/${newCover.name}`);
-      formData.append("cover_name", `${newCover.name}`);
+      formData.append('cover_path', `${folderName}/${newCover.name}`);
+      formData.append('cover_name', `${newCover.name}`);
     }
-    formData.append("music_path", `${folderName}/${newMusic.name}`);
-    formData.append("music_name", `${newMusic.name}`);
-    formData.append("music", newMusic);
-    formData.append("dynamo", JSON.stringify(dynamoJSON()));
+    formData.append('music_path', `${folderName}/${newMusic.name}`);
+    formData.append('music_name', `${newMusic.name}`);
+    formData.append('music', newMusic);
+    formData.append('dynamo', JSON.stringify(dynamoJSON()));
     console.log(formData);
     // Promise.all([
     //   UploadToS3({
@@ -202,7 +209,7 @@ const UploadPage = (props) => {
             setState={setCover}
             pageNum={pageNum}
             setPageNum={setPageNum}
-            accept={"image/png, image/jpeg"}
+            accept={'image/png, image/jpeg'}
           />
         )}
         {pageNum == 2 && (
@@ -212,15 +219,15 @@ const UploadPage = (props) => {
             setState={setmusic}
             pageNum={pageNum}
             setPageNum={setPageNum}
-            accept={"audio/mpeg"}
+            accept={'audio/mpeg'}
           />
         )}
         {pageNum == 3 && (
-          <div className={styles["uploadPage"]}>
+          <div className={styles['uploadPage']}>
             <FormDetailsWrapper>
               <CustomInput
                 onChange={(e) =>
-                  setTitleName(e.target.value.split(" ").join("_"))
+                  setTitleName(e.target.value.split(' ').join('_'))
                 }
                 value={titleName}
               >
@@ -228,7 +235,7 @@ const UploadPage = (props) => {
               </CustomInput>
               <CustomInput
                 onChange={(e) =>
-                  setArtistName(e.target.value.split(" ").join("_"))
+                  setArtistName(e.target.value.split(' ').join('_'))
                 }
                 value={artistName}
               >
@@ -236,9 +243,9 @@ const UploadPage = (props) => {
               </CustomInput>
             </FormDetailsWrapper>
             <Button
-              type={"text"}
+              type={'text'}
               onClick={() => setPageNum(pageNum + 1)}
-              className={styles["uploadPage-nextPage"]}
+              className={styles['uploadPage-nextPage']}
             >
               Next Page
             </Button>
@@ -246,7 +253,7 @@ const UploadPage = (props) => {
         )}
         {pageNum == 4 && (
           <>
-            <div className={styles["uploadPage"]}>
+            <div className={styles['uploadPage']}>
               <FormGenreWrapper>
                 <CustomInput
                   placeholder="Enter Comma Separated Genre"
@@ -254,7 +261,7 @@ const UploadPage = (props) => {
                   value={genreList}
                 />
               </FormGenreWrapper>
-              <Button type="submit" className={styles["uploadPage-nextPage"]}>
+              <Button type="submit" className={styles['uploadPage-nextPage']}>
                 Submit
               </Button>
             </div>

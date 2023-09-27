@@ -28,7 +28,7 @@ export const GET_ALL_SONGS = `/api/streams/all`;
 export const BASE_GET_SONG_COLOR = `/api/song/colors`;
 
 // ------------ UPLOAD ---------------
-export const BASE_UPLOAD_IMAGE = `${BASEAPI}/api/upload/files`;
+export const BASE_UPLOAD_IMAGE = `/api/upload/files`;
 
 // ------------ LOCATION ---------------
 export const BASE_LOCATION_ROUTE = `${BASEAPI}/api/location`;
