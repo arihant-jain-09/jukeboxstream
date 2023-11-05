@@ -135,9 +135,13 @@ const UploadPage = (props) => {
     const genre = genreList.split(',').map((x) => {
       return { S: x.toString() };
     });
-    const timestamp = Date.now().toString();
+
+    //Indian Timestamp
+    let now = new Date();
+    now.setTime(now.getTime() - now.getTimezoneOffset() * 60000);
+    const timestamp = now.toISOString();
     return {
-      id: { N: timestamp },
+      timestamp: { S: timestamp },
       title: { S: titleName },
       artist: { S: artistName },
       genre: { L: genre },

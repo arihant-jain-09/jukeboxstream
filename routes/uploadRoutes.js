@@ -16,6 +16,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 async function uploadLoadToS3(ObjFile, buket_name, key) {
+  console.log(ObjFile, buket_name, key);
   var params = {
     Body: ObjFile.buffer,
     Bucket: buket_name,
