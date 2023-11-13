@@ -45,14 +45,20 @@ const MusicComponent = ({ type }) => {
   //   id: activeSong?.id?.N,
   // });
   // console.log(activeSong);
+  let timestamp = new Date(
+    activeSong?.timestamp?.S || activeSong?.timestamp
+  ).getTime();
+  const HASHKEY =
+    `${activeSong?.artist.S}_${timestamp}` ||
+    `${activeSong?.artist}_${timestamp}`;
   const { data, isFetching, error } =
     type == 'user'
       ? useGetUserSongDetailsQuery({
-          id: activeSong?.id?.N || activeSong?.id,
+          id: HASHKEY,
           userId,
         })
       : useGetSongDetailsQuery({
-          id: activeSong?.id?.N || activeSong?.id,
+          id: HASHKEY,
         });
   // console.log(error);
   useEffect(() => {
@@ -71,7 +77,7 @@ const MusicComponent = ({ type }) => {
       console.log('user type');
       (async () => {
         const data = await POSTAPI(
-          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N || activeSong?.id}`,
+          `${BASE_GET_SONG_COLOR}/${HASHKEY}`,
           { userId },
           'song'
         );
@@ -80,17 +86,14 @@ const MusicComponent = ({ type }) => {
       })();
     } else {
       (async () => {
-        const data = await GETAPI(
-          `${BASE_GET_SONG_COLOR}/${activeSong?.id?.N || activeSong?.id}`,
-          'song'
-        );
+        const data = await GETAPI(`${BASE_GET_SONG_COLOR}/${HASHKEY}`, 'song');
         dispatch(SetColors(data));
         console.log(data);
       })();
     }
 
     return () => {};
-  }, [activeSong?.id?.N || activeSong?.id]);
+  }, [HASHKEY]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
