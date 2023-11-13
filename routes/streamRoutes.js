@@ -51,6 +51,8 @@ router.post('/streams/all', async (req, res) => {
   for (let item of items) {
     console.log(item);
     const name = item.name.S;
+    let now = new Date(item.timestamp.S);
+    item.timestamp.S = now.getTime();
     const s3ObjectKey = `${userId}/${name}/images/default/${name}.webp`;
     const url = `${process.env.CLOUDFRONT_USER_DOMAIN}/${s3ObjectKey}`;
     const privateKey = fs.readFileSync(
