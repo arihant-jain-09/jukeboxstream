@@ -48,9 +48,11 @@ const MusicComponent = ({ type }) => {
   let timestamp = new Date(
     activeSong?.timestamp?.S || activeSong?.timestamp
   ).getTime();
+  console.log('activeSong', activeSong);
   const HASHKEY =
-    `${activeSong?.artist.S}_${timestamp}` ||
+    `${activeSong?.artist?.S}_${timestamp}` ||
     `${activeSong?.artist}_${timestamp}`;
+  console.log('HASHKEY', HASHKEY);
   const { data, isFetching, error } =
     type == 'user'
       ? useGetUserSongDetailsQuery({
