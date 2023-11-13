@@ -6,4 +6,4 @@ export const itemColorKey = (itemId) => `items:colors#${itemId}`;
 export const userItemsKey = (userId, itemId) =>
   `items:user:${userId}#${itemId}`;
 export const userItemColorKey = (userId, itemId) =>
-  `items:user:${userId}:colors#${itemId}`;
+  `items:colors:user:${userId}#${itemId}`;
