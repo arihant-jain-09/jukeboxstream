@@ -1,15 +1,15 @@
-import { useEffect } from "react";
-import Layout from "../../components/Layout/Layout";
-import styles from "./Nearby.module.scss";
-import Button from "../../components/Button/button";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { SetLocation } from "../../redux/userSlice";
-import { BASE_LOCATION_ROUTE } from "../../utils/api-end-points";
+import { useEffect, useState } from 'react';
+import Layout from '../../components/Layout/Layout';
+import styles from './Nearby.module.scss';
+import Button from '../../components/Button/button';
+import axios from 'axios';
+import { BASE_LOCATION_ROUTE } from '../../utils/api-end-points';
+import { UpdateUserLocation, getUser } from '../../utils/auth';
 
 const Nearby = (props) => {
-  const dispatch = useDispatch();
-  const { id: userId, location } = useSelector((state) => state.user);
+  const user = getUser();
+  const [location, setLocation] = useState(null);
+  console.log(user);
   const getLocation = () => {
     if (navigator.geolocation) {
       var options = {
@@ -21,7 +21,7 @@ const Nearby = (props) => {
         var crd = position.coords;
         console.log(`Latitude : ${crd.latitude}`);
         console.log(`Longitude: ${crd.longitude}`);
-        dispatch(SetLocation(crd));
+        setLocation(crd);
       };
 
       const errorCallback = (error) => {
@@ -34,21 +34,22 @@ const Nearby = (props) => {
         options
       );
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      console.log('Geolocation is not supported by this browser.');
     }
   };
 
   useEffect(() => {
     if (location) {
       (async () => {
-        const { data } = await axios.post(
-          BASE_LOCATION_ROUTE,
-          {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            userId: userId,
-          }
-        );
+        let user = await UpdateUserLocation({
+          lat: location.latitude,
+          long: location.longitude,
+        });
+        const { data } = await axios.post(BASE_LOCATION_ROUTE, {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          userId: user.username,
+        });
         console.log(data);
       })();
     }
@@ -59,7 +60,7 @@ const Nearby = (props) => {
   return (
     <Layout {...props}>
       {!location ? (
-        <div className={styles["Nearby"]}>
+        <div className={styles['Nearby']}>
           <div>You need to enable Location Permission</div>
           <Button onClick={getLocation}>Grant Location</Button>
         </div>

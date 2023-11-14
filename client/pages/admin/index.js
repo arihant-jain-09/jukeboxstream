@@ -1,8 +1,9 @@
-import Layout from "../../components/Layout/Layout";
-import useCheckAdminStatus from '../../utils/checkAdminStatus';
+import Layout from '../../components/Layout/Layout';
+import { useCheckAdminStatus } from '../../utils/auth';
 
 const Admin = (props) => {
   const [isAdmin] = useCheckAdminStatus();
+  console.log(isAdmin);
 
   if (isAdmin) {
     return <Layout {...props} isAdmin="true"></Layout>;
