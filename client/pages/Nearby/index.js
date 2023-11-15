@@ -4,12 +4,13 @@ import styles from './Nearby.module.scss';
 import Button from '../../components/Button/button';
 import axios from 'axios';
 import { BASE_LOCATION_ROUTE } from '../../utils/api-end-points';
-import { UpdateUserLocation, getUser } from '../../utils/auth';
+import { UpdateUserLocation } from '../../utils/auth';
+// import withAuth from '../../utils/withAuth';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 
 const Nearby = (props) => {
-  const user = getUser();
+  console.log(props);
   const [location, setLocation] = useState(null);
-  console.log(user);
   const getLocation = () => {
     if (navigator.geolocation) {
       var options = {
@@ -71,4 +72,4 @@ const Nearby = (props) => {
   );
 };
 
-export default Nearby;
+export default withAuthenticator(Nearby);

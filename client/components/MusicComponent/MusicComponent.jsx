@@ -18,8 +18,9 @@ import {
 } from '../../redux/features/playerSlice';
 import { BASE_GET_SONG_COLOR } from '../../utils/api-end-points';
 import { GETAPI, POSTAPI } from '../../utils/callAPI';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 
-const MusicComponent = ({ type }) => {
+const MusicComponent = ({ type, user }) => {
   const {
     activeSong,
     currentSongs,
@@ -38,7 +39,9 @@ const MusicComponent = ({ type }) => {
   const [shuffle, setShuffle] = useState(false);
   const dispatch = useDispatch();
   // const [colors, setColors] = useState(null);
-  const { id: userId, accessToken } = useSelector((state) => state.user);
+  // const { id: userId, accessToken } = useSelector((state) => state.user);
+  const userId = user?.username;
+  // console.log(user);
   // console.log("Music Component");
   // console.log(activeSong);
   // const { data, isFetching, error } = useGetSongDetailsQuery({
@@ -188,4 +191,4 @@ const MusicComponent = ({ type }) => {
   );
 };
 
-export default MusicComponent;
+export default withAuthenticator(MusicComponent);

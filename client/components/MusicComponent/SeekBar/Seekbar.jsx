@@ -1,8 +1,8 @@
-import React from "react";
-import styles from "./Seekbar.module.scss";
-import styled from "styled-components";
+import React from 'react';
+import styles from './Seekbar.module.scss';
+import styled from 'styled-components';
 
-const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
+const Seekbar = ({ buffered, value, min, max, onInput, colors, ...props }) => {
   // converts the time to format 0:00
   const getTime = (time) =>
     `${Math.floor(time / 60)}:${`0${Math.floor(time % 60)}`.slice(-2)}`;
@@ -11,7 +11,7 @@ const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
   //   console.log("DATA");
   // }}
   const CustomSeekBar = styled.div`
-    input[type="range"] {
+    input[type='range'] {
       overflow: hidden;
       // width: 80px;
       -webkit-appearance: none;
@@ -20,14 +20,14 @@ const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
       border-radius: 10px;
     }
 
-    input[type="range"]::-webkit-slider-runnable-track {
+    input[type='range']::-webkit-slider-runnable-track {
       height: 10px;
       -webkit-appearance: none;
       color: #13bba4;
       margin-top: -1px;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
+    input[type='range']::-webkit-slider-thumb {
       width: 10px;
       -webkit-appearance: none;
       height: 10px;
@@ -39,24 +39,24 @@ const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
     }
 
     /** FF*/
-    input[type="range"]::-moz-range-progress {
+    input[type='range']::-moz-range-progress {
       background-color: ${(props) => props.darkVibrant};
     }
-    input[type="range"]::-moz-range-track {
+    input[type='range']::-moz-range-track {
       background-color: ${(props) => props.lightVibrant};
     }
     /* IE*/
-    input[type="range"]::-ms-fill-lower {
+    input[type='range']::-ms-fill-lower {
       background-color: ${(props) => props.darkVibrant};
     }
-    input[type="range"]::-ms-fill-upper {
+    input[type='range']::-ms-fill-upper {
       background-color: ${(props) => props.lightVibrant};
     }
   `;
 
   return (
     <CustomSeekBar
-      className={styles["seekbar"]}
+      className={styles['seekbar']}
       lightVibrant={colors?.LightVibrant}
       darkVibrant={colors?.DarkVibrant}
       // muted={colors?.Muted}
@@ -65,7 +65,7 @@ const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
       vibrant={colors?.Vibrant}
       colors={colors}
     >
-      <p className={styles["time"]}>{value === 0 ? "0:00" : getTime(value)}</p>
+      <p className={styles['time']}>{value === 0 ? '0:00' : getTime(value)}</p>
       <input
         colors={colors}
         type="range"
@@ -81,7 +81,7 @@ const Seekbar = ({ buffered, value, min, max, onInput, colors }) => {
         //   background: `${colors.Muted}`,
         // }}
       />
-      <p className={styles["time"]}>{max === 0 ? "0:00" : getTime(max)}</p>
+      <p className={styles['time']}>{max === 0 ? '0:00' : getTime(max)}</p>
     </CustomSeekBar>
   );
 };

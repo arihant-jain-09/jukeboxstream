@@ -21,10 +21,10 @@ import {
 
 import { GETAPI, POSTAPI } from '../../utils/callAPI';
 
-const ImageGrid = ({ apiRoute, type }) => {
+const ImageGrid = ({ apiRoute, type, user }) => {
   const dispatch = useDispatch();
   const { isPlaying, activeSong } = useSelector((state) => state.player);
-  const { id: userId, accessToken } = useSelector((state) => state.user);
+  const userId = user?.username;
   const [likeSet, setLikeSet] = useState([]);
   const [items, setItems] = useState(null);
 
