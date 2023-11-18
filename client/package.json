@@ -1,5 +1,5 @@
 {
-  "name": "temp",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,14 +13,14 @@
     "@aws-sdk/client-dynamodb": "^3.289.0",
     "@aws-sdk/client-s3": "^3.234.0",
     "@aws-sdk/cloudfront-signer": "^3.289.0",
-    "@reduxjs/toolkit": "^1.9.1",
+    "@reduxjs/toolkit": "^1.9.3",
     "aws-amplify": "^5.3.4",
     "axios": "^1.2.1",
     "eslint": "8.30.0",
-    "eslint-config-next": "13.0.7",
+    "eslint-config-next": "^13.5",
     "hls.js": "^1.2.9",
     "media-chrome": "^0.17.0",
-    "next": "^13.0.7",
+    "next": "^13.5",
     "next-redux-wrapper": "^8.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -31,6 +31,9 @@
     "styled-components": "^6.0.0-rc.1"
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.5.1"
+    "@svgr/webpack": "^6.5.1",
+    "encoding": "^0.1.13",
+    "eslint": "^8",
+    "eslint-config-next": "^13.5"
   }
 }
