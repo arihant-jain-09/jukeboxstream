@@ -47,9 +47,8 @@ router.post('/streams/all', async (req, res) => {
       ':userID': { S: userId }, // Replace "your_userID" with the specific userID you want to query
     },
   });
-  const { Items: items } = await db.send(command);
-  for (let item of items) {
-    console.log(item);
+  let { Items: items } = await db.send(command);
+  items = items.map((item) => {
     const name = item.name.S;
     let now = new Date(item.timestamp.S);
     item.timestamp.S = now.getTime();
@@ -69,8 +68,31 @@ router.post('/streams/all', async (req, res) => {
       dateLessThan,
       privateKey,
     });
-    console.log(s3ObjectKey);
-  }
+    return { ...item, id: `${item.artist.S}_${item.timestamp.S}` };
+  });
+  // for (let item of items) {
+  //   console.log(item);
+  //   const name = item.name.S;
+  //   let now = new Date(item.timestamp.S);
+  //   item.timestamp.S = now.getTime();
+  //   const s3ObjectKey = `${userId}/${name}/images/default/${name}.webp`;
+  //   const url = `${process.env.CLOUDFRONT_USER_DOMAIN}/${s3ObjectKey}`;
+  //   const privateKey = fs.readFileSync(
+  //     new URL('../private_key.pem', import.meta.url),
+  //     {
+  //       encoding: 'utf8',
+  //     }
+  //   );
+  //   const keyPairId = process.env.CLOUDFRONT_KEY_PAIR_ID;
+  //   const dateLessThan = new Date(new Date().getTime() + 60 * 60000);
+  //   item.cover = cloudfrontSignedUrl({
+  //     url,
+  //     keyPairId,
+  //     dateLessThan,
+  //     privateKey,
+  //   });
+  //   console.log(s3ObjectKey);
+  // }
   res.send(items);
 });
 
@@ -79,8 +101,8 @@ router.get('/streams/all', async (req, res) => {
     TableName: process.env.DYNAMODB_TABLE_NAME,
     Select: 'ALL_ATTRIBUTES',
   });
-  const { Items: items } = await db.send(command);
-  for (let item of items) {
+  let { Items: items } = await db.send(command);
+  items = items.map((item) => {
     console.log(item);
     const name = item.name.S;
     let now = new Date(item.timestamp.S);
@@ -102,7 +124,8 @@ router.get('/streams/all', async (req, res) => {
       privateKey,
     });
     console.log(s3ObjectKey);
-  }
+    return { ...item, id: `${item.artist.S}_${item.timestamp.S}` };
+  });
   res.send(items);
 });
 

@@ -1,5 +1,5 @@
+'use client';
 import React, { useState } from 'react';
-import Layout from '../Layout/Layout';
 import {
   CustomInput,
   FormDetailsWrapper,
@@ -7,11 +7,7 @@ import {
   UploadFileWrapper,
 } from './Upload';
 import { UploadFormWrapper } from './Upload';
-import CoverImageIcon from '@/assets/cover.svg';
-import axios from 'axios';
 import Button from '../Button/button';
-import { s3 } from '@/utils/s3';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import styles from './Upload.module.scss';
 import { POSTAPI } from '@/utils/callAPI';
 
@@ -116,20 +112,8 @@ const UploadPage = (props) => {
   const [music, setmusic] = useState(null);
   const [cover, setCover] = useState(null);
   const { backRoute } = props;
+  console.log(cover);
   console.log(music);
-  // const AddToDynamoDB = async (folderName) => {
-  //   const genre = genreList.split(",").map((x) => {
-  //     return { S: x.toString() };
-  //   });
-  //   await axios.put("http://localhost:5000/api/upload/details", {
-  //     id: { S: Date.now().toString() },
-  //     title: { S: titleName },
-  //     s3Name: { S: `${folderName}.webp` },
-  //     artist: { S: artistName },
-  //     genre: { L: genre },
-  //     // createdAt: { N: Date.now().toString() },
-  //   });
-  // };
 
   const dynamoJSON = () => {
     const genre = genreList.split(',').map((x) => {
@@ -181,20 +165,6 @@ const UploadPage = (props) => {
     formData.append('music', newMusic);
     formData.append('dynamo', JSON.stringify(dynamoJSON()));
     console.log(formData);
-    // Promise.all([
-    //   UploadToS3({
-    //     url: "http://localhost:5000/api/upload/music",
-    //     formData: musicformData,
-    //   }),
-    //   AddToDynamoDB(folderName),
-    //   cover &&
-    //     UploadToS3({
-    //       url: "http://localhost:5000/api/upload/cover",
-    //       formData: formData,
-    //     }),
-    // ]).then((values) => {
-    //   console.log(values);
-    // });
     Promise.all([
       UploadToS3({
         url: backRoute,
@@ -204,7 +174,7 @@ const UploadPage = (props) => {
   };
 
   return (
-    <Layout {...props}>
+    <>
       <UploadFormWrapper handleSubmit={handleSubmit}>
         {pageNum == 1 && (
           <UploadFileWrapper
@@ -276,7 +246,7 @@ const UploadPage = (props) => {
         pageNum={pageNum}
         setPageNum={setPageNum}
       ></StripperStatus>
-    </Layout>
+    </>
   );
 };
 

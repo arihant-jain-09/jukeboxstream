@@ -1,11 +1,8 @@
 import React from 'react';
 import styles from './Upload.module.scss';
-import UploadIcon from '@/assets/upload.svg';
 import CoverImageIcon from '@/assets/cover.svg';
 import Mp3Upload from '@/assets/mp3Upload.svg';
 import Details from '@/assets/details.svg';
-
-// import { genreArray } from "../../../utils/genreArray";
 
 export const FormDetailsWrapper = ({ children }) => {
   return (

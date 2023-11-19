@@ -7,8 +7,7 @@ module.exports = {
   },
   webpack(config, { webpack, isServer, nextRuntime }) {
     config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
+      test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
 

@@ -1,19 +1,23 @@
 'use client';
 import './global.scss';
 import Providers from '@/utils/Provider';
-import LayoutWrapper from './LayoutWrapper';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../aws-exports';
+import styles from './layout.module.scss';
+import Sidebar from '@/app/_components/Sidebar/Sidebar';
 
 Amplify.configure(awsconfig, { ssr: true });
 
 const RootLayout = ({ children, ...props }) => {
-  console.log(props);
   return (
     <html lang="en">
       <body>
         <Providers>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <div className={styles['layout']}>
+            {/* // Display flex */}
+            <Sidebar />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

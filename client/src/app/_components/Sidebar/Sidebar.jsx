@@ -13,8 +13,9 @@ import Upload from '@/assets/upload.svg';
 import Loading from '@/assets/loading.svg';
 import Nearby from '@/assets/nearby.svg';
 import MySongs from '@/assets/song.svg';
-import { useRouter } from 'next/navigation';
-// import { useSelector } from "react-redux";
+import { usePathname, useRouter } from 'next/navigation';
+import getUser, { isUserAdmin } from '@/utils/auth';
+import { Auth } from 'aws-amplify'; // import { useSelector } from "react-redux";
 
 const SidebarItem = ({ Svg, text, onClick, selected }) => {
   return (
@@ -34,24 +35,14 @@ const SidebarItem = ({ Svg, text, onClick, selected }) => {
   );
 };
 
-const SidebarLogoutItem = ({ Svg, text, signOut }) => {
-  return (
-    <>
-      <div className={styles['sidebarItem']} onClick={signOut}>
-        <div className={styles['sidebarItem__svg']}>
-          <Svg />
-        </div>
-        <div className={styles['sidebarItem__text']}>{text}</div>
-      </div>
-    </>
-  );
-};
-
-const Sidebar = ({ signOut, isAdmin }) => {
-  // const { isPlaying } = useSelector((state) => state.item);
+const Sidebar = () => {
+  const user = getUser();
   const router = useRouter();
+  const pathName = usePathname();
+  if (!user) return null;
   let sideItems;
-  // console.log("isAdmin", isAdmin);
+  let isAdmin = false;
+  if (pathName.startsWith('/admin')) isAdmin = isUserAdmin(user);
 
   const userSideItems = [
     {
@@ -134,8 +125,12 @@ const Sidebar = ({ signOut, isAdmin }) => {
         {
           Svg: Logout,
           text: 'Logout',
-          onClick: () => {
-            signOut();
+          onClick: async () => {
+            try {
+              await Auth.signOut();
+            } catch (error) {
+              console.log('error signing out: ', error);
+            }
           },
           selected: router.pathname === '/logout',
         },
@@ -203,8 +198,12 @@ const Sidebar = ({ signOut, isAdmin }) => {
         {
           Svg: Logout,
           text: 'Logout',
-          onClick: () => {
-            signOut();
+          onClick: async () => {
+            try {
+              await Auth.signOut();
+            } catch (error) {
+              console.log('error signing out: ', error);
+            }
           },
           selected: router.pathname === '/logout',
         },
@@ -272,17 +271,9 @@ const Sidebar = ({ signOut, isAdmin }) => {
             return (
               <div key={idx} className={styles['sidebar__content_item']}>
                 <div className={styles['sidebar__content-head']}>{key}</div>
-                {item[key].map((item, index) => {
-                  if (item.text === 'Logout')
-                    return (
-                      <SidebarLogoutItem
-                        key={index}
-                        {...item}
-                        signOut={signOut}
-                      />
-                    );
-                  else return <SidebarItem key={index} {...item} />;
-                })}
+                {item[key].map((item, index) => (
+                  <SidebarItem key={index} {...item} />
+                ))}
               </div>
             );
           })}

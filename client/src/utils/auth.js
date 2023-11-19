@@ -43,22 +43,33 @@ export const getUser = () => {
 
 export default getUser;
 
+export const isUserAdmin = (user) => {
+  const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
+  const isAdmin = groups && groups.includes('admin');
+  return isAdmin;
+};
+
 export function useCheckAdminStatus() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  async function checkAdminStatus() {
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      const groups =
-        user.signInUserSession.accessToken.payload['cognito:groups'];
-      const isAdmin = groups && groups.includes('admin');
-      setIsAdmin(isAdmin);
-    } catch (error) {
-      setIsAdmin(false);
-      console.error(error);
-    }
-  }
-  checkAdminStatus();
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const groups =
+          user?.signInUserSession.accessToken.payload['cognito:groups'];
+        const isAdmin = groups && groups.includes('admin');
+        setIsAdmin(isAdmin);
+      } catch (error) {
+        setError(error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-  return [isAdmin];
+  return [isAdmin, loading, error];
 }
