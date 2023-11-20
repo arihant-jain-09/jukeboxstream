@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import MusicComponent from '@/components/MusicComponent/MusicComponent';
 import Notifications from '@/components/Notifications/Notifications';
 import styles from './layout.module.scss';
 import { useCheckAdminStatus } from '@/utils/auth';
@@ -19,7 +18,6 @@ const RootLayout = ({ children, ...props }) => {
       <div className={styles['layout__content-middle']}>{children}</div>
       <div className={styles['layout__content-right']}>
         <Notifications {...props} />
-        <MusicComponent {...props} />
       </div>
     </>
   );

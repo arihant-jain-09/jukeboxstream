@@ -15,7 +15,6 @@ import {
 import { SetColors, SetIsPlaying, SetData } from '@/redux/features/playerSlice';
 import { BASE_GET_SONG_COLOR } from '@/utils/api-end-points';
 import { GETAPI, POSTAPI } from '@/utils/callAPI';
-import { withAuthenticator } from '@aws-amplify/ui-react';
 
 const MusicComponent = ({ user }) => {
   const { activeSong } = useSelector((state) => state.player);
@@ -45,16 +44,11 @@ const Music = ({ user }) => {
   // const [colors, setColors] = useState(null);
   // const { id: userId, accessToken } = useSelector((state) => state.user);
   const userId = user?.username;
-  // console.log(user);
-  // console.log("Music Component");
-  // console.log(activeSong);
-  // const { data, isFetching, error } = useGetSongDetailsQuery({
-  //   id: activeSong?.id?.N,
-  // });
-  // console.log(activeSong);
-  let timestamp = activeSong?.timestamp?.S || activeSong?.timestamp;
-  let artist = activeSong?.artist?.S || activeSong?.artist;
-  const HASHKEY = `${artist}_${timestamp}` || `${artist}_${timestamp}`;
+  const HASHKEY = activeSong?.id;
+  if (!HASHKEY) {
+    console.log('HASHKEY not found');
+    return null;
+  }
   const { data, isFetching, error } =
     type == 'user'
       ? useGetUserSongDetailsQuery({
@@ -195,4 +189,4 @@ const Music = ({ user }) => {
   );
 };
 
-export default withAuthenticator(MusicComponent);
+export default MusicComponent;
