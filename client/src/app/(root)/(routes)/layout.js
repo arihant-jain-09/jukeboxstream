@@ -8,6 +8,7 @@ import Header from '@/components/Header/Header';
 import ImageGrid from '@/components/ImageGrid/ImageGrid';
 import Filter from '@/components/Filters/Filter';
 import { GET_ALL_SONGS } from '@/utils/api-end-points';
+import '@aws-amplify/ui-react/styles.css';
 
 const RootLayout = ({ children, ...props }) => {
   return (
