@@ -1,7 +1,7 @@
-@import '@/styles/variables';
+@import "@/styles/variables";
 .sidebar {
   grid-column: sidebar-start / sidebar-end;
-  height: 100vh;
+  height: 100%;
   position: sticky;
   top: 0;
   display: flex;
@@ -93,7 +93,7 @@
     position: relative;
     // color: $tertiary-color;
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       background-color: $secondary-light-color;
       width: 6px;

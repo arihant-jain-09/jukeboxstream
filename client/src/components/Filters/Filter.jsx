@@ -1,22 +1,28 @@
-'use client';
-import React from 'react';
-import Genre from '../Genre/Genre';
-import styles from './Filter.module.scss';
-import { useDispatch } from 'react-redux';
+"use client";
+import React from "react";
+import Genre from "../Genre/Genre";
+import styles from "./Filter.module.scss";
+import { useDispatch } from "react-redux";
 // import Sort from "../../assets/sort.svg";
-import axios from 'axios';
-import { FILTER_SONG_BY } from '@/utils/api-end-points';
-import { SetAllSongs } from '@/redux/features/playerSlice';
+import axios from "axios";
+import { FILTER_SONG_BY } from "@/utils/api-end-points";
+import { SetAllSongs } from "@/redux/features/playerSlice";
+import { usePathname } from "next/navigation";
 
 const Filter = () => {
+  const pathname = usePathname();
+  console.log(pathname);
+  if (pathname !== "/home" && pathname !== "/mysongs") {
+    return null;
+  }
   const dispatch = useDispatch();
   const [selectedSort, setSelectedSort] = React.useState(null);
   const sortList = [
-    'Most Views',
-    'Least Views',
-    'Most Likes',
-    'Least Likes',
-    'Recently Added',
+    "Most Views",
+    "Least Views",
+    "Most Likes",
+    "Least Likes",
+    "Recently Added",
   ];
 
   const handleSortClick = async (item, idx) => {
@@ -31,21 +37,21 @@ const Filter = () => {
   };
   if (selectedSort) console.log(sortList[selectedSort]);
   return (
-    <div className={styles['filter']}>
+    <div className={styles["filter"]}>
       <Genre />
-      <div className={styles['filter__sort']}>
+      <div className={styles["filter__sort"]}>
         {/* <div className={styles["filter__sort-button"]}>
           Sort
           <Sort />
         </div> */}
-        <div className={styles['filter__sort-items']}>
+        <div className={styles["filter__sort-items"]}>
           {sortList.map((item, idx) => (
             <div
               key={idx}
               onClick={() => handleSortClick(item, idx)}
-              className={`${styles['filter__sort-items--custom']} ${
+              className={`${styles["filter__sort-items--custom"]} ${
                 selectedSort === idx &&
-                styles['filter__sort-items--custom--selected']
+                styles["filter__sort-items--custom--selected"]
               }`}
             >
               {item}

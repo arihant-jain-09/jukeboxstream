@@ -5,7 +5,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 16rem);
+  // height: calc(100vh - 16rem);
+  height: 100%;
   &__label {
     &-upload {
       &--svg {

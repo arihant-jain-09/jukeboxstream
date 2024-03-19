@@ -51,9 +51,9 @@ const Sidebar = () => {
           Svg: Home,
           text: "Home",
           onClick: () => {
-            router.push("/");
+            router.push("/home");
           },
-          selected: router.pathname === "/",
+          selected: router.pathname === "/home",
         },
         {
           Svg: MySongs,
