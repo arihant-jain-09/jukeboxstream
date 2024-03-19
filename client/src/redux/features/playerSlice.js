@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const playerSlice = createSlice({
-  name: "player",
+  name: 'player',
   initialState: {
     allSongs: [],
     currentSongs: [],
@@ -13,10 +13,45 @@ export const playerSlice = createSlice({
     genreList: [],
     colors: {},
     m3u8: {},
+    musicQ: [],
+    totalSongCount: 0,
   },
   reducers: {
+    equeueTrack: (state, action) => {
+      const songIndex = state.allSongs.findIndex(
+        (song) => song.id === action.payload
+      );
+      if (songIndex !== -1) {
+        const updatedList = [...state.allSongs];
+        const songToAdd = updatedList.splice(songIndex, 1)[0];
+        state.totalSongCount--;
+        console.log('Song is present in the list');
+        console.log('The song ' + songToAdd.title.S);
+        state.musicQ = [...state.musicQ, { song: songToAdd, index: songIndex }];
+      } else {
+        console.log('Song not found');
+      }
+    },
+
+    dequeueTrack: (state, action) => {
+      const indexToRemove = action.payload;
+      if (
+        state.musicQ.length > 0 &&
+        indexToRemove >= 0 &&
+        indexToRemove < state.musicQ.length
+      ) {
+        const removedSong = state.musicQ.splice(indexToRemove, 1)[0];
+        state.allSongs.splice(removedSong.index, 0, removedSong.song);
+        state.totalSongCount++;
+        console.log('Dequeued the song ' + removedSong.song.title);
+      } else {
+        console.log('Invalid index or queue is empty');
+      }
+    },
+
     SetAllSongs: (state, action) => {
       state.allSongs = action.payload;
+      state.totalSongCount = action.payload.length;
     },
     SetCurrentSongs: (state, action) => {
       state.currentSongs = action.payload;
@@ -28,26 +63,12 @@ export const playerSlice = createSlice({
       state.isActive = true;
     },
 
-    SetNextSong: (state, action) => {
-      if (state.currentSongs[action.payload]?.track) {
-        state.activeSong = state.currentSongs[action.payload]?.track;
-      } else {
-        state.activeSong = state.currentSongs[action.payload];
-      }
-
-      state.currentIndex = action.payload;
-      state.isActive = true;
+    playNextTrack: (state) => {
+      state.currentIndex = (state.currentIndex + 1) % state.musicQ.length;
     },
-
-    SetPrevSong: (state, action) => {
-      if (state.currentSongs[action.payload]?.track) {
-        state.activeSong = state.currentSongs[action.payload]?.track;
-      } else {
-        state.activeSong = state.currentSongs[action.payload];
-      }
-
-      state.currentIndex = action.payload;
-      state.isActive = true;
+    playPreviousTrack: (state) => {
+      state.currentIndex =
+        (state.currentIndex - 1 + state.musicQ.length) % state.musicQ.length;
     },
 
     SetCurrentIndex: (state, action) => {

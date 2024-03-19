@@ -1,7 +1,6 @@
 module.exports = class Song {
   //constructor
-  constructor(params) {
-    const { artist, cover, genre, id, s3Name, title } = params;
+  constructor(artist, cover, genre, id, s3Name, title) {
     this.artist = artist;
     this.cover = cover;
     this.genre = genre;

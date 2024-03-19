@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Auth, Hub } from 'aws-amplify';
+import { useEffect, useState } from "react";
+import { Auth, Hub } from "aws-amplify";
 
 export const UpdateUserLocation = async ({ lat, long }) => {
   const user = await Auth.currentAuthenticatedUser();
   await Auth.updateUserAttributes(user, {
-    'custom:lat': lat.toString(),
-    'custom:long': long.toString(),
+    "custom:lat": lat.toString(),
+    "custom:long": long.toString(),
   });
   return user;
 };
@@ -24,8 +24,8 @@ export const getUser = () => {
             email: attributes?.email,
             emailVerified: attributes?.email_verified,
             location: {
-              lat: attributes['custom:lat']?.toString(),
-              long: attributes['custom:long']?.toString(),
+              lat: attributes["custom:lat"]?.toString(),
+              long: attributes["custom:long"]?.toString(),
             },
           });
         }
@@ -35,7 +35,7 @@ export const getUser = () => {
     };
 
     getUserDetails();
-    Hub.listen('auth', () => getUserDetails());
+    Hub.listen("auth", () => getUserDetails());
   }, [Auth, userDetails, setUserDetails]);
 
   return userDetails;
@@ -43,9 +43,10 @@ export const getUser = () => {
 
 export default getUser;
 
-export const isUserAdmin = (user) => {
-  const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-  const isAdmin = groups && groups.includes('admin');
+export const isUserAdmin = async () => {
+  const user = await Auth.currentAuthenticatedUser();
+  const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
+  const isAdmin = groups && groups.includes("admin");
   return isAdmin;
 };
 
@@ -58,10 +59,15 @@ export function useCheckAdminStatus() {
     (async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        const groups =
-          user?.signInUserSession.accessToken.payload['cognito:groups'];
-        const isAdmin = groups && groups.includes('admin');
-        setIsAdmin(isAdmin);
+        if (!user) {
+          setIsAdmin(false);
+          setLoading(false);
+        } else {
+          const groups =
+            user?.signInUserSession.accessToken.payload["cognito:groups"];
+          const isAdmin = groups && groups.includes("admin");
+          setIsAdmin(isAdmin);
+        }
       } catch (error) {
         setError(error);
         console.error(error);

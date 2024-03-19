@@ -6,6 +6,8 @@
   border-radius: $border-radius;
   // padding: 2rem 4rem 4rem 4rem;
   padding: 2rem 0;
+  min-height: 40rem;
+  justify-content: space-between;
   background: attr(data-muted);
   // background: linear-gradient(
   //   98.3deg,
@@ -16,7 +18,8 @@
   position: relative;
   @media screen and (max-width: 576px) {
     flex-direction: row;
-    border-radius: 0
+    min-height: auto;
+    border-radius: 0;
   }
   &__header {
     color: #fff;
@@ -34,11 +37,10 @@
       object-fit: cover;
       border-radius: 1rem;
     }
-
   }
   &__player {
     width: 100%;
-    &--container{
+    &--container {
       width: 100%;
       display: flex;
       flex-direction: column;

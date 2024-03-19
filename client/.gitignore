@@ -11,7 +11,7 @@ amplify
 # next.js
 /.next/
 /out/
-
+aws-exports.js
 # production
 /build
 

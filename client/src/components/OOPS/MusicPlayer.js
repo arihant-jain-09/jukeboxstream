@@ -1,6 +1,6 @@
-const Queue = require("./Queue");
-const Song = require("./Song.js");
-import { getM3u8 } from "../../services/GetM3u8.js";
+const Queue = require('./Queue');
+const Song = require('./Song.js');
+const axios = require('axios');
 
 module.exports = class MusicPlayer {
   constructor(songs) {
@@ -13,15 +13,12 @@ module.exports = class MusicPlayer {
       this.musicQ.append(songs[0]);
     }
   }
-  static intializeList(list) {
+  intializeList(list) {
     return new MusicPlayer(list);
   }
   addSong(artist, s3Name, id, genre, title, cover) {
-    this.musiclist.splice(
-      this.total_Song_Count,
-      0,
-      new Song(artist, cover, genre, id, s3Name, title)
-    );
+    const song = new Song(artist, cover, genre, id, s3Name, title);
+    this.musiclist.splice(this.total_Song_Count, 0, song);
     this.total_Song_Count++;
   }
 
@@ -32,8 +29,8 @@ module.exports = class MusicPlayer {
         exists = true;
         [...this.musiclist].splice(i, 1);
         this.total_Song_Count--;
-        console.log("song is present in first half");
-        console.log("The song " + this.musiclist[i].title.S);
+        console.log('song is present in first half');
+        console.log('The song ' + this.musiclist[i].title.S);
         this.musicQ.append(this.musiclist[i]);
         this.musiclist = [...this.musiclist, this.musiclist[i]];
         this.isPlaying = true;
@@ -43,15 +40,15 @@ module.exports = class MusicPlayer {
     for (let i = this.total_Song_Count; i < this.musiclist.length; i++) {
       if (this.musiclist[i].id.S === id) {
         exists = true;
-        console.log("Song is present in second half");
-        console.log("The song " + this.musiclist[i].title.S);
+        console.log('Song is present in second half');
+        console.log('The song ' + this.musiclist[i].title.S);
         this.musicQ.append(this.musiclist[i]);
         this.isPlaying = true;
         return;
       }
     }
     if (!exists) {
-      console.log("Song not found");
+      console.log('Song not found');
     }
   }
 
@@ -86,14 +83,17 @@ module.exports = class MusicPlayer {
     for (let i = 0; i < this.total_Song_Count; i++) {
       if (this.musiclist[i].id.S === id) {
         try {
-          const { data } = await getM3u8(this.musiclist[i].id.S);
+          const { data } = await axios.get(
+            `http://localhost:5000/api/streams/${this.musiclist[i].id.S}`
+          );
+          // const { data } = await getM3u8(this.musiclist[i].id.S);
           if ((data.status = 200)) {
             src = data.body;
             exists = true;
             [...this.musiclist].splice(i, 1);
             this.total_Song_Count--;
-            console.log("song is present in first half");
-            console.log("The song " + this.musiclist[i].title.S);
+            console.log('song is present in first half');
+            console.log('The song ' + this.musiclist[i].title.S);
             if (addToQ) {
               let val = this.musicQ.append(this.musiclist[i]);
               this.setCurrentSong(val);
@@ -110,8 +110,8 @@ module.exports = class MusicPlayer {
     for (let i = this.total_Song_Count; i < this.musiclist.length; i++) {
       if (this.musiclist[i].id.S === id) {
         exists = true;
-        console.log("Song is present in second half");
-        console.log("The song " + this.musiclist[i].title.S);
+        console.log('Song is present in second half');
+        console.log('The song ' + this.musiclist[i].title.S);
         if (addToQ) {
           let val = this.musicQ.append(this.musiclist[i]);
           this.isPlaying = true;
@@ -121,7 +121,7 @@ module.exports = class MusicPlayer {
       }
     }
     if (!exists) {
-      console.log("Song not found");
+      console.log('Song not found');
     }
   };
   playRandomSong() {
@@ -131,17 +131,17 @@ module.exports = class MusicPlayer {
     [...this.musiclist].splice(rand_int, 1);
     this.total_Song_Count--;
     this.musicQ.append(playingSong);
-    console.log("The song " + playingSong.title.S + " added to the queue");
+    console.log('The song ' + playingSong.title.S + ' added to the queue');
     this.musiclist = [...this.musiclist, playingSong];
   }
 
   printQueue() {
-    console.log("The current queue contains: ");
+    console.log('The current queue contains: ');
     return this.musicQ.print();
   }
 
   closeMusicPlayer() {
-    console.log("......Close Music Player......");
+    console.log('......Close Music Player......');
     this.musicQ.head = null;
     this.total_Song_Count = this.musiclist.length;
   }
